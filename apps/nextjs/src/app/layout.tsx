@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
@@ -49,13 +50,15 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{props.children}</TRPCReactProvider>
-          <div className="absolute bottom-4 right-4">
-            <ThemeToggle />
-          </div>
-          <Toaster />
-        </ThemeProvider>
+        <ClerkProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <TRPCReactProvider>{props.children}</TRPCReactProvider>
+            <div className="absolute bottom-4 right-4">
+              <ThemeToggle />
+            </div>
+            <Toaster />
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

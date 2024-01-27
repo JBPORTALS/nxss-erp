@@ -3,9 +3,9 @@ import { z } from "zod";
 import { desc, eq, schema } from "@acme/db";
 import { CreatePostSchema } from "@acme/validators";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 
-export const postRouter = createTRPCRouter({
+export const postRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     // return ctx.db.select().from(schema.post).orderBy(desc(schema.post.id));
     return ctx.db.query.post.findMany({

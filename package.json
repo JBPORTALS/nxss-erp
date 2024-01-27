@@ -32,5 +32,9 @@
     "overrides": {
       "@auth/core": "0.20.0"
     }
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^4.29.5",
+    "postgres": "^3.4.3"
   }
 }

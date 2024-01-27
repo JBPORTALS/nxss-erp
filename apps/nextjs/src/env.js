@@ -18,30 +18,27 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
-    DB_HOST: z.string(),
-    DB_NAME: z.string(),
-    DB_PASSWORD: z.string(),
-    DB_USERNAME: z.string(),
+    DATABASE_URL: z.string(),
+    CLERK_SECRET_KEY: z.string(),
   },
   /**
    * Specify your client-side environment variables schema here.
    * For them to be exposed to the client, prefix them with `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
   },
   /**
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
    */
   runtimeEnv: {
-    DB_HOST: process.env.DB_HOST,
-    DB_NAME: process.env.DB_NAME,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_USERNAME: process.env.DB_USERNAME,
+    DATABASE_URL: process.env.DATABASE_URL,
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     PORT: process.env.PORT,
     VERCEL_URL: process.env.VERCEL_URL,
 
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
   },
   skipValidation:
     !!process.env.CI ||

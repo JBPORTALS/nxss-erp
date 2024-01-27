@@ -1,85 +1,54 @@
-import { relations, sql } from "drizzle-orm";
-import {
-  index,
-  int,
-  primaryKey,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
+// Example model schema from the Drizzle docs
+// https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { mySqlTable } from "./_table";
+import { relations } from "drizzle-orm";
+import { boolean, integer, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-export const users = mySqlTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-    fsp: 3,
-  }).default(sql`CURRENT_TIMESTAMP(3)`),
-  image: varchar("image", { length: 255 }),
+import { pgTable } from "./_table";
+
+/**
+ * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
+ * database instance for multiple projects.
+ *
+ * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
+ */
+
+/**
+ * This is the schema where we track organizations current or completed academic years.
+ */
+export const academicYears = pgTable("academicYears", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  year: integer("year").notNull(),
+  orgId: text("orgId").notNull(),
+  is_completed: boolean("is_completed").default(false).notNull(),
+  completed_at: timestamp("completed_at"),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-}));
-
-export const accounts = mySqlTable(
-  "account",
-  {
-    userId: varchar("userId", { length: 255 }).notNull(),
-    type: varchar("type", { length: 255 })
-      .$type<"oauth" | "oidc" | "email">()
-      .notNull(),
-    provider: varchar("provider", { length: 255 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
-    refresh_token: varchar("refresh_token", { length: 255 }),
-    access_token: text("access_token"),
-    expires_at: int("expires_at"),
-    token_type: varchar("token_type", { length: 255 }),
-    scope: varchar("scope", { length: 255 }),
-    id_token: text("id_token"),
-    session_state: varchar("session_state", { length: 255 }),
-  },
-  (account) => ({
-    compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-    userIdIdx: index("userId_idx").on(account.userId),
-  }),
+export const academicYearsRelations = relations(
+  academicYears,
+  ({ one }) => ({}),
 );
 
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
+/**
+ * This is the schema where we track organizations current or completed semesters.
+ */
+export const semesters = pgTable("semesters", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sem: integer("sem").notNull(),
+  orgId: text("orgId").notNull(),
+  is_completed: boolean("is_completed").default(false).notNull(),
+  completed_at: timestamp("completed_at"),
+});
 
-export const sessions = mySqlTable(
-  "session",
-  {
-    sessionToken: varchar("sessionToken", { length: 255 })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("userId", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (session) => ({
-    userIdIdx: index("userId_idx").on(session.userId),
-  }),
-);
+export const semestersRelations = relations(semesters, ({ one }) => ({}));
 
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
+/**
+ * This is the schema where we store branch details of all org's.
+ */
+export const branches = pgTable("branches", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: text("orgId").notNull(),
+  name: text("name").notNull(),
+});
 
-export const verificationTokens = mySqlTable(
-  "verificationToken",
-  {
-    identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  }),
-);
+export const branchesRelations = relations(branches, ({ one }) => ({}));
