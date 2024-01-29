@@ -17,11 +17,13 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#f472b6",
+            backgroundColor: "hsl(262.1 83.3% 57.8%)",
           },
+          headerTintColor: "#fff",
+          presentation: "transparentModal",
         }}
       />
-      <StatusBar />
+      <StatusBar style="inverted" />
     </TRPCProvider>
   );
 }
