@@ -65,8 +65,5 @@
       "expo-plugins/**"
     ]
   },
-  "resolutions": {
-    "styled-components": "^5"
-  },
   "prettier": "@acme/prettier-config"
 }

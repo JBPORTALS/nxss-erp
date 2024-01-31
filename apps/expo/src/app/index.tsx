@@ -5,8 +5,8 @@ import { Stack } from "expo-router";
 import { api } from "~/utils/api";
 
 export default function Index() {
-  const posts = api.auth.getSession.useQuery();
-  console.log(posts.trpc.path);
+  const posts = api.post.all.useQuery();
+  console.log(posts.failureReason);
   return (
     <View className="h-full w-full bg-background">
       {/* Changes page title visible on the header */}
@@ -19,7 +19,7 @@ export default function Index() {
           App for students manage their Organization Data
         </Text>
         {!posts.data && <Text>No Data</Text>}
-        {posts.data?.title}
+        {posts.data?.map((post) => <Text>{post.title}</Text>)}
         <Button
           disabled={posts.isFetching}
           onPress={() => posts.refetch()}

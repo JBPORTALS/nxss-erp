@@ -33,9 +33,11 @@
       "@auth/core": "0.20.0"
     }
   },
+  "resolutions": {
+    "styled-components": "^5"
+  },
   "dependencies": {
     "@clerk/clerk-expo": "^0.20.1",
-    "@clerk/nextjs": "^4.29.5",
-    "postgres": "^3.4.3"
+    "@clerk/nextjs": "^4.29.5"
   }
 }

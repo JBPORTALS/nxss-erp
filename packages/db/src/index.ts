@@ -14,5 +14,5 @@ const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) throw new Error("Connection String not defined ❌");
 
-const client = postgres(connectionString, { prepare: false });
+const client = postgres(connectionString, { prepare: false, debug: true });
 export const db = drizzle(client, { schema });

@@ -5,6 +5,8 @@ dotenv.config({ path: "../../.env" });
 
 const connectionString = process.env.DATABASE_URL;
 
+console.log(connectionString);
+
 if (!connectionString) throw new Error("Connection String not defined ❌");
 
 export default {

@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "@planetscale/database": "^1.13.0",
-    "drizzle-orm": "^0.29.3"
+    "drizzle-orm": "^0.29.3",
+    "postgres": "^3.4.3"
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:^0.2.0",
