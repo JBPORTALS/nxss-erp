@@ -1,9 +1,8 @@
+import { desc, eq, schema } from "@nxss/db";
+import { CreatePostSchema } from "@nxss/validators";
 import { z } from "zod";
 
-import { desc, eq, schema } from "@acme/db";
-import { CreatePostSchema } from "@acme/validators";
-
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const postRouter = router({
   all: publicProcedure.query(({ ctx }) => {

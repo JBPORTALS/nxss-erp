@@ -3,7 +3,7 @@ import { type NextRequest } from "next/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
 
-import { appRouter, createTRPCContext } from "@acme/api";
+import { appRouter, createTRPCContext } from "@nxss/api";
 
 /**
  * Configure basic CORS headers

@@ -5,18 +5,14 @@ import { StatusBar } from "expo-status-bar";
 
 import { api } from "~/utils/api";
 
-export default function Index() {
-  const posts = api.post.all.useQuery();
-
+export default function MyProfile() {
   return (
     <SafeAreaProvider>
       <StatusBar style="inverted" />
-      <View className="flex h-full w-full items-center justify-center">
+      <View className="h-full w-full bg-background">
         {/* Changes page title visible on the header */}
-        <Stack.Screen options={{ title: "Home" }} />
-        <Text className="text-center text-6xl font-extrabold">
-          Welcome To Nexuss
-        </Text>
+        <Stack.Screen options={{ title: "My Profile" }} />
+        <Text className="text-center text-6xl font-extrabold">My Profile</Text>
       </View>
     </SafeAreaProvider>
   );

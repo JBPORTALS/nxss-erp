@@ -2,12 +2,11 @@ import type { Config } from "tailwindcss";
 // @ts-expect-error - no types
 import nativewind from "nativewind/preset";
 
-import baseConfig from "@acme/tailwind-config";
+import baseConfig from "@nxss/tailwind-config";
 
 export default {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
-  prefix: "",
   theme: {
     container: {
       center: true,

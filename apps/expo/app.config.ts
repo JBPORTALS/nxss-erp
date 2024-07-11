@@ -5,6 +5,9 @@ const defineConfig = (): ExpoConfig => ({
   slug: "expo",
   scheme: "expo",
   version: "0.1.0",
+  extra: {
+    clerkPublishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+  },
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
