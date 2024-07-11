@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "@clerk/clerk-expo": "^0.20.1",
-    "@clerk/nextjs": "^4.29.5"
+    "@clerk/nextjs": "^5.2.2"
   }
 }

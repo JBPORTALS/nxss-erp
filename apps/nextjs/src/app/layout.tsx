@@ -1,15 +1,25 @@
 import type { Metadata, Viewport } from "next";
+import { Merriweather, Open_Sans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+
 import { cn } from "@nxss/ui";
-import { ThemeProvider, ThemeToggle } from "@nxss/ui/theme";
+import { ThemeProvider } from "@nxss/ui/theme";
 import { Toaster } from "@nxss/ui/toast";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 
 import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
+
+const OpenSans = Open_Sans({
+  variable: "--font-open-sans",
+  subsets: ["latin"],
+});
+const Mw = Merriweather({
+  variable: "--font-Mw",
+  subsets: ["latin"],
+  weight: ["900"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -17,7 +27,7 @@ export const metadata: Metadata = {
       ? "https://turbo.t3.gg"
       : "http://localhost:3000",
   ),
-  title: "Create T3 Turbo",
+  title: "NexussERP",
   description: "Simple monorepo with shared backend for web & mobile apps",
   openGraph: {
     title: "Create T3 Turbo",
@@ -41,27 +51,21 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans text-foreground antialiased",
-          GeistSans.variable,
-          GeistMono.variable,
-        )}
-      >
-        <ClerkProvider>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={cn(
+            "min-h-screen w-full bg-background font-sans text-foreground antialiased",
+            OpenSans.variable,
+            Mw.variable,
+          )}
+        >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <TRPCReactProvider>
-              <h1>This is layout</h1>
-              {props.children}
-            </TRPCReactProvider>
-            <div className="absolute bottom-4 right-4">
-              <ThemeToggle />
-            </div>
+            <TRPCReactProvider>{props.children}</TRPCReactProvider>
             <Toaster />
           </ThemeProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

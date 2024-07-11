@@ -1,13 +1,36 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
+import {
+  clerkClient,
+  clerkMiddleware,
+  createRouteMatcher,
+} from "@clerk/nextjs/server";
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-  apiRoutes: ["/api/trpc/post.all"],
-  publicRoutes: ["/api/trpc/post.all", "/", "/posts"],
-});
+const isProtectedRoutes = createRouteMatcher(["/dashboard(.*)"]);
+const isPublicRoutes = createRouteMatcher(["/sign-in(.*)"]);
+
+export default clerkMiddleware(
+  async (auth, request) => {
+    if (isProtectedRoutes(request)) {
+      auth().protect();
+    }
+
+    const userId = auth().userId;
+
+    if (userId && isPublicRoutes(request)) {
+      const organizations =
+        await clerkClient().users.getOrganizationMembershipList({ userId });
+
+      const orgslug = organizations.data[0]?.organization.slug;
+      return NextResponse.redirect(
+        new URL(`/${orgslug}/dashboard`, request.nextUrl.origin),
+      );
+    }
+  },
+  {
+    signInUrl: "/sign-in",
+  },
+);
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
