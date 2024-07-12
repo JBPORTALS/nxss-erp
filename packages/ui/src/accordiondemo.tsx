@@ -10,9 +10,9 @@ import { HStack } from "./stack"
   
   export function AccordionDemo() {
     return (
-      <Accordion type="single" collapsible className="w-full px-3">
+      <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1">
-          <AccordionTrigger ><HStack><PlusCircle />Artificial Intelligence</HStack></AccordionTrigger>
+          <AccordionTrigger isActive><HStack><PlusCircle />Artificial Intelligence</HStack></AccordionTrigger>
           <AccordionContent>
             <NavItem>Semester 1</NavItem>
             <NavItem>Semester 2</NavItem>

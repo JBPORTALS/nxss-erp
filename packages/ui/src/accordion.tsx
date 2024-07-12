@@ -21,12 +21,12 @@ const AccordionItem = React.forwardRef<
 AccordionItem.displayName = "AccordionItem"
 
 const accordionTriggerVariants = cva(
-  "flex flex-1 items-center justify-between py-4 transition-all [&[data-state=open]>svg]:rotate-180",
+  "flex flex-1 items-center justify-between py-4 px-3 transition-all [&[data-state=open]>svg]:rotate-180",
   {
     variants: {
       isActive: {
-        true: "",
-        
+        true: "w-full justify-between py-2 rounded rounded-e-none border-r-2 border-purple-600 bg-accent",
+        false: ""
       }
     },
     defaultVariants: {
