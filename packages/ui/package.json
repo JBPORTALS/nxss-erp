@@ -11,7 +11,10 @@
     "./label": "./src/label.tsx",
     "./theme": "./src/theme.tsx",
     "./toast": "./src/toast.tsx",
-    "./select": "./src/select.tsx"
+    "./select": "./src/select.tsx",
+    "./stack":"./src/stack.tsx",
+    "./branch-navitem":"./src/branch-navitem.tsx",
+    "./headertabs":"./src/headertabs.tsx"
   },
   "license": "MIT",
   "scripts": {
