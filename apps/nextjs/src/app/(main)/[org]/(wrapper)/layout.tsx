@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import {
+  auth,
+  clerkClient,
+  currentUser,
+  Organization,
+} from "@clerk/nextjs/server";
+import {
   DotIcon,
   HomeIcon,
   PlusIcon,
   RocketIcon,
-  SlashIcon,
   Users2Icon,
 } from "lucide-react";
 
@@ -20,7 +25,14 @@ import {
 } from "@nxss/ui/select";
 import { ThemeToggle } from "@nxss/ui/theme";
 
-export default function Template(props: { children: React.ReactNode }) {
+export default async function Template(props: {
+  children: React.ReactNode;
+  params: { org: string };
+}) {
+  const org = await clerkClient().organizations.getOrganization({
+    slug: props.params.org,
+  });
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <div className="sticky inset-0 z-40 flex flex-col">
@@ -33,7 +45,7 @@ export default function Template(props: { children: React.ReactNode }) {
               <RocketIcon className="size-6" />
             </Button>
             <div className="flex items-center gap-1">
-              <span className="font-semibold">KSIT</span>
+              <span className="font-semibold">{org.name}</span>
               <DotIcon className="size-6 text-muted-foreground/80" />
               <Select value="2024">
                 <SelectTrigger
