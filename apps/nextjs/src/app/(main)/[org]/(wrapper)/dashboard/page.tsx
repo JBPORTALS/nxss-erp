@@ -2,8 +2,6 @@
 
 import { useAuth, useUser } from "@clerk/nextjs";
 
-import { Button } from "@nxss/ui/button";
-
 export default function Page() {
   const { signOut } = useAuth();
   const { user } = useUser();
