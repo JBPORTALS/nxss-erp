@@ -14,7 +14,10 @@
     "./select": "./src/select.tsx",
     "./stack":"./src/stack.tsx",
     "./branch-navitem":"./src/branch-navitem.tsx",
-    "./headertabs":"./src/headertabs.tsx"
+    "./headertabs":"./src/headertabs.tsx",
+    "./dropdown-menu":"./src/dropdown-menu.tsx",
+    "./checkbox":"./src/checkbox.tsx"
+   
   },
   "license": "MIT",
   "scripts": {
