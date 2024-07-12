@@ -44,7 +44,7 @@ export const Invitation = () => {
         <p>
           Dear <b>manu48617@gmail.com,</b>
         </p>
-        <p>
+        <p style={{ lineHeight: "24px" }}>
           You have been invited to join <b>KSIT's</b> workspace on Nexus ERP as
           a staff member. Please click on the button below to accept the
           invitation and set up your account.
