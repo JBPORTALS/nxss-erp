@@ -1,0 +1,17 @@
+{
+  "name": "@nxss/transactional",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    ".react-email"
+  ],
+  "scripts": {
+    "dev": "email dev -p 3001",
+    "export": "email export"
+  },
+  "dependencies": {
+    "@react-email/components": "0.0.21",
+    "lucide-react": "^0.407.0",
+    "react-email": "2.1.5"
+  }
+}
