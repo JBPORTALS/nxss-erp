@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  Button,
-  Container,
-  Heading,
-  Html,
-  Section,
-} from "@react-email/components";
+import { Button, Container, Heading, Html } from "@react-email/components";
 import { RocketIcon } from "lucide-react";
 
 export const Invitation = () => {
