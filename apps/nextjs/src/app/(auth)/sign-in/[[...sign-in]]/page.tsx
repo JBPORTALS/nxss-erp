@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { SignIn, useSignIn } from "@clerk/nextjs";
 import { RocketIcon } from "lucide-react";
 import { z } from "zod";
@@ -21,10 +22,12 @@ export default function Page() {
   const form = useForm({
     schema: SignInSchema,
   });
+  const [isLoading, setLoading] = useState(false);
 
   const { signIn, isLoaded } = useSignIn();
 
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
+    setLoading(true);
     try {
       if (isLoaded)
         await signIn.create({
@@ -36,6 +39,7 @@ export default function Page() {
     } catch (err: any) {
       console.log("signin failed:", err);
       form.setValue("error", "Credentials are invalid. Please try again.");
+      setLoading(false);
     }
   }
 
@@ -85,7 +89,7 @@ export default function Page() {
             )}
           />
           <Button
-            isLoading={form.formState.isSubmitting}
+            isLoading={isLoading}
             size={"lg"}
             className="w-full"
             type="submit"

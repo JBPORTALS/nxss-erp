@@ -51,7 +51,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl={"/sign-in"}>
       <html lang="en" suppressHydrationWarning>
         <body
           className={cn(
