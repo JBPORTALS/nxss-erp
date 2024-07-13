@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from ".";
-import NavItem, { NavItemProps } from "./nav-item";
+import { NavItemProps,NavItem } from "./nav-item";
 
 
 

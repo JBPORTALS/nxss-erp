@@ -5,7 +5,7 @@ import {
     AccordionTrigger,
   } from "./accordion"
 import { PlusCircle } from "lucide-react"
-import NavItem from "./nav-item"
+import {NavItem} from "./nav-item"
 import { HStack } from "./stack"
   
   export function AccordionDemo() {

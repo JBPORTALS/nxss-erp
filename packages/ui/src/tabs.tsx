@@ -1,24 +1,6 @@
 import { cn } from ".";
 import { cva, VariantProps } from "class-variance-authority";
 
-
-
-interface TabProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export const Tab = ({
-  children,
-  className,
-  ...props
-}: TabProps) => {
-  return (
-   
-      {children}
-  
-  );
-};
-
-
-
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const Tabs = ({
@@ -43,8 +25,6 @@ export const Tabs = ({
   );
 };
 
-
-
 const TabListVariants = cva(
 
     "flex items-center h-10 px-8 border-b-2 border-transparent gap-3 text-sm text-accent-foreground justify-center",
@@ -62,11 +42,11 @@ const TabListVariants = cva(
     },
   );
   
-  export interface TabListProps
+export interface TabListProps
     extends React.HTMLAttributes<HTMLButtonElement>,
       VariantProps<typeof TabListVariants> {}
   
-  export default function TabList({
+export function TabList({
     className,
     children,
     isActive,

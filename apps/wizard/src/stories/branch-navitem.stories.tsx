@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import BranchNavItem from '@nxss/ui/branch-navitem';
+import {BranchNavItem} from '@nxss/ui/branch-navitem';
 const meta = {
   title: "UI/BranchNavItem",
   component: BranchNavItem,

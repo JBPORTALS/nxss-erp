@@ -1,16 +1,14 @@
 import React from 'react'
-import  TabList, { Tab, Tabs } from './tabs'
+import  {  Tabs,TabList } from './tabs'
 
 
-export default function Headertabs() {
+export function Headertabs() {
     return (
-        <Tab>
         <Tabs>
             <TabList isActive >Overview</TabList>
             <TabList >Subjects</TabList>
             <TabList >Sessions</TabList>
             <TabList >Setting</TabList>
         </Tabs>
-        </Tab>
     )
 }
