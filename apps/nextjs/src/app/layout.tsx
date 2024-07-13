@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Merriweather, Open_Sans } from "next/font/google";
+import { useRouter } from "next/navigation";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { cn } from "@nxss/ui";
