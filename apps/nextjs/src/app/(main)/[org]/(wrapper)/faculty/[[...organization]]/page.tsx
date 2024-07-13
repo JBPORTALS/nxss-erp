@@ -8,7 +8,7 @@ export default function Page() {
   const { signOut } = useAuth();
   const { user } = useUser();
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-col gap-4">
       <div className="flex flex-col gap-2">
         <h1 className="text-xl font-bold">Faculty</h1>
         <p className="text-sm text-muted-foreground">
@@ -16,7 +16,7 @@ export default function Page() {
         </p>
       </div>
       <Tabs>
-        <TabItem>Staff</TabItem>
+        <TabItem isActive>Faculty</TabItem>
         <TabItem>Invitations</TabItem>
       </Tabs>
     </div>

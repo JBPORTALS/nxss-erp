@@ -8,10 +8,7 @@ export const Tabs = ({ children, className, ...props }: TabsProps) => {
   return (
     <div className="w-full border-b border-border">
       <div
-        className={cn(
-          "-mb-px flex w-full gap-0 overflow-x-auto px-10",
-          className,
-        )}
+        className={cn("-mb-px flex w-full gap-0 overflow-x-auto", className)}
       >
         {children}
       </div>
@@ -25,8 +22,8 @@ const TabItemVariants = cva(
   {
     variants: {
       isActive: {
-        true: "border-primary text-black",
-        false: "hover:border-b-muted-foreground/60",
+        true: "border-purple-600 text-primary",
+        false: "text-accent-foreground/80 hover:border-b-muted-foreground/60",
       },
     },
     defaultVariants: {
