@@ -120,7 +120,7 @@ export default async function Template(props: {
             </main>
           </nav>
         </aside> */}
-        <main className="px-10 py-8">{props.children}</main>
+        <main className="w-full px-10 py-8">{props.children}</main>
       </section>
     </div>
   );
