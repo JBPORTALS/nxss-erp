@@ -1,39 +1,36 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDown } from "lucide-react"
-import { cn } from "."
-import { cva, VariantProps } from "class-variance-authority"
+import * as React from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { cva, VariantProps } from "class-variance-authority";
+import { ChevronDown } from "lucide-react";
 
-const Accordion = AccordionPrimitive.Root
+import { cn } from ".";
+
+const Accordion = AccordionPrimitive.Root;
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item
-    ref={ref}
-    className={cn("", className)}
-    {...props}
-  />
-))
-AccordionItem.displayName = "AccordionItem"
+  <AccordionPrimitive.Item ref={ref} className={cn("", className)} {...props} />
+));
+AccordionItem.displayName = "AccordionItem";
 
 const accordionTriggerVariants = cva(
-  "flex flex-1 items-center justify-between py-4 px-3 transition-all [&[data-state=open]>svg]:rotate-180",
+  "flex w-full flex-1 items-center gap-2 px-3 py-4 transition-all [&[data-state=open]>svg]:rotate-180",
   {
     variants: {
       isActive: {
-        true: "w-full justify-between py-2 rounded rounded-e-none border-r-2 border-purple-600 bg-accent",
-        false: ""
-      }
+        true: "w-full rounded rounded-e-none border-r border-purple-600 bg-accent py-2",
+        false: "",
+      },
     },
     defaultVariants: {
-      isActive: false
-    }
-  }
-)
+      isActive: false,
+    },
+  },
+);
 
 interface AccordionTriggerProps
   extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>,
@@ -46,15 +43,21 @@ const AccordionTrigger = React.forwardRef<
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
-      className={cn(accordionTriggerVariants({ isActive }), className)}
+      className={cn(
+        "w-full",
+        accordionTriggerVariants({ isActive }),
+        className,
+      )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+      <div className="ml-auto flex w-fit justify-end">
+        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+      </div>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
-))
-AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
+));
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
@@ -62,12 +65,28 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="text-xs ml-10 border-l"
+    className="ml-5 border-l text-xs"
     {...props}
   >
-    <div className={cn("pb-2 pt-0 gap-0", className)}>{children}</div>
+    <div className={cn("ml-2 gap-0 pb-2 pt-0", className)}>{children}</div>
   </AccordionPrimitive.Content>
-))
-AccordionContent.displayName = AccordionPrimitive.Content.displayName
+));
+AccordionContent.displayName = AccordionPrimitive.Content.displayName;
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+interface AccordionTriggerTextProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+const AccordionTriggerText = ({
+  children,
+  className,
+}: AccordionTriggerTextProps) => {
+  return <div className={cn("truncate text-sm", className)}>{children}</div>;
+};
+
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+  AccordionTriggerText,
+};

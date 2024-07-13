@@ -22,7 +22,8 @@
     "./branch-navitem": "./src/branch-navitem.tsx",
     "./headertabs": "./src/headertabs.tsx",
     "./dropdown-menu": "./src/dropdown-menu.tsx",
-    "./checkbox": "./src/checkbox.tsx"
+    "./checkbox": "./src/checkbox.tsx",
+    "./profileCard": "./src/profileCard.tsx"
   },
   "license": "MIT",
   "scripts": {
