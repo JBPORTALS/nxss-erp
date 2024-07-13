@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { clerkClient } from "@clerk/nextjs/server";
 import {
   DotIcon,
@@ -40,7 +40,7 @@ export default async function Template(props: {
               <RocketIcon className="size-6" />
             </Button>
             <div className="flex items-center gap-1">
-              <span className="font-semibold">{org.name}</span>
+              <OrganizationSwitcher />
               <DotIcon className="size-6 text-muted-foreground/80" />
               <Select value="2024">
                 <SelectTrigger
@@ -71,7 +71,7 @@ export default async function Template(props: {
             <span className="text-xs font-semibold text-muted-foreground">
               MAIN MENU
             </span>
-            <Link href="/dashboard">
+            <Link href={`/${props.params.org}/dashboard`}>
               <Button
                 variant={"ghost"}
                 className={cn(
@@ -81,7 +81,7 @@ export default async function Template(props: {
                 <HomeIcon className="size-4" /> Dashboard
               </Button>
             </Link>
-            <Link href="#">
+            <Link href={`/${props.params.org}/faculty`}>
               <Button
                 variant={"ghost"}
                 className={cn(
