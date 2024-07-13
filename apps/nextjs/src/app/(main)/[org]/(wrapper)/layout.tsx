@@ -82,8 +82,10 @@ export default async function Template(props: {
               <Users2Icon className="size-4" /> Faculty
             </SidebarItem>
           </SidebarBody>
+          <SidebarLabel>BRANCHES</SidebarLabel>
+          <SidebarBody></SidebarBody>
         </Sidebar>
-        {/* <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
+        <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
           <nav className="flex flex-col gap-3 pl-5">
             <span className="text-xs font-semibold text-muted-foreground">
               MAIN MENU
@@ -125,7 +127,7 @@ export default async function Template(props: {
               </div>
             </main>
           </nav>
-        </aside> */}
+        </aside>
         <main className="px-10 py-8">{props.children}</main>
       </section>
     </div>
