@@ -5,7 +5,7 @@ import {
   createRouteMatcher,
 } from "@clerk/nextjs/server";
 
-const isProtectedRoutes = createRouteMatcher(["/dashboard(.*)"]);
+const isProtectedRoutes = createRouteMatcher(["/(.*)/dashboard(.*)"]);
 const isPublicRoutes = createRouteMatcher(["/sign-in(.*)"]);
 
 export default clerkMiddleware(
@@ -28,6 +28,7 @@ export default clerkMiddleware(
   },
   {
     signInUrl: "/sign-in",
+    afterSignInUrl: "/sign-in",
   },
 );
 

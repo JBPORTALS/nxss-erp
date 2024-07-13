@@ -1,6 +1,6 @@
 "use client";
 
-import { useSignIn } from "@clerk/nextjs";
+import { SignIn, useSignIn } from "@clerk/nextjs";
 import { RocketIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -40,7 +40,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex h-full w-full items-center justify-center">
+    <div className="flex h-full w-full items-center justify-center pt-20">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -94,6 +94,12 @@ export default function Page() {
           </Button>
         </form>
       </Form>
+      {/* <SignIn
+        routing="virtual"
+        appearance={{
+          elements: {},
+        }}
+      /> */}
     </div>
   );
 }
