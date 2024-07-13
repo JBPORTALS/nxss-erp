@@ -7,7 +7,7 @@ import { Button } from "@nxss/ui/button";
 export default function HomePage() {
   return (
     <>
-      <header className="flex h-16 items-center justify-between border-b bg-background px-14">
+      <header className="flex h-16 items-center justify-between border-b bg-background px-8">
         <div className="flex items-center gap-2">
           <RocketIcon className="size-7" />
           <span className="font-mw text-xl">NexussERP</span>

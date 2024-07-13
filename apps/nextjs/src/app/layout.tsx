@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Merriweather, Open_Sans } from "next/font/google";
+import { useRouter } from "next/navigation";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { cn } from "@nxss/ui";
@@ -51,7 +52,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl={"/sign-in"}>
       <html lang="en" suppressHydrationWarning>
         <body
           className={cn(
