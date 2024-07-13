@@ -1,20 +1,14 @@
 "use client";
 
 import { cn } from ".";
-import { NavItemProps,NavItem } from "./nav-item";
-
-
+import { NavItem, NavItemProps } from "./nav-item";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
-export default function Sidebar({
-  children,
-  className,
-  ...props
-}: SidebarProps) {
+export function Sidebar({ children, className, ...props }: SidebarProps) {
   return (
     <div
       className={cn(
-        "flex h-full w-60 flex-col justify-between gap-6 pl-5 py-4",
+        "flex h-full w-60 flex-col justify-between gap-6 py-4 pl-5",
         className,
       )}
     >
@@ -32,7 +26,10 @@ export const SidebarLabel = ({
 }: SidebarLabelProps) => {
   return (
     <h2
-      className={cn("text-muted-foreground text-xs pt-5 font-semibold ", className)}
+      className={cn(
+        "pt-5 text-xs font-semibold text-muted-foreground",
+        className,
+      )}
       {...props}
     >
       {children}

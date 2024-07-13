@@ -10,6 +10,12 @@ import {
 } from "lucide-react";
 
 import { cn } from "@nxss/ui";
+import {
+  Sidebar,
+  SidebarBody,
+  SidebarItem,
+  SidebarLabel,
+} from "@nxss/ui/asidebar";
 import { Button } from "@nxss/ui/button";
 import {
   Select,
@@ -66,7 +72,18 @@ export default async function Template(props: {
         </header>
       </div>
       <section className="flex flex-1">
-        <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
+        <Sidebar>
+          <SidebarLabel>MAIN MENU</SidebarLabel>
+          <SidebarBody>
+            <SidebarItem>
+              <HomeIcon className="size-4" /> Dashboard
+            </SidebarItem>
+            <SidebarItem>
+              <Users2Icon className="size-4" /> Faculty
+            </SidebarItem>
+          </SidebarBody>
+        </Sidebar>
+        {/* <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
           <nav className="flex flex-col gap-3 pl-5">
             <span className="text-xs font-semibold text-muted-foreground">
               MAIN MENU
@@ -108,7 +125,7 @@ export default async function Template(props: {
               </div>
             </main>
           </nav>
-        </aside>
+        </aside> */}
         <main className="px-10 py-8">{props.children}</main>
       </section>
     </div>
