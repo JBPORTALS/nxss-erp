@@ -66,7 +66,7 @@ export default async function Template(props: {
         </header>
       </div>
       <section className="flex flex-1">
-        <aside className="sticky inset-0 w-[280px]  shrink-0 border-r py-5">
+        <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
           <nav className="flex flex-col gap-3 pl-5">
             <span className="text-xs font-semibold text-muted-foreground">
               MAIN MENU
@@ -85,7 +85,7 @@ export default async function Template(props: {
               <Button
                 variant={"ghost"}
                 className={cn(
-                  "w-full justify-start rounded-e-none text-muted-foreground ",
+                  "w-full justify-start rounded-e-none text-muted-foreground",
                 )}
               >
                 <Users2Icon className="size-4" /> Faculty
@@ -103,7 +103,7 @@ export default async function Template(props: {
               <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
                 <span className="font-semibold">No Branches</span>
                 <p className="text-sm text-muted-foreground">
-                  Create new branch by clicking on the Branches plus icon.
+                  Create new branch by clicking on the BRANCHES plus icon.
                 </p>
               </div>
             </main>
