@@ -11,14 +11,9 @@ export const Tab = ({
   ...props
 }: TabProps) => {
   return (
-    <div
-      className={cn(
-        "border-b-2 border-gray-100",
-        className,
-      )}
-    >
+   
       {children}
-    </div>
+  
   );
 };
 
@@ -33,12 +28,17 @@ export const Tabs = ({
 }: TabsProps) => {
   return (
     <div
+    className=
+      "border-b-2 border-gray-100"
+  >
+    <div
       className={cn(
         "flex w-full gap-0 px-10 -mb-0.5 overflow-x-auto",
         className,
       )}
     >
       {children}
+    </div>
     </div>
   );
 };
