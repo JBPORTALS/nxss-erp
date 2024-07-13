@@ -16,19 +16,19 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@planetscale/database": "^1.13.0",
-    "drizzle-orm": "^0.29.3",
-    "postgres": "^3.4.3"
+    "@planetscale/database": "^1.18.0",
+    "drizzle-orm": "^0.32.0",
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
-    "@nxss/eslint-config": "workspace:^0.2.0",
-    "@nxss/prettier-config": "workspace:^0.1.0",
-    "@nxss/tsconfig": "workspace:^0.1.0",
-    "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.20.10",
-    "eslint": "^8.56.0",
-    "prettier": "^3.1.1",
-    "typescript": "^5.3.3"
+    "@nxss/eslint-config": "workspace:^",
+    "@nxss/prettier-config": "workspace:^",
+    "@nxss/tsconfig": "workspace:^",
+    "dotenv-cli": "^7.4.2",
+    "drizzle-kit": "^0.23.0",
+    "eslint": "^9.7.0",
+    "prettier": "^3.3.2",
+    "typescript": "^5.5.3"
   },
   "eslintConfig": {
     "root": true,

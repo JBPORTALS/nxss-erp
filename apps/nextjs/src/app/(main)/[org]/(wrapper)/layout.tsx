@@ -1,11 +1,6 @@
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import {
-  auth,
-  clerkClient,
-  currentUser,
-  Organization,
-} from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
 import {
   DotIcon,
   HomeIcon,
@@ -15,7 +10,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@nxss/ui";
-import { Button, buttonVariants } from "@nxss/ui/button";
+import { Button } from "@nxss/ui/button";
 import {
   Select,
   SelectContent,
