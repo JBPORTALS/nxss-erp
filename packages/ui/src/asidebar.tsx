@@ -8,7 +8,7 @@ export function Sidebar({ children, className, ...props }: SidebarProps) {
   return (
     <div
       className={cn(
-        "flex h-full w-60 flex-col justify-between gap-6 py-4 pl-5",
+        "flex h-full min-h-screen w-60 flex-col justify-between gap-6 border-r py-4 pl-5",
         className,
       )}
     >
@@ -45,7 +45,10 @@ export const SidebarBody = ({
   ...props
 }: SidebarBodyProps) => {
   return (
-    <div className={cn("flex h-full flex-col gap-2", className)} {...props}>
+    <div
+      className={cn("-mr-px flex h-full flex-col gap-2", className)}
+      {...props}
+    >
       {children}
     </div>
   );
