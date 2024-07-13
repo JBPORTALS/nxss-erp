@@ -1,15 +1,22 @@
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { clerkClient } from "@clerk/nextjs/server";
 import {
   DotIcon,
   HomeIcon,
   PlusIcon,
   RocketIcon,
+  SlashIcon,
   Users2Icon,
 } from "lucide-react";
 
 import { cn } from "@nxss/ui";
+import {
+  Sidebar,
+  SidebarBody,
+  SidebarItem,
+  SidebarLabel,
+} from "@nxss/ui/asidebar";
 import { Button } from "@nxss/ui/button";
 import {
   Select,
@@ -19,6 +26,8 @@ import {
   SelectValue,
 } from "@nxss/ui/select";
 import { ThemeToggle } from "@nxss/ui/theme";
+
+import AsideBarClient from "~/app/_components/asidebar-client";
 
 export default async function Template(props: {
   children: React.ReactNode;
@@ -40,8 +49,9 @@ export default async function Template(props: {
               <RocketIcon className="size-6" />
             </Button>
             <div className="flex items-center gap-1">
-              <span className="font-semibold">{org.name}</span>
-              <DotIcon className="size-6 text-muted-foreground/80" />
+              <SlashIcon className="size-4 text-muted-foreground/40" />
+              <span className="px-2 font-semibold">{org.name}</span>
+              <SlashIcon className="size-4 text-muted-foreground/40" />
               <Select value="2024">
                 <SelectTrigger
                   className={cn(
@@ -66,12 +76,13 @@ export default async function Template(props: {
         </header>
       </div>
       <section className="flex flex-1">
-        <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
+        <AsideBarClient />
+        {/* <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
           <nav className="flex flex-col gap-3 pl-5">
             <span className="text-xs font-semibold text-muted-foreground">
               MAIN MENU
             </span>
-            <Link href="/dashboard">
+            <Link href={`/${props.params.org}/dashboard`}>
               <Button
                 variant={"ghost"}
                 className={cn(
@@ -81,7 +92,7 @@ export default async function Template(props: {
                 <HomeIcon className="size-4" /> Dashboard
               </Button>
             </Link>
-            <Link href="#">
+            <Link href={`/${props.params.org}/faculty`}>
               <Button
                 variant={"ghost"}
                 className={cn(
@@ -108,8 +119,8 @@ export default async function Template(props: {
               </div>
             </main>
           </nav>
-        </aside>
-        <main className="px-10 py-8">{props.children}</main>
+        </aside> */}
+        <main className="w-full px-10 py-8">{props.children}</main>
       </section>
     </div>
   );

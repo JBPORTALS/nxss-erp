@@ -4,14 +4,11 @@ import { cn } from ".";
 
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export const Tabs = ({ children, className }: TabsProps) => {
+export const Tabs = ({ children, className, ...props }: TabsProps) => {
   return (
-    <div className="border-b-2 border-gray-100">
+    <div className="w-full border-b border-border">
       <div
-        className={cn(
-          "-mb-0.5 flex w-full gap-0 overflow-x-auto px-10",
-          className,
-        )}
+        className={cn("-mb-px flex w-full gap-0 overflow-x-auto", className)}
       >
         {children}
       </div>
@@ -19,14 +16,14 @@ export const Tabs = ({ children, className }: TabsProps) => {
   );
 };
 
-const TabListVariants = cva(
-  "flex h-10 items-center justify-center gap-3 border-b-2 border-transparent px-8 text-sm text-accent-foreground",
+const TabItemVariants = cva(
+  "flex h-10 items-center justify-center gap-3 border-b border-transparent px-8 text-sm text-accent-foreground",
 
   {
     variants: {
       isActive: {
-        true: "border-primary text-black",
-        false: "hover:border-b-gray-300",
+        true: "border-purple-600 text-primary",
+        false: "text-accent-foreground/80 hover:border-b-muted-foreground/60",
       },
     },
     defaultVariants: {
@@ -35,19 +32,19 @@ const TabListVariants = cva(
   },
 );
 
-export interface TabListProps
+export interface TabItemProps
   extends React.HTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof TabListVariants> {}
+    VariantProps<typeof TabItemVariants> {}
 
-export function TabList({
+export function TabItem({
   className,
   children,
   isActive,
   ...props
-}: TabListProps) {
+}: TabItemProps) {
   return (
     <button
-      className={cn("", TabListVariants({ className, isActive }))}
+      className={cn("", TabItemVariants({ className, isActive }))}
       {...props}
     >
       {children}

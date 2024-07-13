@@ -20,7 +20,7 @@
     "./asidebar": "./src/asidebar.tsx",
     "./dialog": "./src/dialog.tsx",
     "./branch-navitem": "./src/branch-navitem.tsx",
-    "./headertabs": "./src/headertabs.tsx",
+    "./tabs": "./src/tabs.tsx",
     "./dropdown-menu": "./src/dropdown-menu.tsx",
     "./checkbox": "./src/checkbox.tsx",
     "./profileCard": "./src/profileCard.tsx"
