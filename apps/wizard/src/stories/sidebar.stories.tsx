@@ -41,7 +41,7 @@ export const Multiple: Story = {
     args: {},
     render: (args) => {
         return (
-            <Sidebar className="border-r min-h-screen w-[280px]">
+            <Sidebar className="">
             <SidebarBody>
               <SidebarLabel>
                 MAIN MENU
@@ -59,7 +59,6 @@ export const Multiple: Story = {
               <SidebarLabel className="pr-2">
                 <div className="flex justify-between">
                   BRANCHES
-      
                   <Dialog>
                     <DialogTrigger asChild>
                       <Plus className="pb-1 hover:cursor-pointer" />

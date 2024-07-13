@@ -12,9 +12,9 @@ import { HStack } from "./stack"
     return (
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1">
-          <AccordionTrigger isActive><HStack><PlusCircle />Artificial Intelligence</HStack></AccordionTrigger>
+          <AccordionTrigger className=""><HStack><PlusCircle />Artificial Intelligence</HStack></AccordionTrigger>
           <AccordionContent>
-            <NavItem>Semester 1</NavItem>
+            <NavItem isActive>Semester 1</NavItem>
             <NavItem>Semester 2</NavItem>
             <NavItem>Semester 3</NavItem>
             <NavItem>Semester 4</NavItem>
