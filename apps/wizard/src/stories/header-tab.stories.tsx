@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import {Headertabs} from "@nxss/ui/header-tabs";
-import { Tabs,TabList } from "node_modules/@nxss/ui/src/tabs";
+import { Tabs,TabItem } from "@nxss/ui/tabs";
 
 const meta: Meta<typeof Headertabs> = {
     title: "UI/Headertabs",
@@ -39,13 +39,13 @@ export const Default: Story = {
         return (
             <Tabs>
                 {args.items.map((item: string, index: number) => (
-                    <TabList
+                    <TabItem
                         key={index}
                         isActive={index === activeIndex}
                         onClick={() => handleClick(index)}
                     >
                         {item}
-                    </TabList>
+                    </TabItem>
                 ))}
             </Tabs>
         );
