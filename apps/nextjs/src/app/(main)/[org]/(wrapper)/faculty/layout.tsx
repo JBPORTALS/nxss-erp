@@ -15,7 +15,7 @@ export default function Template(props: { children: React.ReactNode }) {
         <div className="flex flex-col gap-2">
           <h1 className="text-xl font-bold">Faculty</h1>
           <p className="text-sm text-muted-foreground">
-            All staff members with access to KSIT institution.
+            All staff members with access to <b>RJS</b> institution.
           </p>
         </div>
         <Button>Invite Member</Button>
@@ -24,6 +24,9 @@ export default function Template(props: { children: React.ReactNode }) {
         <Link href={`/${org}/faculty`}>
           <TabItem isActive={pathname === `/${org}/faculty`}>Members</TabItem>
         </Link>
+
+        <TabItem>Inactive</TabItem>
+        <TabItem>Approve</TabItem>
         <Link href={`/${org}/faculty/invitations`}>
           <TabItem isActive={pathname === `/${org}/faculty/invitations`}>
             Invitations
