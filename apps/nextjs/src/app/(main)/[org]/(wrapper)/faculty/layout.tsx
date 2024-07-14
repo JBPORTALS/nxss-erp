@@ -6,6 +6,8 @@ import { useParams, usePathname } from "next/navigation";
 import { Button } from "@nxss/ui/button";
 import { TabItem, Tabs } from "@nxss/ui/tabs";
 
+import { InviteDialog } from "~/app/_components/invite-dialog";
+
 export default function Template(props: { children: React.ReactNode }) {
   const { org } = useParams();
   const pathname = usePathname();
@@ -18,7 +20,9 @@ export default function Template(props: { children: React.ReactNode }) {
             All staff members with access to <b>RJS</b> institution.
           </p>
         </div>
-        <Button>Invite Member</Button>
+        <InviteDialog>
+          <Button>Invite Member</Button>
+        </InviteDialog>
       </div>
       <Tabs>
         <Link href={`/${org}/faculty`}>

@@ -24,7 +24,8 @@
     "./dropdown-menu": "./src/dropdown-menu.tsx",
     "./checkbox": "./src/checkbox.tsx",
     "./table": "./src/table.tsx",
-    "./avatar": "./src/avatar.tsx"
+    "./avatar": "./src/avatar.tsx",
+    "./textarea": "./src/textarea.tsx"
   },
   "license": "MIT",
   "scripts": {
