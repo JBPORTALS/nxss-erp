@@ -5,18 +5,17 @@ import {
   createRouteMatcher,
 } from "@clerk/nextjs/server";
 
-const isProtectedRoutes = createRouteMatcher(["/(.*)/dashboard(.*)"]);
-const isPublicRoutes = createRouteMatcher(["/sign-in(.*)"]);
+const isProtectedRoutes = createRouteMatcher(["/(.*)"]);
+const isMainRoot = createRouteMatcher(["/"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
     if (isProtectedRoutes(request)) {
       auth().protect();
     }
-
     const userId = auth().userId;
 
-    if (userId && isPublicRoutes(request)) {
+    if (userId && isMainRoot(request)) {
       const organizations =
         await clerkClient().users.getOrganizationMembershipList({ userId });
 

@@ -1,6 +1,6 @@
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 import { clerkClient } from "@clerk/nextjs/server";
-import { DotIcon, RocketIcon, SlashIcon } from "lucide-react";
+import { RocketIcon, SlashIcon } from "lucide-react";
 
 import { cn } from "@nxss/ui";
 import { Button } from "@nxss/ui/button";
@@ -20,7 +20,7 @@ export default async function Template(props: {
   children: React.ReactNode;
   params: { org: string };
 }) {
-  const org = await clerkClient().organizations.getOrganization({
+  const organization = await clerkClient().organizations.getOrganization({
     slug: props.params.org,
   });
 
@@ -35,21 +35,21 @@ export default async function Template(props: {
             >
               <RocketIcon className="size-6" />
             </Button>
-            <div className="flex items-center gap-1">
-              <CustomOrganizationSwitcher />
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold">{organization.name}</span>
               <SlashIcon className="size-4 text-muted-foreground/40" />
               <Select value="2024">
                 <SelectTrigger
                   className={cn(
-                    "w-fit border-none px-2 text-base font-semibold shadow-none outline-none hover:bg-accent",
+                    "w-fit border-none px-2 font-semibold shadow-none outline-none hover:bg-accent",
                   )}
                 >
                   <SelectValue placeholder="Select Academic Year" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="2024">2024-25</SelectItem>
-                  <SelectItem value="2023">2023-24</SelectItem>
-                  <SelectItem value="2022">2022-21</SelectItem>
+                  <SelectItem value="2024">Academic Year 2024</SelectItem>
+                  <SelectItem value="2023">Academic Year 2023</SelectItem>
+                  <SelectItem value="2022">Academic Year 2022</SelectItem>
                 </SelectContent>
               </Select>
             </div>
