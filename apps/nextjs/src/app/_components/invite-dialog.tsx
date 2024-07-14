@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { CheckCircle2 } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@nxss/ui/button";
@@ -21,9 +22,10 @@ import {
   useForm,
 } from "@nxss/ui/form";
 import { Textarea } from "@nxss/ui/textarea";
+import { toast } from "@nxss/ui/toast";
 import { inviteSchema } from "@nxss/validators";
 
-import { inviteMembers } from "~/trpc/actions";
+import { inviteMember } from "~/trpc/actions";
 import { api } from "~/trpc/react";
 
 export function InviteDialog({ children }: { children: React.ReactNode }) {
@@ -36,16 +38,30 @@ export function InviteDialog({ children }: { children: React.ReactNode }) {
   });
 
   async function onInviteMembers(values: z.infer<typeof inviteSchema>) {
-    try {
-      await inviteMembers({
-        slug: org as string,
-        emails: values.emails,
-      });
-      onChangeOpen(false);
-      form.reset();
-    } catch (e) {
-      console.log(e);
-    }
+    await Promise.all(
+      values.emails
+        .split(",")
+        .map((email) => email.trim())
+        .map(async (email) => {
+          try {
+            await inviteMember({
+              slug: org as string,
+              email,
+            });
+            toast.success("Invitation sent successfully", {
+              description: `to ${email}`,
+              icon: <CheckCircle2 />,
+            });
+          } catch (e) {
+            console.log(e);
+            toast.error(`Failed!`, {
+              description: `couldn't able send invitation to ${email}`,
+            });
+          }
+        }),
+    );
+    onChangeOpen(false);
+    form.reset();
   }
 
   return (
@@ -66,6 +82,7 @@ export function InviteDialog({ children }: { children: React.ReactNode }) {
             <FormField
               control={form.control}
               name="emails"
+              disabled={form.formState.isSubmitting}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

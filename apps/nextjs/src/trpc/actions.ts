@@ -7,16 +7,14 @@ import { inviteSchema } from "@nxss/validators";
 
 import { api } from "./server";
 
-export async function inviteMembers(
-  values: z.infer<typeof inviteSchema> & { slug: string },
-) {
+export async function inviteMember(values: { slug: string; email: string }) {
   try {
-    await api.organization.inviteStaffMembers({
+    await api.organization.inviteStaffMember({
       slug: values.slug,
-      emails: values.emails.split(",").map((email) => email.trim()),
+      email: values.email,
     });
 
-    revalidatePath(`/${values.slug}/faculty/invitations`);
+    revalidatePath(`/${values.slug}/faculty/invitations`, "page");
   } catch (e) {
     const error = e as Error;
     return new Error(error.message);
@@ -30,7 +28,7 @@ export async function revokeInvitation(values: {
   try {
     await api.organization.revokeInvitation(values);
 
-    revalidatePath(`/${values.slug}/faculty/invitations`);
+    revalidatePath(`/${values.slug}/faculty/invitations`, "page");
   } catch (e) {
     const error = e as Error;
     return new Error(error.message);

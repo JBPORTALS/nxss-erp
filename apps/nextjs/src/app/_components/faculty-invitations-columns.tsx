@@ -7,6 +7,7 @@ import { useFormStatus } from "react-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
+import { toast } from "@nxss/ui/toast";
 
 import { revokeInvitation } from "~/trpc/actions";
 import { api } from "~/trpc/server";
@@ -15,6 +16,7 @@ type MembershipList = Awaited<
   ReturnType<typeof api.organization.getInvitationsList>
 >["invitations"][0];
 
+//just to track the state of the form
 function CancelInvitationButton(props: React.ComponentProps<typeof Button>) {
   const state = useFormStatus();
   return (
@@ -55,26 +57,9 @@ export const FacultyInvitationsColumns: ColumnDef<MembershipList>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "status",
-  //   header(props) {
-  //     return (
-  //       <div className="flex w-full justify-end px-3 text-sm text-muted-foreground">
-  //         Status
-  //       </div>
-  //     );
-  //   },
-  //   cell(props) {
-  //     return (
-  //       <div className="ml-auto w-fit rounded-md border border-green-600 bg-green-200 px-3 py-1 text-xs text-green-800 dark:bg-green-950 dark:text-foreground">
-  //         Active
-  //       </div>
-  //     );
-  //   },
-  // },
   {
     id: "created-at",
-    header(props) {
+    header() {
       return (
         <div className="flex w-full justify-end text-sm text-muted-foreground">
           Invited
@@ -101,7 +86,12 @@ export const FacultyInvitationsColumns: ColumnDef<MembershipList>[] = [
             await revokeInvitation({
               slug: org as string,
               invitationId: props.row.original.id,
-            });
+            }).then(() =>
+              toast.info("Invitation Cancelled", {
+                description: `for ${props.row.original.email}`,
+                richColors: true,
+              }),
+            );
           }}
           className="flex justify-end"
         >

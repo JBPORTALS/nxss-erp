@@ -89,11 +89,11 @@ export const organizationRouter = router({
         throw new Error("Failed to fetch organization members");
       }
     }),
-  inviteStaffMembers: protectedProcedure
+  inviteStaffMember: protectedProcedure
     .input(
       z.object({
         slug: z.string(),
-        emails: z.array(z.string().email()).min(1),
+        email: z.string().email(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -104,17 +104,13 @@ export const organizationRouter = router({
         });
 
         //map the list of emails to sent invitation
-        return Promise.all(
-          input.emails.map((emailAddress) => {
-            clerkClient().organizations.createOrganizationInvitation({
-              emailAddress,
-              organizationId: organization.id,
-              role: "org:staff",
-              inviterUserId: currentUserId,
-              redirectUrl: `http://localhost:3000/`,
-            });
-          }),
-        );
+        return clerkClient().organizations.createOrganizationInvitation({
+          emailAddress: input.email,
+          organizationId: organization.id,
+          role: "org:staff",
+          inviterUserId: currentUserId,
+          redirectUrl: `http://localhost:3000/invite`,
+        });
       } catch (error) {
         console.error("Error fetching organization members:", error);
         throw new Error("Failed to fetch organization members");
