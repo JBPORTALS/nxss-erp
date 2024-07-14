@@ -20,10 +20,6 @@ export default async function Template(props: {
   children: React.ReactNode;
   params: { org: string };
 }) {
-  const organization = await clerkClient().organizations.getOrganization({
-    slug: props.params.org,
-  });
-
   const { userId } = auth();
 
   // Fetch user's organizations
@@ -42,6 +38,10 @@ export default async function Template(props: {
       return notFound();
     }
   }
+
+  const organization = await clerkClient().organizations.getOrganization({
+    slug: props.params.org,
+  });
 
   return (
     <div className="flex min-h-screen w-full flex-col">

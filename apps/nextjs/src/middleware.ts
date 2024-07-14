@@ -7,6 +7,7 @@ import {
 } from "@clerk/nextjs/server";
 
 const isPublicRoutes = createRouteMatcher(["/sign-in"]);
+const isHomeRoute = createRouteMatcher(["/"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
@@ -16,7 +17,7 @@ export default clerkMiddleware(
     }
 
     //if it matches public routes and authenticated. push to current organization
-    if (userId && isPublicRoutes(request)) {
+    if (userId && isHomeRoute(request)) {
       const organizations =
         await clerkClient().users.getOrganizationMembershipList({ userId });
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useOrganization, useOrganizationList } from "@clerk/nextjs";
 
 import { cn } from "@nxss/ui";
