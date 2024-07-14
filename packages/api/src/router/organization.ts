@@ -9,12 +9,13 @@ export const organizationRouter = router({
     .input(z.object({ slug: z.string() }))
     .query(async ({ input, ctx }) => {
       const currentUserId = ctx.auth.userId;
+      console.log(currentUserId);
       try {
         const organization = await clerkClient().organizations.getOrganization({
           slug: input.slug,
         });
         const memberList =
-          await clerkClient.organizations.getOrganizationMembershipList({
+          await clerkClient().organizations.getOrganizationMembershipList({
             organizationId: organization.id,
           });
 
@@ -33,9 +34,6 @@ export const organizationRouter = router({
           }),
         );
 
-        //remove currentUser profile
-        members.filter((member) => member.userId !== currentUserId);
-
         // Sort members with admins first, then alphabetically by last name
         members.sort((a, b) => {
           return a.isAdmin ? -1 : 1;
@@ -47,7 +45,7 @@ export const organizationRouter = router({
             name: organization.name,
             slug: organization.slug,
           },
-          members,
+          members: members.filter((member) => member.userId != currentUserId),
         };
       } catch (error) {
         console.error("Error fetching organization members:", error);

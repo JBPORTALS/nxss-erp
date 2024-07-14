@@ -13,7 +13,17 @@ export default clerkMiddleware(
   async (auth, request) => {
     const userId = auth().userId;
     if (!isPublicRoutes(request)) {
-      auth().protect();
+      auth().protect({
+        unauthenticatedUrl: new URL(
+          "/sign-in",
+          request.nextUrl.origin,
+        ).toString(),
+      });
+    }
+
+    //if user authencted and visit the publicRoutes redirect to dashboard
+    if (isPublicRoutes(request) && userId) {
+      return NextResponse.redirect(new URL("/", request.nextUrl.origin));
     }
 
     //if it matches public routes and authenticated. push to current organization
