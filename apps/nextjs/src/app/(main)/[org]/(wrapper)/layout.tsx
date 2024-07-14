@@ -65,7 +65,7 @@ export default async function Template(props: {
                 >
                   <SelectValue placeholder="Select Academic Year" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="p-2 text-base">
                   <SelectItem value="2024">Academic Year 2024</SelectItem>
                   <SelectItem value="2023">Academic Year 2023</SelectItem>
                   <SelectItem value="2022">Academic Year 2022</SelectItem>
