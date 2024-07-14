@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useParams } from "next/navigation";
 import { z } from "zod";
 
 import { Button } from "@nxss/ui/button";
@@ -21,15 +23,33 @@ import {
 import { Textarea } from "@nxss/ui/textarea";
 import { inviteSchema } from "@nxss/validators";
 
+import { inviteMembers } from "~/trpc/actions";
+import { api } from "~/trpc/react";
+
 export function InviteDialog({ children }: { children: React.ReactNode }) {
+  const [isOpen, onChangeOpen] = useState(false);
+  const { org } = useParams();
+
   const form = useForm({
     schema: inviteSchema,
     mode: "onChange",
   });
 
-  async function onInviteMembers(values: z.infer<typeof inviteSchema>) {}
+  async function onInviteMembers(values: z.infer<typeof inviteSchema>) {
+    try {
+      await inviteMembers({
+        slug: org as string,
+        emails: values.emails,
+      });
+      onChangeOpen(false);
+      form.reset();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={onChangeOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -60,7 +80,9 @@ export function InviteDialog({ children }: { children: React.ReactNode }) {
               )}
             />
             <DialogFooter>
-              <Button type="submit">Invite</Button>
+              <Button isLoading={form.formState.isSubmitting} type="submit">
+                Invite
+              </Button>
             </DialogFooter>
           </form>
         </Form>

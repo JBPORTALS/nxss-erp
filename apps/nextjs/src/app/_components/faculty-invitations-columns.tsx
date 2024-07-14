@@ -1,18 +1,34 @@
 "use client";
 
-import { OrganizationMembership } from "@clerk/nextjs/server";
+import { useParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
-import { MoreHorizontalIcon } from "lucide-react";
+import { useFormStatus } from "react-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
 
+import { revokeInvitation } from "~/trpc/actions";
 import { api } from "~/trpc/server";
 
 type MembershipList = Awaited<
   ReturnType<typeof api.organization.getInvitationsList>
 >["invitations"][0];
+
+function CancelInvitationButton(props: React.ComponentProps<typeof Button>) {
+  const state = useFormStatus();
+  return (
+    <Button
+      variant={"outline"}
+      type="submit"
+      disabled={state.pending}
+      isLoading={state.pending}
+      {...props}
+    >
+      Cancel Invitation
+    </Button>
+  );
+}
 
 export const FacultyInvitationsColumns: ColumnDef<MembershipList>[] = [
   {
@@ -78,10 +94,19 @@ export const FacultyInvitationsColumns: ColumnDef<MembershipList>[] = [
   {
     id: "faculty-more-actions",
     cell(props) {
+      const { org } = useParams();
       return (
-        <div className="flex justify-end">
-          <Button variant={"outline"}>Cancel Invitation</Button>
-        </div>
+        <form
+          action={async () => {
+            await revokeInvitation({
+              slug: org as string,
+              invitationId: props.row.original.id,
+            });
+          }}
+          className="flex justify-end"
+        >
+          <CancelInvitationButton />
+        </form>
       );
     },
   },

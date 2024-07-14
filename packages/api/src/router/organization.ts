@@ -5,10 +5,9 @@ import { protectedProcedure, router } from "../trpc";
 
 export const organizationRouter = router({
   getMembershipList: protectedProcedure
-    .input(z.object({ slug: z.string() }))
+    .input(z.object({ slug: z.string().min(1) }))
     .query(async ({ input, ctx }) => {
       const currentUserId = ctx.auth.userId;
-      console.log(currentUserId);
       try {
         const organization = await clerkClient().organizations.getOrganization({
           slug: input.slug,
@@ -47,10 +46,8 @@ export const organizationRouter = router({
       }
     }),
   getInvitationsList: protectedProcedure
-    .input(z.object({ slug: z.string() }))
+    .input(z.object({ slug: z.string().min(1) }))
     .query(async ({ input, ctx }) => {
-      const currentUserId = ctx.auth.userId;
-      console.log(currentUserId);
       try {
         const organization = await clerkClient().organizations.getOrganization({
           slug: input.slug,
@@ -75,7 +72,7 @@ export const organizationRouter = router({
         // Sort invitations by createdAt timestamp in desc order first
         const sortedInvitatins = invitations
           .sort((a, b) => {
-            return a.createdAt - b.createdAt;
+            return b.createdAt - a.createdAt;
           })
           .filter((invitation) => invitation.status === "pending");
 
@@ -87,6 +84,61 @@ export const organizationRouter = router({
           },
           invitations: sortedInvitatins,
         };
+      } catch (error) {
+        console.error("Error fetching organization members:", error);
+        throw new Error("Failed to fetch organization members");
+      }
+    }),
+  inviteStaffMembers: protectedProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+        emails: z.array(z.string().email()).min(1),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const currentUserId = ctx.auth.userId;
+      try {
+        const organization = await clerkClient().organizations.getOrganization({
+          slug: input.slug,
+        });
+
+        //map the list of emails to sent invitation
+        return Promise.all(
+          input.emails.map((emailAddress) => {
+            clerkClient().organizations.createOrganizationInvitation({
+              emailAddress,
+              organizationId: organization.id,
+              role: "org:staff",
+              inviterUserId: currentUserId,
+              redirectUrl: `http://localhost:3000/`,
+            });
+          }),
+        );
+      } catch (error) {
+        console.error("Error fetching organization members:", error);
+        throw new Error("Failed to fetch organization members");
+      }
+    }),
+  revokeInvitation: protectedProcedure
+    .input(
+      z.object({
+        slug: z.string().min(1),
+        invitationId: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const currentUserId = ctx.auth.userId;
+      try {
+        const organization = await clerkClient().organizations.getOrganization({
+          slug: input.slug,
+        });
+
+        return clerkClient().organizations.revokeOrganizationInvitation({
+          invitationId: input.invitationId,
+          organizationId: organization.id,
+          requestingUserId: currentUserId,
+        });
       } catch (error) {
         console.error("Error fetching organization members:", error);
         throw new Error("Failed to fetch organization members");
