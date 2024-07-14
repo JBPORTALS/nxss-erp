@@ -1,6 +1,6 @@
-import { UserButton } from "@clerk/nextjs";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { clerkClient } from "@clerk/nextjs/server";
-import { DotIcon, RocketIcon } from "lucide-react";
+import { DotIcon, RocketIcon, SlashIcon } from "lucide-react";
 
 import { cn } from "@nxss/ui";
 import { Button } from "@nxss/ui/button";
@@ -14,6 +14,7 @@ import {
 import { ThemeToggle } from "@nxss/ui/theme";
 
 import AsideBarClient from "~/app/_components/asidebar-client";
+import { CustomOrganizationSwitcher } from "~/app/_components/organizatoin-switcher";
 
 export default async function Template(props: {
   children: React.ReactNode;
@@ -35,12 +36,12 @@ export default async function Template(props: {
               <RocketIcon className="size-6" />
             </Button>
             <div className="flex items-center gap-1">
-              <span className="px-2 font-semibold">{org.name}</span>
-              <DotIcon className="size-4 text-muted-foreground/40" />
+              <CustomOrganizationSwitcher />
+              <SlashIcon className="size-4 text-muted-foreground/40" />
               <Select value="2024">
                 <SelectTrigger
                   className={cn(
-                    "w-fit border-none px-2 text-base font-semibold shadow-none outline-none",
+                    "w-fit border-none px-2 text-base font-semibold shadow-none outline-none hover:bg-accent",
                   )}
                 >
                   <SelectValue placeholder="Select Academic Year" />

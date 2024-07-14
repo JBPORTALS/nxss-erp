@@ -41,7 +41,7 @@ export const FacultyColumns: ColumnDef<StaffMember>[] = [
   {
     header: "Sl No.",
     cell(props) {
-      return <>{props.row.index + 1}</>;
+      return <div>{props.row.index + 1}</div>;
     },
   },
   {
@@ -68,10 +68,16 @@ export const FacultyColumns: ColumnDef<StaffMember>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header(props) {
+      return (
+        <div className="flex w-full justify-end px-3 text-sm text-muted-foreground">
+          Status
+        </div>
+      );
+    },
     cell(props) {
       return (
-        <div className="w-fit rounded-md border border-green-600 bg-green-200 px-3 py-1 text-xs text-green-800 dark:bg-green-950 dark:text-foreground">
+        <div className="ml-auto w-fit rounded-md border border-green-600 bg-green-200 px-3 py-1 text-xs text-green-800 dark:bg-green-950 dark:text-foreground">
           Active
         </div>
       );
