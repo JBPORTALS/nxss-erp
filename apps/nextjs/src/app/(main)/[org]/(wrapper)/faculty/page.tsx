@@ -1,19 +1,19 @@
-"use client";
+import { clerkClient } from "@clerk/nextjs/server";
 
-import { useAuth, useUser } from "@clerk/nextjs";
-
-import {
-  FacultyColumns,
-  staffMembers,
-} from "~/app/_components/faculty-columns";
+import { FacultyColumns } from "~/app/_components/faculty-columns";
 import { FacultyDataTable } from "~/app/_components/faculty-tabel";
+import { api } from "~/trpc/server";
 
-export default function Page() {
-  const { signOut } = useAuth();
-  const { user } = useUser();
+export default async function Page({ params }: { params: { org: string } }) {
+  const { members } = await api.organization.getMembershipList({
+    slug: params.org,
+  });
+
+  console.log(members);
+
   return (
     <div>
-      <FacultyDataTable columns={FacultyColumns} data={staffMembers} />
+      <FacultyDataTable columns={FacultyColumns} data={members} />
     </div>
   );
 }

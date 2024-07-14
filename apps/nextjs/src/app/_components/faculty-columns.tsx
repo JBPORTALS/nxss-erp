@@ -1,43 +1,19 @@
+"use client";
+
+import { OrganizationMembership } from "@clerk/nextjs/server";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
 
-type StaffMember = {
-  id: string;
-  name?: string;
-  email: string;
-  status: "active" | "inactive";
-  image: string;
-};
+import { api } from "~/trpc/server";
 
-export const staffMembers: StaffMember[] = [
-  {
-    id: "728ed52f",
-    status: "active",
-    email: "m@example.com",
-    name: "Manu",
-    image: "https://github.com/jbportals.png",
-  },
-  {
-    id: "489e1d42",
-    status: "active",
-    email: "shad@gmail.com",
-    name: "Shadcn",
-    image: "https://github.com/shadcn.png",
-  },
-  {
-    id: "489e1d42",
-    status: "active",
-    email: "example@gmail.com",
-    name: "Manu",
-    image: "https://github.com/x-sss-x.png",
-  },
-  // ...
-];
+type MembershipList = Awaited<
+  ReturnType<typeof api.organization.getMembershipList>
+>["members"][0];
 
-export const FacultyColumns: ColumnDef<StaffMember>[] = [
+export const FacultyColumns: ColumnDef<MembershipList>[] = [
   {
     header: "Sl No.",
     cell(props) {
@@ -45,21 +21,20 @@ export const FacultyColumns: ColumnDef<StaffMember>[] = [
     },
   },
   {
-    accessorKey: "email",
     header: "Staff",
     cell(props) {
       return (
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={props.row.original.image} />
+            <AvatarImage src={props.row.original.imageUrl} />
             <AvatarFallback>
-              {props.row.original.email.charAt(0).toUpperCase()}
+              {props.row.original.email?.at(0)?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-1">
-            <span>{props.row.original.name}</span>
+            <span>{props.row.original.firstName}</span>
             <span className="text-sm text-muted-foreground">
-              {props.row.original.email}
+              {props.row.original?.email}
             </span>
           </div>
         </div>
