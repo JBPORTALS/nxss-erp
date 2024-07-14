@@ -1,13 +1,15 @@
-"use client";
+import { DataTable } from "~/app/_components/data-tabel";
+import { FacultyInvitationsColumns } from "~/app/_components/faculty-invitations-columns";
+import { api } from "~/trpc/server";
 
-import { useAuth, useUser } from "@clerk/nextjs";
+export default async function Page({ params }: { params: { org: string } }) {
+  const { invitations } = await api.organization.getInvitationsList({
+    slug: params.org,
+  });
 
-export default function Page() {
-  const { signOut } = useAuth();
-  const { user } = useUser();
   return (
-    <div className="flex w-full flex-col gap-4">
-      <span>Invitations Page</span>
+    <div>
+      <DataTable columns={FacultyInvitationsColumns} data={invitations} />
     </div>
   );
 }
