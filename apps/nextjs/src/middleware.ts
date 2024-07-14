@@ -1,28 +1,11 @@
-import { NextResponse } from "next/server";
-import {
-  clerkClient,
-  clerkMiddleware,
-  createRouteMatcher,
-} from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoutes = createRouteMatcher(["/(.*)"]);
-const isMainRoot = createRouteMatcher(["/"]);
+const isPublicRoutes = createRouteMatcher(["/sign-in"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
-    if (isProtectedRoutes(request)) {
+    if (!isPublicRoutes(request)) {
       auth().protect();
-    }
-    const userId = auth().userId;
-
-    if (userId && isMainRoot(request)) {
-      const organizations =
-        await clerkClient().users.getOrganizationMembershipList({ userId });
-
-      const orgslug = organizations.data[0]?.organization.slug;
-      return NextResponse.redirect(
-        new URL(`/${orgslug}/dashboard`, request.nextUrl.origin),
-      );
     }
   },
   {

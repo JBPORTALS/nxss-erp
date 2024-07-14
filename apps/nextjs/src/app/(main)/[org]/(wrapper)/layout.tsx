@@ -1,5 +1,6 @@
+import { notFound } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { RocketIcon, SlashIcon } from "lucide-react";
 
 import { cn } from "@nxss/ui";
@@ -14,7 +15,6 @@ import {
 import { ThemeToggle } from "@nxss/ui/theme";
 
 import AsideBarClient from "~/app/_components/asidebar-client";
-import { CustomOrganizationSwitcher } from "~/app/_components/organizatoin-switcher";
 
 export default async function Template(props: {
   children: React.ReactNode;
@@ -23,6 +23,25 @@ export default async function Template(props: {
   const organization = await clerkClient().organizations.getOrganization({
     slug: props.params.org,
   });
+
+  const { userId } = auth();
+
+  // Fetch user's organizations
+  if (userId) {
+    const userOrgs = await clerkClient.users.getOrganizationMembershipList({
+      userId,
+    });
+
+    // Check if the user is a member of the organization in the URL
+    const isMember = userOrgs.data.some(
+      (org) => org.organization.slug === props.params.org,
+    );
+
+    if (!isMember) {
+      // If not a member, return 404
+      return notFound();
+    }
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col">
