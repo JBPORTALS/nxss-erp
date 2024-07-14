@@ -73,9 +73,11 @@ export const organizationRouter = router({
         );
 
         // Sort invitations by createdAt timestamp in desc order first
-        const sortedInvitatins = invitations.sort((a, b) => {
-          return a.createdAt - b.createdAt;
-        });
+        const sortedInvitatins = invitations
+          .sort((a, b) => {
+            return a.createdAt - b.createdAt;
+          })
+          .filter((invitation) => invitation.status === "pending");
 
         return {
           organization: {
