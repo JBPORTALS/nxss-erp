@@ -2,7 +2,15 @@ import * as React from "react";
 import { Button, Container, Heading, Html } from "@react-email/components";
 import { RocketIcon } from "lucide-react";
 
-export const Invitation = () => {
+export const Invitation = ({
+  link,
+  org,
+  to,
+}: {
+  link: string;
+  org: string;
+  to: string;
+}) => {
   return (
     <Html style={{ fontFamily: "sans-serif" }}>
       <Container>
@@ -30,7 +38,7 @@ export const Invitation = () => {
               style={{ height: "32px", width: "32px", color: "white" }}
             />
           </div>
-          <Heading as="h2">NexussERP</Heading>
+          <Heading as="h2">Join KSIT on NexussERP</Heading>
           <span style={{ color: "gray", textAlign: "center" }}>
             Empowering Education with Smart ERP Solutions
           </span>
@@ -55,7 +63,7 @@ export const Invitation = () => {
               borderRadius: "6px",
             }}
           >
-            Accept Invitation
+            Join the Institution
           </Button>
         </div>
       </Container>

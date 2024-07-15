@@ -22,7 +22,7 @@ export interface BranchNavItemProps
   extends React.HTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof branchNavItemVariants> {}
 
-export default function BranchNavItem({
+export  function BranchNavItem({
   className,
   children,
   isActive,

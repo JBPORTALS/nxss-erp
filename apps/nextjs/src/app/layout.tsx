@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Merriweather, Open_Sans } from "next/font/google";
+import { useRouter } from "next/navigation";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { cn } from "@nxss/ui";
@@ -10,6 +11,15 @@ import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
+
+import {
+  BadgeAlert,
+  BadgeCheck,
+  BadgeInfo,
+  CheckCircle2,
+  InfoIcon,
+  TriangleAlert,
+} from "lucide-react";
 
 const OpenSans = Open_Sans({
   variable: "--font-open-sans",
@@ -51,7 +61,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl={"/sign-in"}>
       <html lang="en" suppressHydrationWarning>
         <body
           className={cn(
@@ -62,7 +72,15 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <TRPCReactProvider>{props.children}</TRPCReactProvider>
-            <Toaster />
+            <Toaster
+              richColors
+              icons={{
+                success: <BadgeCheck />,
+                error: <BadgeAlert />,
+                info: <BadgeInfo />,
+                warning: <TriangleAlert />,
+              }}
+            />
           </ThemeProvider>
         </body>
       </html>

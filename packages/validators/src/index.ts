@@ -10,3 +10,15 @@ export const SignInSchema = z.object({
   password: z.string().min(1),
   error: z.string().optional(),
 });
+
+export const inviteSchema = z.object({
+  emails: z
+    .string()
+    .min(1, "Required!")
+    .refine((val) => {
+      const emails = val.split(",").map((email) => email.trim());
+      return emails.every(
+        (email) => z.string().email().safeParse(email).success,
+      );
+    }, "One or more email addresses are invalid"),
+});
