@@ -1,25 +1,18 @@
-import type {
-  SignedInAuthObject,
-  SignedOutAuthObject,
-} from "@clerk/nextjs/api";
 import { getAuth } from "@clerk/nextjs/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 
 import { db } from "@nxss/db";
-
-/**
- * Replace this with an object if you want to pass things to createContextInner
- */
-type AuthContextProps = {
-  auth: SignedInAuthObject | SignedOutAuthObject;
-};
 
 /** Use this helper for:
  *  - testing, where we dont have to Mock Next.js' req/res
  *  - trpc's `createSSGHelpers` where we don't have req/res
  * @see https://beta.create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-export const createContextInner = async ({ auth }: AuthContextProps) => {
+export const createContextInner = async ({
+  auth,
+}: {
+  auth: ReturnType<typeof getAuth>;
+}) => {
   return {
     auth,
     db,

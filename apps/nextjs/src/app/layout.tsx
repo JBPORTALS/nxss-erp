@@ -12,6 +12,15 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
+import {
+  BadgeAlert,
+  BadgeCheck,
+  BadgeInfo,
+  CheckCircle2,
+  InfoIcon,
+  TriangleAlert,
+} from "lucide-react";
+
 const OpenSans = Open_Sans({
   variable: "--font-open-sans",
   subsets: ["latin"],
@@ -63,7 +72,15 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <TRPCReactProvider>{props.children}</TRPCReactProvider>
-            <Toaster />
+            <Toaster
+              richColors
+              icons={{
+                success: <BadgeCheck />,
+                error: <BadgeAlert />,
+                info: <BadgeInfo />,
+                warning: <TriangleAlert />,
+              }}
+            />
           </ThemeProvider>
         </body>
       </html>

@@ -23,7 +23,10 @@
     "./tabs": "./src/tabs.tsx",
     "./dropdown-menu": "./src/dropdown-menu.tsx",
     "./checkbox": "./src/checkbox.tsx",
-    "./profileCard": "./src/profileCard.tsx"
+    "./profileCard": "./src/profileCard.tsx",
+    "./table": "./src/table.tsx",
+    "./avatar": "./src/avatar.tsx",
+    "./textarea": "./src/textarea.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -36,6 +39,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
+    "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -56,10 +60,10 @@
     "@nxss/prettier-config": "workspace:^",
     "@nxss/tailwind-config": "workspace:^",
     "@nxss/tsconfig": "workspace:^",
-    "eslint": "^9.7.0",
+    "eslint": "^8.56.0",
     "prettier": "^3.3.2",
-    "tailwindcss": "^3.4.4",
-    "typescript": "^5.5.3",
+    "tailwindcss": "3.4.4",
+    "typescript": " ~5.3.3",
     "zod": "^3.23.8"
   },
   "peerDependencies": {

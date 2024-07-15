@@ -5,18 +5,28 @@ import {
   createRouteMatcher,
 } from "@clerk/nextjs/server";
 
-const isProtectedRoutes = createRouteMatcher(["/(.*)/dashboard(.*)"]);
-const isPublicRoutes = createRouteMatcher(["/sign-in(.*)"]);
+const isPublicRoutes = createRouteMatcher(["/sign-in"]);
+const isHomeRoute = createRouteMatcher(["/"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
-    if (isProtectedRoutes(request)) {
-      auth().protect();
+    const userId = auth().userId;
+    if (!isPublicRoutes(request)) {
+      auth().protect({
+        unauthenticatedUrl: new URL(
+          "/sign-in",
+          request.nextUrl.origin,
+        ).toString(),
+      });
     }
 
-    const userId = auth().userId;
+    //if user authencted and visit the publicRoutes redirect to dashboard
+    if (isPublicRoutes(request) && userId) {
+      return NextResponse.redirect(new URL("/", request.nextUrl.origin));
+    }
 
-    if (userId && isPublicRoutes(request)) {
+    //if it matches public routes and authenticated. push to current organization
+    if (userId && isHomeRoute(request)) {
       const organizations =
         await clerkClient().users.getOrganizationMembershipList({ userId });
 

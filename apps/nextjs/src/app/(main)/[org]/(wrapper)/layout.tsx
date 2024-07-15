@@ -1,22 +1,9 @@
-import Link from "next/link";
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
-import { clerkClient } from "@clerk/nextjs/server";
-import {
-  DotIcon,
-  HomeIcon,
-  PlusIcon,
-  RocketIcon,
-  SlashIcon,
-  Users2Icon,
-} from "lucide-react";
+import { notFound } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import { RocketIcon, SlashIcon } from "lucide-react";
 
 import { cn } from "@nxss/ui";
-import {
-  Sidebar,
-  SidebarBody,
-  SidebarItem,
-  SidebarLabel,
-} from "@nxss/ui/asidebar";
 import { Button } from "@nxss/ui/button";
 import {
   Select,
@@ -33,7 +20,26 @@ export default async function Template(props: {
   children: React.ReactNode;
   params: { org: string };
 }) {
-  const org = await clerkClient().organizations.getOrganization({
+  const { userId } = auth();
+
+  // Fetch user's organizations
+  if (userId) {
+    const userOrgs = await clerkClient.users.getOrganizationMembershipList({
+      userId,
+    });
+
+    // Check if the user is a member of the organization in the URL
+    const isMember = userOrgs.data.some(
+      (org) => org.organization.slug === props.params.org,
+    );
+
+    if (!isMember) {
+      // If not a member, return 404
+      return notFound();
+    }
+  }
+
+  const organization = await clerkClient().organizations.getOrganization({
     slug: props.params.org,
   });
 
@@ -48,28 +54,26 @@ export default async function Template(props: {
             >
               <RocketIcon className="size-6" />
             </Button>
-            <div className="flex items-center gap-1">
-              <SlashIcon className="size-4 text-muted-foreground/40" />
-              <span className="px-2 font-semibold">{org.name}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold">{organization.name}</span>
               <SlashIcon className="size-4 text-muted-foreground/40" />
               <Select value="2024">
                 <SelectTrigger
                   className={cn(
-                    "w-fit border-none px-2 text-base font-semibold shadow-none outline-none",
+                    "w-fit border-none px-2 font-semibold shadow-none outline-none hover:bg-accent",
                   )}
                 >
                   <SelectValue placeholder="Select Academic Year" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2024">2024-25</SelectItem>
-                  <SelectItem value="2023">2023-24</SelectItem>
-                  <SelectItem value="2022">2022-21</SelectItem>
+                <SelectContent className="p-2 text-base">
+                  <SelectItem value="2024">Academic Year 2024</SelectItem>
+                  <SelectItem value="2023">Academic Year 2023</SelectItem>
+                  <SelectItem value="2022">Academic Year 2022</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            {/* <Button variant={"outline"}>As a Staff</Button> */}
             <ThemeToggle />
             <UserButton />
           </div>
@@ -77,49 +81,6 @@ export default async function Template(props: {
       </div>
       <section className="flex flex-1">
         <AsideBarClient />
-        {/* <aside className="sticky inset-0 w-[280px] shrink-0 border-r py-5">
-          <nav className="flex flex-col gap-3 pl-5">
-            <span className="text-xs font-semibold text-muted-foreground">
-              MAIN MENU
-            </span>
-            <Link href={`/${props.params.org}/dashboard`}>
-              <Button
-                variant={"ghost"}
-                className={cn(
-                  "w-full justify-start rounded-e-none border-r-2 border-purple-600 bg-accent",
-                )}
-              >
-                <HomeIcon className="size-4" /> Dashboard
-              </Button>
-            </Link>
-            <Link href={`/${props.params.org}/faculty`}>
-              <Button
-                variant={"ghost"}
-                className={cn(
-                  "w-full justify-start rounded-e-none text-muted-foreground",
-                )}
-              >
-                <Users2Icon className="size-4" /> Faculty
-              </Button>
-            </Link>
-            <div className="flex items-center justify-between pr-2">
-              <span className="text-xs font-semibold text-muted-foreground">
-                BRANCHES{" "}
-              </span>
-              <Button variant={"ghost"} size={"icon"}>
-                <PlusIcon className="size-5" />
-              </Button>
-            </div>
-            <main className="pr-2">
-              <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
-                <span className="font-semibold">No Branches</span>
-                <p className="text-sm text-muted-foreground">
-                  Create new branch by clicking on the BRANCHES plus icon.
-                </p>
-              </div>
-            </main>
-          </nav>
-        </aside> */}
         <main className="w-full px-10 py-8">{props.children}</main>
       </section>
     </div>

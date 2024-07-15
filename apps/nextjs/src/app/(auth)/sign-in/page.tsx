@@ -38,7 +38,7 @@ export default function Page() {
       window.location.reload();
     } catch (err: any) {
       console.log("signin failed:", err);
-      form.setValue("error", "Credentials are invalid. Please try again.");
+      form.setValue("error", "Invalid Credentials. Please try again.");
       setLoading(false);
     }
   }
