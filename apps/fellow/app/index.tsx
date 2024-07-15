@@ -1,9 +1,9 @@
 import { Text, View } from "react-native";
 
-export default function TabTwoScreen() {
+export default function index() {
   return (
     <View>
-      <Text>Explore Tab</Text>
+      <Text>index</Text>
     </View>
   );
 }
