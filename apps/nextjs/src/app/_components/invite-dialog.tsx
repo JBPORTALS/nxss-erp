@@ -26,7 +26,6 @@ import { toast } from "@nxss/ui/toast";
 import { inviteSchema } from "@nxss/validators";
 
 import { inviteMember } from "~/trpc/actions";
-import { api } from "~/trpc/react";
 
 export function InviteDialog({ children }: { children: React.ReactNode }) {
   const [isOpen, onChangeOpen] = useState(false);
