@@ -1,3 +1,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --background: 255, 255, 255;
+  --foreground: 10, 9, 9;
+  --card: 255, 255, 255;
+  --card-foreground: 10, 9, 9;
+  --popover: 255, 255, 255;
+  --popover-foreground: 10, 9, 9;
+  --primary: 24, 23, 23;
+  --primary-foreground: 250, 250, 250;
+  --secondary: 244, 244, 244;
+  --secondary-foreground: 24, 23, 23;
+  --muted: 244, 244, 244;
+  --muted-foreground: 118, 118, 118;
+  --accent: 244, 244, 244;
+  --accent-foreground: 24, 23, 23;
+  --destructive: 154, 25, 25;
+  --destructive-foreground: 250, 250, 250;
+  --border: 230, 230, 230;
+  --input: 230, 230, 230;
+  --ring: 24, 23, 23;
+  --radius: 0.4rem;
+}
+
+@font-face {
+  font-family: "OpenSans-Regular";
+  src: url("./assets/fonts/OpenSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans-Regular";
+  src: url("./assets/fonts/OpenSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans-Regular";
+  src: url("./assets/fonts/OpenSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans-Regular";
+  src: url("./assets/fonts/OpenSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans-Regular";
+  src: url("./assets/fonts/OpenSans-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
