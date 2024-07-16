@@ -24,7 +24,7 @@ export default async function Template(props: {
 
   // Fetch user's organizations
   if (userId) {
-    const userOrgs = await clerkClient.users.getOrganizationMembershipList({
+    const userOrgs = await clerkClient().users.getOrganizationMembershipList({
       userId,
     });
 
