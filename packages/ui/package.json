@@ -26,7 +26,12 @@
     "./profileCard": "./src/profileCard.tsx",
     "./table": "./src/table.tsx",
     "./avatar": "./src/avatar.tsx",
-    "./textarea": "./src/textarea.tsx"
+    "./textarea": "./src/textarea.tsx",
+    "./popover": "./src/popover.tsx",
+    "./combobox": "./src/combobox.tsx",
+    "./command": "./src/command.tsx",
+    "./landing-page": "./src/landing-page.tsx",
+    "./text": "./src/text.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -48,6 +53,7 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
+    "cmdk": "^1.0.0",
     "lucide-react": "^0.408.0",
     "next-themes": "^0.3.0",
     "react-hook-form": "^7.52.1",

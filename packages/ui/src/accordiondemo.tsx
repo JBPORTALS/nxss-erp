@@ -12,7 +12,7 @@ import { HStack } from "./stack";
 
 export function AccordionDemo() {
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion type="single" collapsible={false} className="w-full">
       <AccordionItem value="item-1 ">
         <AccordionTrigger>
           <PlusCircle className="size-4 flex-shrink-0" />
