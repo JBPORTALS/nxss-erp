@@ -6,6 +6,7 @@ import "../global.css";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 
 export default function layout() {
   const [loaded, error] = useFonts({
@@ -28,7 +29,11 @@ export default function layout() {
 
   return (
     <Stack
-      screenOptions={{ animation: "ios", animationTypeForReplace: "push" }}
+      screenOptions={{
+        animation: "simple_push",
+        headerShown: false,
+        animationTypeForReplace: "push",
+      }}
     >
       <Stack.Screen name="index" />
       <Stack.Screen name="sign-in" />

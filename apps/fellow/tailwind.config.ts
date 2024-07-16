@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 // @ts-expect-error - no types
 import nativewind from "nativewind/preset";
+import plugin from "tailwindcss/plugin";
 
 export default {
   content: ["./app/**/*.{ts,tsx}"],
@@ -35,7 +36,37 @@ export default {
       fontFamily: {
         sans: ["OpenSans-Regular"],
       },
+      fontWeight: {
+        normal: "400",
+        medium: "500",
+        semibold: "600",
+        bold: "700",
+        extrabold: "800",
+      },
     },
   },
   presets: [nativewind],
+  plugins: [
+    plugin(function ({ addUtilities, theme }) {
+      const fontWeightMap = {
+        "400": "OpenSans-Regular",
+        "500": "OpenSans-Medium",
+        "600": "OpenSans-SemiBold",
+        "700": "OpenSans-Bold",
+        "800": "OpenSans-ExtraBold",
+      };
+
+      const newUtilities = Object.entries(theme("fontWeight")).reduce(
+        (acc, [key, value]) => {
+          acc[`.font-${key}`] = {
+            fontFamily: fontWeightMap[value] || fontWeightMap["400"], // Default to Regular if weight not found
+          };
+          return acc;
+        },
+        {},
+      );
+
+      addUtilities(newUtilities);
+    }),
+  ],
 } satisfies Config;

@@ -17,14 +17,14 @@ export default function SignIn() {
             contentFit="contain"
             transition={200}
           />
-          <Text className="text-2xl font-bold">Fellow</Text>
-          <Text className="text-sm font-semibold text-muted-foreground">
+          <Text className="text-3xl font-bold">Fellow</Text>
+          <Text className="font-normal text-muted-foreground">
             Your Academic Hub is Just a Login Away
           </Text>
         </View>
         <View className="w-full gap-10 px-5">
           <View className="w-full gap-3">
-            <Text className="text-sm font-semibold text-muted-foreground">
+            <Text className="text-sm font-normal text-muted-foreground">
               Email
             </Text>
             <TextInput
@@ -34,7 +34,7 @@ export default function SignIn() {
             />
           </View>
           <View className="w-full gap-3">
-            <Text className="text-sm font-semibold text-muted-foreground">
+            <Text className="text-sm font-normal text-muted-foreground">
               Password
             </Text>
             <TextInput
