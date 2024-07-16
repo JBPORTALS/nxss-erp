@@ -1,11 +1,13 @@
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Image } from "expo-image";
+import { StatusBar } from "expo-status-bar";
 
 export default function SignIn() {
   return (
     <SafeAreaProvider>
+      <StatusBar style="dark" />
       <View className="h-full flex-1 items-center gap-20 pt-24">
         <View className="items-center gap-3">
           <Image

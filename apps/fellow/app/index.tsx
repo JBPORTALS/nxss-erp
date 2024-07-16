@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 export default function Index() {
   return (
     <SafeAreaProvider>
-      <StatusBar style="inverted" />
+      <StatusBar style="dark" />
       <View className="flex-1 items-center justify-end gap-32 bg-background px-3 py-5">
         <Image
           style={{
