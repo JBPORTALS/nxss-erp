@@ -408,6 +408,9 @@ importers:
       cmdk:
         specifier: ^1.0.0
         version: 1.0.0(react-dom@18.2.0)(react@18.2.0)
+      lucide:
+        specifier: ^0.408.0
+        version: 0.408.0
       lucide-react:
         specifier: ^0.408.0
         version: 0.408.0(react@18.2.0)
@@ -9129,15 +9132,6 @@ packages:
       - '@types/react-dom'
     dev: false
 
-  /co@4.6.0:
-    resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
-    engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
-    dev: true
-
-  /collect-v8-coverage@1.0.2:
-    resolution: {integrity: sha512-lHl4d5/ONEbLlJvaJNtsF/Lz+WvB07u2ycqTYbdrq7UypDXailES4valYb2eWiJFxZlVmpGekfqoxQhzyFdT4Q==}
-    dev: true
-
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
     dependencies:
@@ -13426,6 +13420,10 @@ packages:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /lucide@0.408.0:
+    resolution: {integrity: sha512-6pDkMOt468x+KS9CWCms9dTQcHbnhkl1z9E0rvSxAhpD0JDin+PeJFuLDQP1b9+ErD34gX2DmjFtXt9fKDMw3A==}
     dev: false
 
   /lz-string@1.5.0:
