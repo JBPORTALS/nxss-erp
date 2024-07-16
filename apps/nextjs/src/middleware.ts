@@ -7,22 +7,14 @@ import {
 
 const isPublicRoutes = createRouteMatcher(["/sign-in"]);
 const isHomeRoute = createRouteMatcher(["/"]);
+const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
-    const userId = auth().userId;
-    if (!isPublicRoutes(request)) {
-      auth().protect({
-        unauthenticatedUrl: new URL(
-          "/sign-in",
-          request.nextUrl.origin,
-        ).toString(),
-      });
-    }
+    const { userId, redirectToSignIn, sessionClaims } = auth();
 
-    //if user authencted and visit the publicRoutes redirect to dashboard
-    if (isPublicRoutes(request) && userId) {
-      return NextResponse.redirect(new URL("/", request.nextUrl.origin));
+    if (!isPublicRoutes(request) && !userId) {
+      return redirectToSignIn({ returnBackUrl: request.url });
     }
 
     //if it matches public routes and authenticated. push to current organization

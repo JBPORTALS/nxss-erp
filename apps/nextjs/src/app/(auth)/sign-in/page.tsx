@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { SignIn, useSignIn } from "@clerk/nextjs";
 import { RocketIcon } from "lucide-react";
 import { z } from "zod";
@@ -23,6 +24,7 @@ export default function Page() {
     schema: SignInSchema,
   });
   const [isLoading, setLoading] = useState(false);
+  const redirect_url = useSearchParams().get("redirect_url");
 
   const { signIn, isLoaded } = useSignIn();
 
@@ -35,7 +37,11 @@ export default function Page() {
           identifier: values.email,
           strategy: "password",
         });
-      window.location.reload();
+      if (redirect_url) {
+        window.location.href = redirect_url;
+      } else {
+        window.location.reload();
+      }
     } catch (err: any) {
       console.log("signin failed:", err);
       form.setValue("error", "Invalid Credentials. Please try again.");
@@ -61,6 +67,7 @@ export default function Page() {
           <FormField
             control={form.control}
             name="email"
+            disabled={isLoading}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -76,6 +83,7 @@ export default function Page() {
             )}
           />
           <FormField
+            disabled={isLoading}
             control={form.control}
             name="password"
             render={({ field }) => (
