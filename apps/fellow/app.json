@@ -1,6 +1,7 @@
 {
   "expo": {
     "scheme": "fellow",
+    "icon": "./assets/icon.png",
     "web": {
       "bundler": "metro"
     },
@@ -15,6 +16,21 @@
     ],
     "name": "fellow",
     "slug": "fellow",
-    "userInterfaceStyle": "automatic"
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "splash": {
+        "image": "./assets/splash-screen.png",
+        "backgroundColor": "#ffffff"
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      }
+    },
+    "splash": {
+      "image": "./assets/splash-screen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    }
   }
 }
