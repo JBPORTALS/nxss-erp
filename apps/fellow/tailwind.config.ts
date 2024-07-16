@@ -32,6 +32,9 @@ export default {
       borderRadius: {
         DEFAULT: "var(--radius)",
       },
+      fontFamily: {
+        sans: ["OpenSans-Regular"],
+      },
     },
   },
   presets: [nativewind],

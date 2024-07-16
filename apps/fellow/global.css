@@ -24,3 +24,9 @@
   --ring: 24, 23, 23;
   --radius: 0.4rem;
 }
+
+@layer base {
+  * {
+    @apply font-sans;
+  }
+}
