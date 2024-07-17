@@ -77,7 +77,7 @@ export const Default: Story = {
                 </div>
                 <VStack className="gap-4">
                   <span className="text-4xl font-bold">Session Management</span>
-                  <span className="h-full w-[628px] text-2xl">
+                  <span className="h-full w-[628px] text-2xl leading-relaxed text-foreground/80">
                     Seamlessly track session schedules and attendance data in
                     one place. Our integrated solution provides a comprehensive
                     view of student participation and class timings, enhancing
@@ -94,7 +94,7 @@ export const Default: Story = {
                 </div>
                 <VStack className="gap-4">
                   <span className="text-4xl font-bold">Student Management</span>
-                  <span className="h-full w-[628px] text-2xl">
+                  <span className="h-full w-[628px] text-2xl leading-relaxed text-foreground/80">
                     Seamlessly track session schedules and attendance data in
                     one place. Our integrated solution provides a comprehensive
                     view of student participation and class timings, enhancing
@@ -111,7 +111,7 @@ export const Default: Story = {
                 </div>
                 <VStack className="gap-4">
                   <span className="text-4xl font-bold">Staff Management</span>
-                  <span className="h-full w-[628px] text-2xl">
+                  <span className="h-full w-[628px] text-2xl leading-relaxed text-foreground/80">
                     Seamlessly track session schedules and attendance data in
                     one place. Our integrated solution provides a comprehensive
                     view of student participation and class timings, enhancing
