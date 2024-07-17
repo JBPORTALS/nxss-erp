@@ -24,7 +24,7 @@ export const Default: Story = {
   args: {},
   render: () => {
     return (
-      <div className="relative h-full w-[1600px] border">
+      <div className="relative h-full w-screen">
         <header className="flex h-16 w-full items-center justify-between border-b px-16">
           <HStack className="items-center">
             <img src="/rocket.png" className="h-10 w-10" />
