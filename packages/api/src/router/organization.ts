@@ -107,7 +107,7 @@ export const organizationRouter = router({
         const baseURL =
           process.env.NODE_ENV === "development"
             ? `http://localhost:${process.env.PORT}`
-            : `https://${process.env.VERCEL_URL}`;
+            : `https://nexusserp.vercel.app`;
         //map the list of emails to sent invitation
         return clerkClient().organizations.createOrganizationInvitation({
           emailAddress: input.email,
