@@ -138,22 +138,22 @@ export const Default: Story = {
             <form className="flex w-[500px] flex-col gap-6">
               <VStack>
                 <Label className="text-lg">Full Name</Label>
-                <Input type="name" required />
+                <Input type="name" required className="h-12 text-lg" />
               </VStack>
               <VStack>
                 <Label className="text-lg">Email</Label>
-                <Input type="name" required />
+                <Input type="name" required className="h-12 text-lg"/>
               </VStack>
               <VStack>
                 <Label className="text-lg">Phone Number</Label>
-                <Input type="name" required />
+                <Input type="name" required className="h-12 text-lg"/>
               </VStack>
               <VStack>
                 <Label className="text-lg">Message</Label>
                 <Textarea
                   rows={6}
                   required
-                  className="w-full rounded-lg border"
+                  className="w-full rounded-lg border text-lg"
                 />
               </VStack>
               <Button className="h-12 text-xl">Submit</Button>
