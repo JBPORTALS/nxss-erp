@@ -103,13 +103,18 @@ export const organizationRouter = router({
           slug: input.slug,
         });
 
+        //get base URL for Invitation redirect
+        const baseURL =
+          process.env.NODE_ENV === "development"
+            ? `http://localhost:${process.env.PORT}`
+            : `https://${process.env.VERCEL_URL}`;
         //map the list of emails to sent invitation
         return clerkClient().organizations.createOrganizationInvitation({
           emailAddress: input.email,
           organizationId: organization.id,
           role: "org:staff",
           inviterUserId: currentUserId,
-          redirectUrl: `http://localhost:3000/invite?org_name=${organization.name}`,
+          redirectUrl: `${baseURL}/invite?org_name=${organization.name}`,
         });
       } catch (error) {
         console.error("Error sending invitation to member:", error);
