@@ -2,10 +2,16 @@
 
 import { OrganizationMembership } from "@clerk/nextjs/server";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, TriangleAlertIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@nxss/ui/dropdown-menu";
 
 import { api } from "~/trpc/server";
 
@@ -25,7 +31,7 @@ export const FacultyColumns: ColumnDef<MembershipList>[] = [
     cell(props) {
       return (
         <div className="flex items-center gap-2">
-          <Avatar>
+          <Avatar className="size-8 border">
             <AvatarImage src={props.row.original.imageUrl} />
             <AvatarFallback>
               {props.row.original.email?.at(0)?.toUpperCase()}
@@ -63,9 +69,18 @@ export const FacultyColumns: ColumnDef<MembershipList>[] = [
     cell(props) {
       return (
         <div className="flex justify-end">
-          <Button variant={"ghost"} size={"icon"}>
-            <MoreHorizontalIcon className="size-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant={"ghost"} size={"icon"}>
+                <MoreHorizontalIcon className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem className="text-destructive hover:text-destructive">
+                <TriangleAlertIcon className="mr-2 size-4" /> Deactivate
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       );
     },
