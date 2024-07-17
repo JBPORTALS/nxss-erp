@@ -26,7 +26,7 @@ export const SidebarLabel = ({
 }: SidebarLabelProps) => {
   return (
     <h2
-      className={cn("text-xs font-semibold text-muted-foreground", className)}
+      className={cn("text-xs font-medium text-muted-foreground", className)}
       {...props}
     >
       {children}

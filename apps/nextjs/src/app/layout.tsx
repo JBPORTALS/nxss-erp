@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Merriweather, Open_Sans } from "next/font/google";
-import { useRouter } from "next/navigation";
+import { Merriweather, Roboto } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { cn } from "@nxss/ui";
@@ -12,18 +11,12 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import {
-  BadgeAlert,
-  BadgeCheck,
-  BadgeInfo,
-  CheckCircle2,
-  InfoIcon,
-  TriangleAlert,
-} from "lucide-react";
+import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 
-const OpenSans = Open_Sans({
+const OpenSans = Roboto({
   variable: "--font-open-sans",
   subsets: ["latin"],
+  weight: ["100", "400", "300", "500", "700", "900"],
 });
 const Mw = Merriweather({
   variable: "--font-Mw",
