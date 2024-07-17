@@ -11,6 +11,10 @@ export const SignInSchema = z.object({
   error: z.string().optional(),
 });
 
+export const InvitationSchema = z.object({
+  error: z.string().optional(),
+});
+
 export const inviteSchema = z.object({
   emails: z
     .string()

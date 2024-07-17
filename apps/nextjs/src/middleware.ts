@@ -8,12 +8,13 @@ import {
 const isPublicRoutes = createRouteMatcher(["/sign-in"]);
 const isHomeRoute = createRouteMatcher(["/"]);
 const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
+const isIvitationRoute = createRouteMatcher(["/invite(.*)"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
     const { userId, redirectToSignIn, sessionClaims } = auth();
 
-    if (!isPublicRoutes(request) && !userId) {
+    if (!isPublicRoutes(request) && !isIvitationRoute(request) && !userId) {
       return redirectToSignIn({ returnBackUrl: request.url });
     }
 

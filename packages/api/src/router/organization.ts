@@ -109,11 +109,11 @@ export const organizationRouter = router({
           organizationId: organization.id,
           role: "org:staff",
           inviterUserId: currentUserId,
-          redirectUrl: `http://localhost:3000/invite`,
+          redirectUrl: `http://localhost:3000/invite?org_name=${organization.name}`,
         });
       } catch (error) {
-        console.error("Error fetching organization members:", error);
-        throw new Error("Failed to fetch organization members");
+        console.error("Error sending invitation to member:", error);
+        throw new Error("Failed to send invitation");
       }
     }),
   revokeInvitation: protectedProcedure
