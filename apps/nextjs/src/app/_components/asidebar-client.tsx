@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { HomeIcon, PlusIcon, Users2Icon } from "lucide-react";
+import { Protect } from "@clerk/nextjs";
+import { HomeIcon, Layers, PlusIcon, Users2Icon } from "lucide-react";
 
 import {
   Sidebar,
@@ -24,25 +25,48 @@ export default function AsideBarClient() {
             <HomeIcon className="size-4" /> Dashboard
           </SidebarItem>
         </Link>
-        <Link href={`/${org}/faculty`}>
-          <SidebarItem isActive={pathname.startsWith(`/${org}/faculty`)}>
-            <Users2Icon className="size-4" /> Faculty
+
+        <Protect role="org:admin">
+          <Link href={`/${org}/faculty`}>
+            <SidebarItem isActive={pathname.startsWith(`/${org}/faculty`)}>
+              <Users2Icon className="size-4" /> Faculty
+            </SidebarItem>
+          </Link>
+          <SidebarItem isActive={pathname.startsWith(`/${org}/subjects`)}>
+            <Layers className="size-4" /> Subjects
           </SidebarItem>
-        </Link>
+        </Protect>
       </SidebarBody>
-      <SidebarLabel className="flex items-center justify-between pr-2">
-        BRANCHES
-        <Button size={"icon"} variant={"ghost"} className="size-8">
-          <PlusIcon />
-        </Button>
-      </SidebarLabel>
+      <Protect role="org:admin">
+        <SidebarLabel className="flex items-center justify-between pr-2">
+          BRANCHES
+          <Button size={"icon"} variant={"ghost"} className="size-8">
+            <PlusIcon />
+          </Button>
+        </SidebarLabel>
+      </Protect>
+      <Protect role="org:staff">
+        <SidebarLabel className="flex items-center justify-between pr-2">
+          SUBJECTS
+        </SidebarLabel>
+      </Protect>
       <SidebarBody>
         <main className="pr-2">
           <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
-            <span className="text-sm font-semibold">No Branches</span>
-            <p className="text-xs text-muted-foreground">
-              Create new branch by clicking on the BRANCHES plus icon.
-            </p>
+            <Protect role="org:admin">
+              <span className="text-sm font-semibold">No Branches</span>
+              <p className="text-xs text-muted-foreground">
+                Create new branch by clicking on the BRANCHES plus icon.
+              </p>
+            </Protect>
+            <Protect role="org:staff">
+              <span className="text-sm font-semibold">
+                No Subjects Assigned
+              </span>
+              <p className="text-xs text-muted-foreground">
+                Wait for subject allocation by your institution admin.
+              </p>
+            </Protect>
           </div>
         </main>
       </SidebarBody>
