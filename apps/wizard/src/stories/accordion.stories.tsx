@@ -8,7 +8,7 @@ import {
     AccordionTrigger,
 } from "@nxss/ui/accordion";
 import { PlusCircle } from "lucide-react";
-import NavItem from "@nxss/ui/nav-item";
+import {NavItem} from "@nxss/ui/nav-item";
 
 const meta: Meta<typeof AccordionDemo> = {
     title: "UI/Accordion",
