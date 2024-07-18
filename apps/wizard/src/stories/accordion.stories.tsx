@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { PlusCircle } from "lucide-react";
-
 import {
   Accordion,
   AccordionContent,
@@ -10,8 +9,7 @@ import {
 } from "@nxss/ui/accordion";
 import { AccordionDemo } from "@nxss/ui/accordiondemo";
 import {NavItem} from "@nxss/ui/nav-item";
-import { PlusCircle } from "lucide-react";
-import {NavItem} from "@nxss/ui/nav-item";
+
 
 const meta: Meta<typeof AccordionDemo> = {
   title: "UI/Accordion",
