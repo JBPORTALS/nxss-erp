@@ -3,12 +3,12 @@ import { cva, VariantProps } from "class-variance-authority";
 import { Button } from "./button";
 
 const navItemVariants = cva(
-  "flex w-full justify-start gap-2 rounded-e-none border-r border-transparent px-4 py-2 text-sm text-accent-foreground",
+  "flex w-full justify-start gap-2 rounded-e-none border-r border-transparent px-4 py-2 text-sm font-normal text-accent-foreground",
   {
     variants: {
       isActive: {
         true: "justify-start border-purple-600 bg-accent",
-        false: "text-accent-foreground/80 hover:border-accent-foreground/50",
+        false: "text-accent-foreground/60 hover:border-accent-foreground/50",
       },
     },
     defaultVariants: {

@@ -41,7 +41,7 @@ export default function AsideBarClient() {
         <SidebarLabel className="flex items-center justify-between pr-2">
           BRANCHES
           <Button size={"icon"} variant={"ghost"} className="size-8">
-            <PlusIcon />
+            <PlusIcon className="size-4" />
           </Button>
         </SidebarLabel>
       </Protect>
