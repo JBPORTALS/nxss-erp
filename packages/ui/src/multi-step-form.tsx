@@ -12,7 +12,7 @@ const StepVariants = cva(
     variants: {
       variant: {
         completed: "border-green-500",
-        inProcess: "border-black",
+        inProcess: "border-border",
       },
     },
     defaultVariants: {
@@ -72,7 +72,7 @@ export function MultiStepForm({
       <ul className="list-none space-y-6">{children}</ul>
       {lineHeight > 0 && (
         <div
-          className="absolute left-[11.5px] top-0 w-[1.5px] bg-muted-foreground"
+          className="absolute left-[11.5px] top-0 w-[1px] bg-muted"
           style={{ height: `${lineHeight}px` }}
         />
       )}
@@ -85,7 +85,7 @@ export const Step = ({ children, className, variant, ...props }: StepProps) => {
     <li className="add-status mb-16 flex items-start space-x-2">
       <div
         className={cn(
-          "step-icon z-20 flex-shrink-0",
+          "step-icon z-20 flex-shrink-0 bg-background",
           StepVariants({ variant }),
           className,
         )}
