@@ -3,7 +3,7 @@ import { fn } from "@storybook/test";
 
 import { Input } from "@nxss/ui/input";
 import { Label } from "@nxss/ui/label";
-import { Step, MultiStepForm } from "@nxss/ui/status-bar";
+import { Step, MultiStepForm } from "@nxss/ui/multi-step-form";
 import ImageUploader from "@nxss/ui/image-placeholder";
 import { Button } from "@nxss/ui/button";
 
