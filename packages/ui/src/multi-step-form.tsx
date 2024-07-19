@@ -99,7 +99,7 @@ export const Step = ({ children, className, variant, ...props }: StepProps) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="3"
+            strokeWidth="3"
             stroke-linecap="round"
             stroke-linejoin="round"
             className="lucide lucide-check text-green-500"
@@ -107,10 +107,10 @@ export const Step = ({ children, className, variant, ...props }: StepProps) => {
             animate="visible"
           >
             <motion.path
-              d="M20 6 9 17l-5-5"
+              d="M5 12l4 4L20 6"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 2 }}
+              transition={{ duration: 2, ease: "easeOut" }}
             />
           </motion.svg>
         )}
