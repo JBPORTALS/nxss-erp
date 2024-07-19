@@ -5,7 +5,7 @@ import {
   createRouteMatcher,
 } from "@clerk/nextjs/server";
 
-const isPublicRoutes = createRouteMatcher(["/sign-in"]);
+const isPublicRoutes = createRouteMatcher(["/sign-in", "/api/clerk(.*)"]);
 const isHomeRoute = createRouteMatcher(["/"]);
 const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
 const isIvitationRoute = createRouteMatcher(["/invite(.*)"]);

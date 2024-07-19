@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { motion } from "framer-motion";
-import { Check, Circle } from "lucide-react";
 
 import { cn } from ".";
 
@@ -73,7 +72,7 @@ export function MultiStepForm({
       <ul className="list-none space-y-6">{children}</ul>
       {lineHeight > 0 && (
         <div
-          className="absolute left-[12px] top-0 w-[1.5px] bg-muted-foreground"
+          className="absolute left-[11.5px] top-0 w-[1.5px] bg-muted-foreground"
           style={{ height: `${lineHeight}px` }}
         />
       )}
@@ -94,23 +93,23 @@ export const Step = ({ children, className, variant, ...props }: StepProps) => {
         {variant === "completed" && (
           <motion.svg
             xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
+            width="16"
+            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="lucide lucide-check text-green-500"
             initial="hidden"
             animate="visible"
           >
             <motion.path
               d="M20 6 9 17l-5-5"
+              strokeWidth="3"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 2 }}
+              transition={{ duration: 0.2 }}
             />
           </motion.svg>
         )}

@@ -11,7 +11,9 @@ if (!connectionString) throw new Error("Connection String not defined ❌");
 
 export default {
   schema: "./src/schema",
-  driver: "pg",
-  dbCredentials: { connectionString },
   tablesFilter: ["nxss_*"],
+  dialect: "postgresql",
+  dbCredentials: {
+    url: connectionString,
+  },
 } satisfies Config;
