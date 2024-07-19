@@ -18,6 +18,9 @@ importers:
       '@clerk/nextjs':
         specifier: ^5.2.3
         version: 5.2.3(next@14.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@clerk/themes':
+        specifier: ^2.1.12
+        version: 2.1.12
     devDependencies:
       '@nxss/prettier-config':
         specifier: workspace:^
@@ -219,6 +222,9 @@ importers:
       next:
         specifier: ^14.2.5
         version: 14.2.5(@babel/core@7.24.8)(react-dom@18.2.0)(react@18.2.0)
+      next-themes:
+        specifier: ^0.3.0
+        version: 0.3.0(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2379,8 +2385,23 @@ packages:
       swr: 2.2.5(react@18.2.0)
     dev: false
 
+  /@clerk/themes@2.1.12:
+    resolution: {integrity: sha512-9YxHyfWKiuopwQQp4APl8S8JY5qowQBbVOTJgw0VP3XwCc22UrQACo+hPCOcQA0j7xXLI2XfafPaS+CWRqOHlw==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/types': 4.8.0
+      tslib: 2.4.1
+    dev: false
+
   /@clerk/types@4.7.0:
     resolution: {integrity: sha512-Gg4zEZLE7wgByMhgHMU69tkIEwfiFKNSbtRwdtAwrW+Pg0blpVpw7XuN0wHNAYFM2COrrKEUaGt8KWZmmdTFbg==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      csstype: 3.1.1
+    dev: false
+
+  /@clerk/types@4.8.0:
+    resolution: {integrity: sha512-UjirfALJOWeuRSz+SvTujexlvIXvMC1VzvYlcNmSF0E9wcAcPJnzboLM+SlNTG7p1JMlL4bd0dipsFyWTJsq5A==}
     engines: {node: '>=18.17.0'}
     dependencies:
       csstype: 3.1.1

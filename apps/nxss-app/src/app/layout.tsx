@@ -1,17 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Merriweather, Roboto } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 
 import { cn } from "@nxss/ui";
 import { ThemeProvider } from "@nxss/ui/theme";
-import { Toaster } from "@nxss/ui/toast";
 
 import { env } from "~/env";
-import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
+import { Providers } from "./providers";
 
 const OpenSans = Roboto({
   variable: "--font-open-sans",
@@ -54,29 +51,18 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <ClerkProvider afterSignOutUrl={"/sign-in"}>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={cn(
-            "min-h-screen w-full bg-background font-sans text-foreground antialiased",
-            OpenSans.variable,
-            Mw.variable,
-          )}
-        >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <TRPCReactProvider>{props.children}</TRPCReactProvider>
-            <Toaster
-              richColors
-              icons={{
-                success: <BadgeCheck />,
-                error: <BadgeAlert />,
-                info: <BadgeInfo />,
-                warning: <TriangleAlert />,
-              }}
-            />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen w-full bg-background font-sans text-foreground antialiased",
+          OpenSans.variable,
+          Mw.variable,
+        )}
+      >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Providers>{props.children}</Providers>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

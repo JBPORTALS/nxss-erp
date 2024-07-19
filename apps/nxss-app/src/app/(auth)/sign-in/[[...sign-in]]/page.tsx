@@ -51,7 +51,7 @@ export default function Page() {
 
   return (
     <div className="flex h-full w-full items-center justify-center pt-20">
-      <Form {...form}>
+      {/* <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-[400px] space-y-8 pt-14"
@@ -105,13 +105,13 @@ export default function Page() {
             Signin
           </Button>
         </form>
-      </Form>
-      {/* <SignIn
+      </Form> */}
+      <SignIn
         routing="virtual"
         appearance={{
           elements: {},
         }}
-      /> */}
+      />
     </div>
   );
 }
