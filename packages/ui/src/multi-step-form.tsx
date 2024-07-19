@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { motion } from "framer-motion";
 import { Check, Circle } from "lucide-react";
-
 import { cn } from ".";
 
 const StepVariants = cva(
@@ -24,8 +23,9 @@ const StepVariants = cva(
 
 type VariantKeys = VariantProps<typeof StepVariants>["variant"];
 
-interface StepProps extends React.HTMLAttributes<HTMLDivElement> {
+interface StepProps extends React.HTMLAttributes<HTMLLIElement> {
   variant?: VariantKeys;
+  disabled?: boolean;
 }
 
 export function MultiStepForm({
@@ -42,16 +42,13 @@ export function MultiStepForm({
         statusBarRef.current.querySelectorAll(".add-status"),
       );
       if (steps.length > 1) {
-        // Ensure there are at least two steps
         const firstStep = steps[0];
         const lastStep = steps[steps.length - 1];
 
         if (firstStep && lastStep) {
-          // Ensure firstStep and lastStep are defined
           const firstStepTop = firstStep.getBoundingClientRect().top;
           const lastStepIcon = lastStep.querySelector(".step-icon");
           if (lastStepIcon instanceof HTMLElement) {
-            // Type guard
             const lastStepIconBottom =
               lastStepIcon.getBoundingClientRect().bottom;
             const newHeight = lastStepIconBottom - firstStepTop;
@@ -59,7 +56,7 @@ export function MultiStepForm({
           }
         }
       } else {
-        setLineHeight(0); // No line if there's only one or no steps
+        setLineHeight(0);
       }
     }
   }, [children]);
@@ -74,16 +71,20 @@ export function MultiStepForm({
       {lineHeight > 0 && (
         <div
           className="absolute left-[12px] top-0 w-[1.5px] bg-muted-foreground"
-          style={{ height: `${lineHeight}px` }}
+          style={{ height: `${lineHeight-22}px` }}
         />
       )}
     </div>
   );
 }
 
-export const Step = ({ children, className, variant, ...props }: StepProps) => {
+export const Step = ({ children, className, variant, disabled, ...props }: StepProps) => {
   return (
-    <li className="add-status mb-16 flex items-start space-x-2">
+    <li
+      className={cn("add-status mb-16 flex items-start space-x-2", {
+        "opacity-50 pointer-events-none": disabled,
+      })}
+    >
       <div
         className={cn(
           "step-icon z-20 flex-shrink-0",
@@ -100,8 +101,8 @@ export const Step = ({ children, className, variant, ...props }: StepProps) => {
             fill="none"
             stroke="currentColor"
             strokeWidth="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="lucide lucide-check text-green-500"
             initial="hidden"
             animate="visible"
@@ -118,7 +119,6 @@ export const Step = ({ children, className, variant, ...props }: StepProps) => {
       <div className="flex-grow">
         <div
           className={cn("ml-4 flex w-full flex-col gap-5", className)}
-          {...props}
         >
           {children}
         </div>

@@ -35,7 +35,8 @@
     "./progress-bar":"./src/progress-bar.tsx",
     "./progress":"./src/progress.tsx",
     "./image-placeholder":"./src/image-placeholder.tsx",
-    "./multi-step-form":"./src/multi-step-form.tsx"
+    "./multi-step-form":"./src/multi-step-form.tsx",
+    "./multi-step-formdemo":"./src/multi-step-formdemo.tsx"
   },
   "license": "MIT",
   "scripts": {
