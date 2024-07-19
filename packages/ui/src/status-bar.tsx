@@ -2,29 +2,33 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { cva, VariantProps } from "class-variance-authority";
-import { cn } from ".";
+import { motion } from "framer-motion";
 import { Check, Circle } from "lucide-react";
 
-const AddStatusVariants = cva("h-6 w-6 rounded-full border-2 bg-white", {
-  variants: {
-    variant: {
-      success: "border-green-500",
-      pending: "border-gray-200",
-      process: "border-black",
+import { cn } from ".";
+
+const StepVariants = cva(
+  "flex size-6 items-center justify-center rounded-full border-2 bg-white",
+  {
+    variants: {
+      variant: {
+        completed: "border-green-500",
+        inProcess: "border-black",
+      },
+    },
+    defaultVariants: {
+      variant: "inProcess",
     },
   },
-  defaultVariants: {
-    variant: "pending",
-  },
-});
+);
 
-type VariantKeys = VariantProps<typeof AddStatusVariants>["variant"];
+type VariantKeys = VariantProps<typeof StepVariants>["variant"];
 
-interface AddStatusProps extends React.HTMLAttributes<HTMLDivElement> {
+interface StepProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: VariantKeys;
 }
 
-export function StatusBar({
+export function MultiStepForm({
   children,
   className,
   ...props
@@ -34,52 +38,88 @@ export function StatusBar({
 
   useEffect(() => {
     if (statusBarRef.current) {
-      const firstCircle = statusBarRef.current.querySelector('.add-status:first-child svg');
-      const lastCircle = statusBarRef.current.querySelector('.add-status:last-child svg');
-      
-      if (firstCircle && lastCircle) {
-        const firstCircleTop = firstCircle.getBoundingClientRect().top;
-        const lastCircleBottom = lastCircle.getBoundingClientRect().bottom;
-        const newHeight = lastCircleBottom - firstCircleTop;
-        setLineHeight(newHeight);
+      const steps = Array.from(
+        statusBarRef.current.querySelectorAll(".add-status"),
+      );
+      if (steps.length > 1) {
+        // Ensure there are at least two steps
+        const firstStep = steps[0];
+        const lastStep = steps[steps.length - 1];
+
+        if (firstStep && lastStep) {
+          // Ensure firstStep and lastStep are defined
+          const firstStepTop = firstStep.getBoundingClientRect().top;
+          const lastStepIcon = lastStep.querySelector(".step-icon");
+          if (lastStepIcon instanceof HTMLElement) {
+            // Type guard
+            const lastStepIconBottom =
+              lastStepIcon.getBoundingClientRect().bottom;
+            const newHeight = lastStepIconBottom - firstStepTop;
+            setLineHeight(newHeight);
+          }
+        }
+      } else {
+        setLineHeight(0); // No line if there's only one or no steps
       }
     }
   }, [children]);
 
   return (
-    <div ref={statusBarRef} className={cn("relative ml-6", className)} {...props}>
+    <div
+      ref={statusBarRef}
+      className={cn("relative ml-6", className)}
+      {...props}
+    >
       <ul className="list-none space-y-6">{children}</ul>
-      <div
-        className="absolute left-[12px] top-0 w-[1.5px] bg-muted-foreground"
-        style={{ height: `${lineHeight}px` }}
-      />
+      {lineHeight > 0 && (
+        <div
+          className="absolute left-[12px] top-0 w-[1.5px] bg-muted-foreground"
+          style={{ height: `${lineHeight}px` }}
+        />
+      )}
     </div>
   );
 }
 
-export const AddStatus = ({
-  children,
-  className,
-  variant,
-  ...props
-}: AddStatusProps) => {
+export const Step = ({ children, className, variant, ...props }: StepProps) => {
   return (
-    <li className="flex items-start space-x-2  mb-16 add-status">
-      <svg
+    <li className="add-status mb-16 flex items-start space-x-2">
+      <div
         className={cn(
-          "z-20 h-10 w-10 flex-shrink-0",
-          AddStatusVariants({ variant }),
+          "step-icon z-20 flex-shrink-0",
+          StepVariants({ variant }),
           className,
         )}
-        fill="currentColor"
-        viewBox="0 0 20 20"
       >
-        {variant === 'success' && (
-          <Check size={20} className="text-green-400"/>
+        {variant === "completed" && (
+          <motion.svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="lucide lucide-check text-green-500"
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.path
+              d="M20 6 9 17l-5-5"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 2 }}
+            />
+          </motion.svg>
         )}
-      </svg>
+      </div>
       <div className="flex-grow">
-        <div className={cn("flex w-full flex-col ml-10 gap-5", className)} {...props}>
+        <div
+          className={cn("ml-4 flex w-full flex-col gap-5", className)}
+          {...props}
+        >
           {children}
         </div>
       </div>

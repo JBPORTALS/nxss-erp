@@ -3,16 +3,16 @@ import { fn } from "@storybook/test";
 
 import { Input } from "@nxss/ui/input";
 import { Label } from "@nxss/ui/label";
-import { AddStatus, StatusBar } from "@nxss/ui/status-bar";
+import { Step, MultiStepForm } from "@nxss/ui/status-bar";
 import ImageUploader from "@nxss/ui/image-placeholder";
 import { Button } from "@nxss/ui/button";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: "UI/Status Bar",
+  title: "UI/Multi Step Form",
   component: () => (
-    <StatusBar >
-      <AddStatus variant={"success"}>
+    <MultiStepForm >
+      <Step variant={"completed"}>
         <h1 className="text-2xl font-semibold">Add Staff Details</h1>
         <span>
           Submit Your Staff Details to collaborate with the institution
@@ -21,15 +21,15 @@ const meta = {
         <Input placeholder="Acme" />
         <Label>Institution Staff Id</Label>
         <Input placeholder="465UA123" />
-      </AddStatus>
+      </Step>
 
-      <AddStatus variant={"process"}>
+      <Step>
         <h1 className="text-2xl font-semibold">Upload Staff ID</h1>
         <span>Upload Your Staff ID for verification</span>
         <ImageUploader />
         <Button className="w-40">Submit</Button>
-      </AddStatus>
-    </StatusBar>
+      </Step>
+    </MultiStepForm>
   ),
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -43,7 +43,7 @@ const meta = {
   // },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: { onClick: fn() },
-} satisfies Meta<typeof StatusBar>;
+} satisfies Meta<typeof MultiStepForm>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
