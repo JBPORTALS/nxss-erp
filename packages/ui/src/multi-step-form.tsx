@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { motion } from "framer-motion";
-import { Check, Circle } from "lucide-react";
 import { cn } from ".";
 
 const StepVariants = cva(
@@ -12,7 +11,7 @@ const StepVariants = cva(
     variants: {
       variant: {
         completed: "border-green-500",
-        inProcess: "border-black",
+        inProcess: "border-border",
       },
     },
     defaultVariants: {
@@ -70,8 +69,8 @@ export function MultiStepForm({
       <ul className="list-none space-y-6">{children}</ul>
       {lineHeight > 0 && (
         <div
-          className="absolute left-[12px] top-0 w-[1.5px] bg-muted-foreground"
-          style={{ height: `${lineHeight-22}px` }}
+          className="absolute left-[11.5px] top-0 w-[1px] bg-muted"
+          style={{ height: `${lineHeight}px` }}
         />
       )}
     </div>
@@ -87,7 +86,7 @@ export const Step = ({ children, className, variant, disabled, ...props }: StepP
     >
       <div
         className={cn(
-          "step-icon z-20 flex-shrink-0",
+          "step-icon z-20 flex-shrink-0 bg-background",
           StepVariants({ variant }),
           className,
         )}
@@ -95,12 +94,11 @@ export const Step = ({ children, className, variant, disabled, ...props }: StepP
         {variant === "completed" && (
           <motion.svg
             xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
+            width="16"
+            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="lucide lucide-check text-green-500"
@@ -108,10 +106,11 @@ export const Step = ({ children, className, variant, disabled, ...props }: StepP
             animate="visible"
           >
             <motion.path
-              d="M5 12l4 4L20 6"
+              d="M20 6 9 17l-5-5"
+              strokeWidth="3"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 2, ease: "easeOut" }}
+              transition={{ duration: 0.2 }}
             />
           </motion.svg>
         )}
