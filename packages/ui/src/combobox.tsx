@@ -1,41 +1,36 @@
-"use client";
+// components/ComboboxDemo.tsx
 
-import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+"use client"
 
-import { cn } from ".";
-import { Button } from "./button";
+import * as React from "react"
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "."
+import { Button } from "./button"
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "./command";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+} from "./command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "./popover"
 
-const frameworks = [
-  {
-    value: "computer Science",
-    label: "Computer Science",
-  },
-  {
-    value: "mechanical",
-    label: "Mechanical",
-  },
-  {
-    value: "civil",
-    label: "Civil",
-  },
-  {
-    value: "electrical and electronics",
-    label: "Electrical and Electronics",
-  }
-];
+interface Framework {
+  value: string
+  label: string
+}
 
-export function ComboboxDemo() {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+interface ComboboxDemoProps {
+  frameworks: Framework[]
+}
+
+export function ComboboxDemo({ frameworks }: ComboboxDemoProps) {
+  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState("")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -62,14 +57,14 @@ export function ComboboxDemo() {
                 key={framework.value}
                 value={framework.value}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
-                  setOpen(false);
+                  setValue(currentValue === value ? "" : currentValue)
+                  setOpen(false)
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0",
+                    value === framework.value ? "opacity-100" : "opacity-0"
                   )}
                 />
                 {framework.label}
@@ -79,5 +74,5 @@ export function ComboboxDemo() {
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }
