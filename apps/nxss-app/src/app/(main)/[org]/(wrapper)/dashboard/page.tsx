@@ -1,18 +1,28 @@
-"use client";
-
-import { Protect, useUser } from "@clerk/nextjs";
+import { Protect } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import StaffOnboarding from "~/app/_components/staff-onboaring";
 
-export default function Page() {
-  const { user } = useUser();
+export default async function Page({ params }: { params: { org: string } }) {
+  const { sessionClaims } = auth();
+  const org = await clerkClient().organizations.getOrganization({
+    slug: params.org,
+  });
+  const currentOrgClaim = sessionClaims?.metadata.staff?.organizations?.find(
+    (val) => val.org_id === org.id,
+  );
+
   return (
     <div>
-      <h1 className="text-lg">
-        Hey, <b>{user?.emailAddresses[0]?.emailAddress}</b>
-      </h1>
+      <h1 className="text-lg"></h1>
       <Protect role="org:staff">
-        <StaffOnboarding />
+        {currentOrgClaim?.status === "initial" || !currentOrgClaim?.status ? (
+          <StaffOnboarding />
+        ) : (
+          <>
+            <h1>Current status of staff profile {currentOrgClaim.status}</h1>
+          </>
+        )}
       </Protect>
     </div>
   );
