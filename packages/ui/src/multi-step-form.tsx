@@ -69,8 +69,8 @@ export function MultiStepForm({
       <ul className="list-none space-y-6">{children}</ul>
       {lineHeight > 0 && (
         <div
-          className="absolute left-[11.5px] top-0 w-[1px] bg-muted"
-          style={{ height: `${lineHeight}px` }}
+          className="absolute left-[11.5px] top-0 w-[1.5px] bg-muted"
+          style={{ height: `${lineHeight-22}px` }}
         />
       )}
     </div>
