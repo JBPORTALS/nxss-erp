@@ -79,3 +79,35 @@ export const completeOnboarding = async (
     return { error: "There was an error updating the user metadata." };
   }
 };
+
+export const completeVerification = async (values: { staffId: string }) => {
+  const { userId, orgSlug, orgId } = auth();
+
+  if (!userId) {
+    return { message: "No Logged In User" };
+  }
+
+  if (!orgSlug || !orgId) return { message: "No slug or ID" };
+
+  try {
+    const res = await db
+      .update(staff)
+      .set({
+        status: "approved",
+      })
+      .where(
+        and(
+          eq(staff.clerk_user_id, values.staffId),
+          eq(staff.clerk_org_id, orgId),
+        ),
+      )
+      .returning();
+
+    revalidatePath(`/${orgSlug}/faculty`, "layout");
+
+    return { message: res.at(0)?.id };
+  } catch (err) {
+    console.log(err);
+    return { error: "There was an error updating the user metadata." };
+  }
+};

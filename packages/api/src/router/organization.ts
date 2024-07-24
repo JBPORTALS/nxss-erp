@@ -201,4 +201,40 @@ export const organizationRouter = router({
       throw new Error("Failed to fetch organization members");
     }
   }),
+  getStaffProfileDetails: protectedProcedure
+    .input(z.object({ clerk_staff_user_id: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const staffUserId = input.clerk_staff_user_id;
+      const currentOrgId = ctx.auth.orgId;
+      try {
+        if (!currentOrgId)
+          throw new TRPCError({
+            message: "No organization selected",
+            code: "BAD_REQUEST",
+          });
+
+        const user = await clerkClient().users.getUser(staffUserId);
+
+        const organization = await db
+          .select()
+          .from(staff)
+          .where(
+            and(
+              eq(staff.clerk_user_id, staffUserId),
+              eq(staff.clerk_org_id, currentOrgId),
+            ),
+          );
+
+        return {
+          email: user.emailAddresses.at(0)?.emailAddress,
+          status: organization.at(0)?.status,
+          docUrl: organization.at(0)?.docUrl,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        };
+      } catch (error) {
+        console.error("Error fetching staff details:", error);
+        throw new Error("Failed to fetch organization members");
+      }
+    }),
 });

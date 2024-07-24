@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { CheckCircle2 } from "lucide-react";
+import { LoaderPinwheelIcon } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@nxss/ui/button";
@@ -14,56 +16,44 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@nxss/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  useForm,
-} from "@nxss/ui/form";
-import { Textarea } from "@nxss/ui/textarea";
+import { Form, useForm } from "@nxss/ui/form";
 import { toast } from "@nxss/ui/toast";
-import { inviteSchema } from "@nxss/validators";
 
-import { inviteMember } from "~/trpc/actions";
+import { completeVerification } from "~/trpc/actions";
+import { api } from "~/trpc/react";
 
 export function ViewApproveDetailsDialog({
   children,
+  staffId,
 }: {
   children: React.ReactNode;
+  staffId: string;
 }) {
   const [isOpen, onChangeOpen] = useState(false);
-  const { org } = useParams();
+
+  const { data, isPending } = api.organization.getStaffProfileDetails.useQuery(
+    {
+      clerk_staff_user_id: staffId,
+    },
+    {
+      enabled: !!staffId && isOpen,
+    },
+  );
 
   const form = useForm({
-    schema: inviteSchema,
+    schema: z.object({}),
     mode: "onChange",
   });
 
-  async function onInviteMembers(values: z.infer<typeof inviteSchema>) {
-    await Promise.all(
-      values.emails
-        .split(",")
-        .map((email) => email.trim())
-        .map(async (email) => {
-          try {
-            await inviteMember({
-              slug: org as string,
-              email,
-            });
-            toast.success("Invitation sent successfully", {
-              description: `to ${email}`,
-              icon: <CheckCircle2 />,
-            });
-          } catch (e) {
-            console.log(e);
-            toast.error(`Failed!`, {
-              description: `couldn't able send invitation to ${email}`,
-            });
-          }
-        }),
-    );
+  async function onApproveTheProfile() {
+    try {
+      await completeVerification({ staffId });
+      toast.success(`Profile approved successfully`, {
+        description: `${data?.email} profile approved and now verified member of the institution.`,
+      });
+    } catch (e: any) {
+      toast.error("Something went wrong", { description: e.message });
+    }
     onChangeOpen(false);
     form.reset();
   }
@@ -80,29 +70,41 @@ export function ViewApproveDetailsDialog({
         </DialogHeader>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onInviteMembers)}
+            onSubmit={form.handleSubmit(onApproveTheProfile)}
             className="space-y-3"
           >
-            <div className="flex gap-3">
-              <b>FirstName:</b>
-              <span>Manoj</span>
-            </div>
-            <div className="flex gap-3">
-              <b>LastName:</b>
-              <span>M</span>
-            </div>
-            <div className="flex flex-col gap-3">
-              <b>Indentification Document:</b>
-              <div className="relative aspect-video w-full rounded-md border bg-muted">
-                <Image fill src="/" alt="Indentification Document Image" />
+            {isPending ? (
+              <div className="flex items-center justify-center py-20">
+                <LoaderPinwheelIcon className="size-10 animate-spin text-primary" />
               </div>
-            </div>
-            <DialogFooter>
-              <Button variant={"outline"}>Reject</Button>
-              <Button isLoading={form.formState.isSubmitting} type="submit">
-                Approve
-              </Button>
-            </DialogFooter>
+            ) : (
+              <>
+                <div className="flex gap-3">
+                  <b>FirstName:</b>
+                  <span>{data?.firstName}</span>
+                </div>
+                <div className="flex gap-3">
+                  <b>LastName:</b>
+                  <span>{data?.lastName}</span>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <b>Indentification Document:</b>
+                  <div className="relative aspect-video w-full rounded-md border bg-muted">
+                    <Image
+                      fill
+                      src={data?.docUrl ?? ""}
+                      alt="Indentification Document Image"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant={"outline"}>Reject</Button>
+                  <Button isLoading={form.formState.isSubmitting} type="submit">
+                    Approve
+                  </Button>
+                </DialogFooter>
+              </>
+            )}
           </form>
         </Form>
       </DialogContent>

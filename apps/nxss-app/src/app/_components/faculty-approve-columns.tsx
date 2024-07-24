@@ -62,7 +62,7 @@ export const FacultyApproveColumns: ColumnDef<MembershipList>[] = [
     cell(props) {
       return (
         <div className="flex justify-end">
-          <ViewApproveDetailsDialog>
+          <ViewApproveDetailsDialog staffId={props.row.original.userId}>
             <Button variant={"outline"} type="submit">
               View Details
             </Button>
