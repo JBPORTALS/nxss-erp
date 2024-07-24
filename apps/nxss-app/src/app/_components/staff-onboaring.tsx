@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { z } from "zod";
@@ -22,7 +23,7 @@ import { toast } from "@nxss/ui/toast";
 import { ProfileDetailsSchema } from "@nxss/validators";
 
 import { completeOnboarding } from "~/trpc/actions";
-import { UploadDropzone } from "~/utils/uploadthing";
+import { UploadButton, UploadDropzone } from "~/utils/uploadthing";
 
 export default function StaffOnboarding() {
   const form = useForm({
@@ -108,28 +109,65 @@ export default function StaffOnboarding() {
               name="docUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormControl>
-                    <UploadDropzone
-                      appearance={{
-                        button: buttonVariants({ variant: "primary" }),
-                        container: "border-border border-2",
-                        label: "text-foreground hover:text-foreground",
-                      }}
-                      config={{
-                        appendOnPaste: true,
-                      }}
-                      endpoint="imageUploader"
-                      onClientUploadComplete={(res) => {
-                        // Do something with the response
-                        console.log("Files: ", res);
-                        form.setValue("docUrl", res.at(0)?.url ?? "");
-                        toast.info("Document Uploaded");
-                      }}
-                      onUploadError={(error: Error) => {
-                        // Do something with the error.
-                        toast.error(error.name, { description: error.message });
-                      }}
-                    />
+                  <FormControl className="py-3">
+                    {form.getValues().docUrl ? (
+                      <div>
+                        <div className="flex justify-end">
+                          <UploadButton
+                            appearance={{
+                              button: buttonVariants({ variant: "primary" }),
+                            }}
+                            config={{
+                              appendOnPaste: true,
+                            }}
+                            endpoint="imageUploader"
+                            onClientUploadComplete={(res) => {
+                              // Do something with the response
+                              console.log("Files: ", res);
+                              form.setValue("docUrl", res.at(0)?.url ?? "");
+                              toast.info("Document Uploaded");
+                            }}
+                            onUploadError={(error: Error) => {
+                              // Do something with the error.
+                              toast.error(error.name, {
+                                description: error.message,
+                              });
+                            }}
+                          />
+                        </div>
+                        <div className="relative aspect-video w-full overflow-hidden rounded-md border">
+                          <Image
+                            src={form.getValues().docUrl}
+                            fill
+                            alt={form.getValues().docUrl}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <UploadDropzone
+                        appearance={{
+                          button: buttonVariants({ variant: "primary" }),
+                          container: "border-border border-2",
+                          label: "text-foreground hover:text-foreground",
+                        }}
+                        config={{
+                          appendOnPaste: true,
+                        }}
+                        endpoint="imageUploader"
+                        onClientUploadComplete={(res) => {
+                          // Do something with the response
+                          console.log("Files: ", res);
+                          form.setValue("docUrl", res.at(0)?.url ?? "");
+                          toast.info("Document Uploaded");
+                        }}
+                        onUploadError={(error: Error) => {
+                          // Do something with the error.
+                          toast.error(error.name, {
+                            description: error.message,
+                          });
+                        }}
+                      />
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -11,13 +11,20 @@ const config = {
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  remotePatterns: [
-    {
-      protocol: "https",
-      hostname: "utfs.io",
-      pathname: "/a/pcdvk0cx7a/*",
-    },
-  ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: "/a/*",
+      },
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: "/f/*",
+      },
+    ],
+  },
 };
 
 export default config;

@@ -16,6 +16,7 @@ export const staff = pgTable("staff", {
   clerk_user_id: text("clerk_user_id").notNull(),
   clerk_org_id: text("clerk_org_id").notNull(),
   status: StatusEnum("status").default("in_review"),
+  docUrl: text("docUrl"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
