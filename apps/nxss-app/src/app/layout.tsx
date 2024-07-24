@@ -72,7 +72,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light">
           <Providers>{props.children}</Providers>
         </ThemeProvider>
       </body>
