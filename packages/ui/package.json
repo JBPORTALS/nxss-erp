@@ -32,10 +32,11 @@
     "./command": "./src/command.tsx",
     "./landing-page": "./src/landing-page.tsx",
     "./badge": "./src/badge.tsx",
-    "./progress-bar":"./src/progress-bar.tsx",
-    "./progress":"./src/progress.tsx",
-    "./image-placeholder":"./src/image-placeholder.tsx",
-    "./multi-step-form":"./src/multi-step-form.tsx"
+    "./progress-bar": "./src/progress-bar.tsx",
+    "./progress": "./src/progress.tsx",
+    "./image-placeholder": "./src/image-placeholder.tsx",
+    "./multi-step-form": "./src/multi-step-form.tsx",
+    "./seperator": "./src/seperator.tsx"
   },
   "license": "MIT",
   "scripts": {

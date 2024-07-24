@@ -25,9 +25,17 @@ export default clerkMiddleware(
       const organizations =
         await clerkClient().users.getOrganizationMembershipList({ userId });
 
-      const orgslug = organizations.data[0]?.organization.slug;
+      const orgSlug = organizations.data[0]?.organization.slug;
+      const orgId = organizations.data[0]?.organization.id;
+
+      await clerkClient().users.updateUser(userId, {
+        publicMetadata: {
+          orgSlug,
+          orgId,
+        },
+      });
       return NextResponse.redirect(
-        new URL(`/${orgslug}/dashboard`, request.nextUrl.origin),
+        new URL(`/${orgSlug}/dashboard`, request.nextUrl.origin),
       );
     }
   },

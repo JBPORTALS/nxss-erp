@@ -12,8 +12,8 @@ export const SignInSchema = z.object({
 });
 
 export const ProfileDetailsSchema = z.object({
-  fullname: z.string().min(1),
-  staffId: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
   error: z.string().optional(),
 });
 

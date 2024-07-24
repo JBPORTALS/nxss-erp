@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { cn } from ".";
 
 const StepVariants = cva(
-  "flex size-6 items-center justify-center rounded-full border-2 bg-white",
+  "flex size-6 items-center justify-center rounded-full border-2 bg-background",
   {
     variants: {
       variant: {
@@ -85,7 +85,7 @@ export const Step = ({ children, className, variant, ...props }: StepProps) => {
     <li className="add-status mb-16 flex items-start space-x-2">
       <div
         className={cn(
-          "step-icon z-20 flex-shrink-0 bg-background",
+          "step-icon z-20 flex-shrink-0",
           StepVariants({ variant }),
           className,
         )}

@@ -22,8 +22,7 @@ export const organizationRouter = router({
             return {
               id: member.id,
               userId: member.publicUserData?.userId,
-              firstName: member.publicUserData?.firstName,
-              lastName: member.publicUserData?.lastName,
+              fullName: member.publicUserData?.firstName,
               email: member.publicUserData?.identifier,
               role: member.role,
               imageUrl: member.publicUserData?.imageUrl,
