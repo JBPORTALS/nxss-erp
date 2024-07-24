@@ -1,40 +1,32 @@
-"use client";
-
-import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
 import { Protect } from "@clerk/nextjs";
 import { HomeIcon, Layers, PlusIcon, Users2Icon } from "lucide-react";
 
-import {
-  Sidebar,
-  SidebarBody,
-  SidebarItem,
-  SidebarLabel,
-} from "@nxss/ui/asidebar";
+import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
 import { Button } from "@nxss/ui/button";
 
-export default function AsideBarClient() {
-  const { org } = useParams();
-  const pathname = usePathname();
+import { SidebarItemClient } from "./sidebar-item";
+
+export default function AsideBarClient({
+  params,
+}: {
+  params: { org: string };
+}) {
+  console.log(params);
   return (
     <Sidebar>
       <SidebarLabel>MAIN MENU</SidebarLabel>
       <SidebarBody>
-        <Link href={`/${org}/dashboard`}>
-          <SidebarItem isActive={pathname.startsWith(`/${org}/dashboard`)}>
-            <HomeIcon className="size-4" /> Dashboard
-          </SidebarItem>
-        </Link>
+        <SidebarItemClient path={`/${params.org}/dashboard`}>
+          <HomeIcon className="size-4" /> Dashboard
+        </SidebarItemClient>
 
         <Protect role="org:admin">
-          <Link href={`/${org}/faculty`}>
-            <SidebarItem isActive={pathname.startsWith(`/${org}/faculty`)}>
-              <Users2Icon className="size-4" /> Faculty
-            </SidebarItem>
-          </Link>
-          <SidebarItem isActive={pathname.startsWith(`/${org}/subjects`)}>
+          <SidebarItemClient path={`/${params.org}/faculty`}>
+            <Users2Icon className="size-4" /> Faculty
+          </SidebarItemClient>
+          <SidebarItemClient path={`/${params.org}/subjects`}>
             <Layers className="size-4" /> Subjects
-          </SidebarItem>
+          </SidebarItemClient>
         </Protect>
       </SidebarBody>
       <Protect role="org:admin">
