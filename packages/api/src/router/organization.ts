@@ -1,6 +1,10 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { and, db, eq } from "@nxss/db";
+
+import { staff } from "../../../db/src/schema/staff";
 import { protectedProcedure, router } from "../trpc";
 
 export const organizationRouter = router({
@@ -22,7 +26,8 @@ export const organizationRouter = router({
             return {
               id: member.id,
               userId: member.publicUserData?.userId,
-              fullName: member.publicUserData?.firstName,
+              firstName: member.publicUserData?.firstName,
+              lastName: member.publicUserData?.lastName,
               email: member.publicUserData?.identifier,
               role: member.role,
               imageUrl: member.publicUserData?.imageUrl,
@@ -144,4 +149,32 @@ export const organizationRouter = router({
         throw new Error("Failed to fetch organization members");
       }
     }),
+  getStaffProfileStatus: protectedProcedure.query(async ({ ctx }) => {
+    const currentUserId = ctx.auth.userId;
+    const currentOrgId = ctx.auth.orgId;
+    try {
+      if (!currentOrgId)
+        throw new TRPCError({
+          message: "No organization selected",
+          code: "BAD_REQUEST",
+        });
+
+      const organization = await db
+        .select()
+        .from(staff)
+        .where(
+          and(
+            eq(staff.clerk_user_id, currentUserId),
+            eq(staff.clerk_org_id, currentOrgId),
+          ),
+        );
+
+      return {
+        status: organization.at(0)?.status,
+      };
+    } catch (error) {
+      console.error("Error fetching organization members:", error);
+      throw new Error("Failed to fetch organization members");
+    }
+  }),
 });

@@ -13,7 +13,7 @@ export const SignInSchema = z.object({
 
 export const ProfileDetailsSchema = z.object({
   firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  lastName: z.string().optional(),
   error: z.string().optional(),
 });
 

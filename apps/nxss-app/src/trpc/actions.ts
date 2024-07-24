@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { staff } from "node_modules/@nxss/db/src/schema/staff";
 import { z } from "zod";
 
+import { and, db, eq } from "@nxss/db";
 import { ProfileDetailsSchema } from "@nxss/validators";
 
 import { api } from "./server";
@@ -58,6 +60,17 @@ export const completeOnboarding = async (
       lastName: values.lastName,
       createOrganizationEnabled: false,
     });
+
+    await db
+      .update(staff)
+      .set({
+        status: "in_review",
+      })
+      .where(
+        and(eq(staff.clerk_user_id, userId), eq(staff.clerk_org_id, orgId)),
+      );
+
+    revalidatePath(`/${orgSlug}/dashboard`);
 
     return { message: res.publicMetadata };
   } catch (err) {

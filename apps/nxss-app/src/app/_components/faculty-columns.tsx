@@ -38,7 +38,9 @@ export const FacultyColumns: ColumnDef<MembershipList>[] = [
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0">
-            <span>{props.row.original.fullName}</span>
+            <span>
+              {props.row.original.firstName} {props.row.original.lastName}
+            </span>
             <span className="text-sm text-muted-foreground">
               {props.row.original?.email}
             </span>

@@ -88,9 +88,7 @@ export default function StaffOnboarding() {
                 <FormControl>
                   <Input {...field} placeholder="Chowdry" />
                 </FormControl>
-                <FormDescription>
-                  As per your institution staff ID Card.
-                </FormDescription>
+                <FormDescription>{"(Optional)"}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
