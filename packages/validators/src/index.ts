@@ -14,6 +14,7 @@ export const SignInSchema = z.object({
 export const ProfileDetailsSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().optional(),
+  docUrl: z.string().min(1, "Required"),
   error: z.string().optional(),
 });
 

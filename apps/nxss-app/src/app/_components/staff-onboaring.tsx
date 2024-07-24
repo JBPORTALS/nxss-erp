@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { z } from "zod";
 
-import { Button } from "@nxss/ui/button";
+import { Button, buttonVariants } from "@nxss/ui/button";
 import {
   Form,
   FormControl,
@@ -18,9 +18,11 @@ import {
 } from "@nxss/ui/form";
 import { Input } from "@nxss/ui/input";
 import { Separator } from "@nxss/ui/seperator";
+import { toast } from "@nxss/ui/toast";
 import { ProfileDetailsSchema } from "@nxss/validators";
 
 import { completeOnboarding } from "~/trpc/actions";
+import { UploadDropzone } from "~/utils/uploadthing";
 
 export default function StaffOnboarding() {
   const form = useForm({
@@ -101,6 +103,38 @@ export default function StaffOnboarding() {
               Upload any identification document that can be recognized by your
               institution.
             </p>
+            <FormField
+              control={form.control}
+              name="docUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <UploadDropzone
+                      appearance={{
+                        button: buttonVariants({ variant: "primary" }),
+                        container: "border-border border-2",
+                        label: "text-foreground hover:text-foreground",
+                      }}
+                      config={{
+                        appendOnPaste: true,
+                      }}
+                      endpoint="imageUploader"
+                      onClientUploadComplete={(res) => {
+                        // Do something with the response
+                        console.log("Files: ", res);
+                        form.setValue("docUrl", res.at(0)?.url ?? "");
+                        toast.info("Document Uploaded");
+                      }}
+                      onUploadError={(error: Error) => {
+                        // Do something with the error.
+                        toast.error(error.name, { description: error.message });
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <Button
             type="submit"

@@ -9,7 +9,9 @@ import { protectedProcedure, router } from "../trpc";
 
 export const organizationRouter = router({
   getMembershipList: protectedProcedure
-    .input(z.object({ slug: z.string().min(1) }))
+    .input(
+      z.object({ slug: z.string().min(1), unApproved: z.boolean().optional() }),
+    )
     .query(async ({ input, ctx }) => {
       const currentUserId = ctx.auth.userId;
       try {
@@ -23,26 +25,48 @@ export const organizationRouter = router({
 
         const members = await Promise.all(
           memberList.data.map(async (member) => {
+            //fetch the status of staff profile
+            const staffData = await db
+              .select()
+              .from(staff)
+              .where(
+                and(
+                  eq(staff.clerk_user_id, member.publicUserData?.userId ?? ""),
+                  eq(staff.clerk_org_id, organization.id),
+                ),
+              );
+
             return {
               id: member.id,
-              userId: member.publicUserData?.userId,
+              userId: member.publicUserData?.userId ?? "",
               firstName: member.publicUserData?.firstName,
               lastName: member.publicUserData?.lastName,
               email: member.publicUserData?.identifier,
               role: member.role,
               imageUrl: member.publicUserData?.imageUrl,
+              createdAt: staffData.at(0)?.createdAt ?? Date(),
               isAdmin: member.role === "admin",
+              status: staffData.at(0)?.status,
             };
           }),
         );
 
+        const approvedMembers = members.filter((member) => {
+          if (input.unApproved) return member.status === "in_review";
+          // Check if the staff status is 'approved'
+          return member.status === "approved";
+        });
+
+        // console.log("staffData", approvedMembers);
         return {
           organization: {
             id: organization.id,
             name: organization.name,
             slug: organization.slug,
           },
-          members: members.filter((member) => member.userId != currentUserId),
+          members: approvedMembers.filter(
+            (member) => member?.userId != currentUserId,
+          ),
         };
       } catch (error) {
         console.error("Error fetching organization members:", error);
@@ -51,7 +75,7 @@ export const organizationRouter = router({
     }),
   getInvitationsList: protectedProcedure
     .input(z.object({ slug: z.string().min(1) }))
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       try {
         const organization = await clerkClient().organizations.getOrganization({
           slug: input.slug,

@@ -11,10 +11,13 @@ const isPublicRoute = createRouteMatcher([
   "/invite(.*)",
 ]);
 const isHomeRoute = createRouteMatcher(["/"]);
+const isUploadthingRoute = createRouteMatcher(["/api/uploadthing(.*)"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
     const { userId, redirectToSignIn } = auth();
+
+    if (isUploadthingRoute(request)) return NextResponse.next();
 
     // If the user isn't signed in and the route is private, redirect to sign-in
     if (!userId && !isPublicRoute(request))
@@ -45,5 +48,5 @@ export default clerkMiddleware(
 );
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc|uploadthing)(.*)"],
 };
