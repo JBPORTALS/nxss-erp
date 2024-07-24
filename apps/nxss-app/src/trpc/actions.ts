@@ -65,6 +65,7 @@ export const completeOnboarding = async (
       .update(staff)
       .set({
         status: "in_review",
+        docUrl: values.docUrl,
       })
       .where(
         and(eq(staff.clerk_user_id, userId), eq(staff.clerk_org_id, orgId)),

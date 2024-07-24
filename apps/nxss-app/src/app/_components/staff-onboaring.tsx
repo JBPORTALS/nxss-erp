@@ -120,7 +120,7 @@ export default function StaffOnboarding() {
                             config={{
                               appendOnPaste: true,
                             }}
-                            endpoint="imageUploader"
+                            endpoint="documentUploader"
                             onClientUploadComplete={(res) => {
                               // Do something with the response
                               console.log("Files: ", res);
@@ -153,7 +153,7 @@ export default function StaffOnboarding() {
                         config={{
                           appendOnPaste: true,
                         }}
-                        endpoint="imageUploader"
+                        endpoint={`documentUploader`}
                         onClientUploadComplete={(res) => {
                           // Do something with the response
                           console.log("Files: ", res);
