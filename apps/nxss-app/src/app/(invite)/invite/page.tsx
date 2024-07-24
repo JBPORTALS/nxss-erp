@@ -1,11 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RocketIcon } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
 
-export default function Page() {
+function Invitation() {
   const ticket = useSearchParams().get("__clerk_ticket");
   const status = useSearchParams().get("__clerk_status");
   const org_name = useSearchParams().get("org_name");
@@ -40,5 +41,13 @@ export default function Page() {
         </Button>
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <Invitation />
+    </Suspense>
   );
 }
