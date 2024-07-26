@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   const payload: WebhookEvent = await request.json();
 
   if (payload.type === "organizationInvitation.accepted") {
-    console.log("testing...", payload);
     const user = await clerkClient().users.getUserList({
       emailAddress: [payload.data.email_address],
     });

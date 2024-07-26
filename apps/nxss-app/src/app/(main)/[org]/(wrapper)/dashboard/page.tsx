@@ -8,12 +8,16 @@ import { api } from "~/trpc/server";
 
 export default async function Page() {
   const { orgId } = auth();
+  const jwt = auth().sessionClaims;
+
+  console.log("jio", jwt);
 
   if (!orgId) throw new Error("No organization selected");
 
   const { name: orgName } = await clerkClient().organizations.getOrganization({
     organizationId: orgId,
   });
+
   const { status } = await api.organization.getStaffProfileStatus();
 
   return (

@@ -11,7 +11,6 @@ export default function AsideBarClient({
 }: {
   params: { org: string };
 }) {
-  console.log(params);
   return (
     <Sidebar>
       <SidebarLabel>MAIN MENU</SidebarLabel>

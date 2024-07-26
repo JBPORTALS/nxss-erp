@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { ClerkAPIError } from "@clerk/types";
+import { TRPCClientError } from "@trpc/client";
+import {
+  TRPCErrorResponse,
+  TRPCErrorShape,
+} from "@trpc/server/unstable-core-do-not-import";
 import { CheckCircle2 } from "lucide-react";
 import { z } from "zod";
 
@@ -54,9 +60,10 @@ export function InviteDialog({ children }: { children: React.ReactNode }) {
               icon: <CheckCircle2 />,
             });
           } catch (e) {
-            console.log(e);
-            toast.error(`Failed!`, {
-              description: `couldn't able send invitation to ${email}`,
+            const error = e as ClerkAPIError;
+            console.log("invitation error:", error);
+            toast.error(`${error}`, {
+              description: `${error.longMessage}`,
             });
           }
         }),

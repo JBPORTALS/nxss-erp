@@ -11,6 +11,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 
+import { SyncActiveOrganization } from "~/utils/sync-active-organization";
+
 export function Providers(props: { children: React.ReactNode }) {
   const { theme } = useTheme();
   return (
@@ -20,6 +22,8 @@ export function Providers(props: { children: React.ReactNode }) {
         baseTheme: theme === "dark" ? dark : undefined,
       }}
     >
+      <SyncActiveOrganization />
+
       <TRPCReactProvider>{props.children}</TRPCReactProvider>
       <Toaster
         richColors
