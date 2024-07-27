@@ -39,7 +39,8 @@
     "./multi-step-formdemo": "./src/multi-step-formdemo.tsx",
     "./card": "./src/card.tsx",
     "./avatar-list": "./src/avatar-list.tsx",
-    "./password-input":"./src/password-input.tsx"
+    "./password-input":"./src/password-input.tsx",
+    "./seperator": "./src/seperator.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -61,6 +62,7 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "cmdk": "^1.0.0",

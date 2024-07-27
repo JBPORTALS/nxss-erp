@@ -12,8 +12,9 @@ export const SignInSchema = z.object({
 });
 
 export const ProfileDetailsSchema = z.object({
-  fullname: z.string().min(1),
-  staffId: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().optional(),
+  docUrl: z.string().min(1, "Required"),
   error: z.string().optional(),
 });
 
