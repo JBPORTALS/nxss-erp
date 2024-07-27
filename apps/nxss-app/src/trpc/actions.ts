@@ -18,9 +18,8 @@ export async function inviteMember(values: { slug: string; email: string }) {
     });
 
     revalidatePath(`/${values.slug}/faculty/invitations`, "page");
-  } catch (e) {
-    const error = e as Error;
-    return new Error(error.message);
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -111,3 +110,8 @@ export const completeVerification = async (values: { staffId: string }) => {
     return { error: "There was an error updating the user metadata." };
   }
 };
+
+export async function getOrg(slug: string) {
+  const { id } = await clerkClient().organizations.getOrganization({ slug });
+  return id;
+}

@@ -15,7 +15,7 @@ const isUploadthingRoute = createRouteMatcher(["/api/uploadthing(.*)"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
-    const { userId, redirectToSignIn } = auth();
+    const { userId, redirectToSignIn, sessionId } = auth();
 
     if (isUploadthingRoute(request)) return NextResponse.next();
 
@@ -28,17 +28,21 @@ export default clerkMiddleware(
       const organizations =
         await clerkClient().users.getOrganizationMembershipList({ userId });
 
-      const orgSlug = organizations.data[0]?.organization.slug;
-      const orgId = organizations.data[0]?.organization.id;
+      const org_slug = organizations.data[0]?.organization.slug;
+      const org_id = organizations.data[0]?.organization.id;
+      const org_name = organizations.data[0]?.organization.name;
+      const org_role = organizations.data[0]?.role;
 
       await clerkClient().users.updateUser(userId, {
         publicMetadata: {
-          orgSlug,
-          orgId,
+          org_id,
+          org_slug,
+          org_name,
+          org_role,
         },
       });
       return NextResponse.redirect(
-        new URL(`/${orgSlug}/dashboard`, request.nextUrl.origin),
+        new URL(`/${org_slug}/dashboard`, request.nextUrl.origin),
       );
     }
   },

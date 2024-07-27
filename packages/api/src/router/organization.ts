@@ -1,4 +1,5 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { ClerkAPIError } from "@clerk/types";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -137,16 +138,17 @@ export const organizationRouter = router({
             ? `http://localhost:${process.env.PORT}`
             : `https://nexusserp.vercel.app`;
         //map the list of emails to sent invitation
-        return clerkClient().organizations.createOrganizationInvitation({
+        await clerkClient().organizations.createOrganizationInvitation({
           emailAddress: input.email,
           organizationId: organization.id,
           role: "org:staff",
           inviterUserId: currentUserId,
           redirectUrl: `${baseURL}/invite?org_name=${organization.name}`,
         });
-      } catch (error) {
+      } catch (e) {
+        const error = e as ClerkAPIError;
         console.error("Error sending invitation to member:", error);
-        throw new Error("Failed to send invitation");
+        throw error;
       }
     }),
   revokeInvitation: protectedProcedure

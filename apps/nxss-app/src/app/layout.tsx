@@ -11,6 +11,7 @@ import "~/app/globals.css";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
+import { SyncActiveOrganization } from "~/utils/sync-active-organization";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Providers } from "./providers";
 

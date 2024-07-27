@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { env } from "@/env";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import {
   Briefcase,
@@ -18,10 +20,8 @@ import { Label } from "@nxss/ui/label";
 import { HStack, VStack } from "@nxss/ui/stack";
 import { Textarea } from "@nxss/ui/textarea";
 
-export default async function HomePage() {
-  const { userId } = auth();
-  if (!userId) return null;
-  const user = await clerkClient().users.getUser(userId);
+export default function HomePage() {
+  const { user } = useUser();
   return (
     <div className="relative h-full w-full">
       <header className="flex h-16 w-full items-center justify-between border-b px-16">
@@ -39,7 +39,7 @@ export default async function HomePage() {
               <Button variant={"ghost"}>
                 Dashboard
                 <Avatar className="size-6">
-                  <AvatarImage src={user.imageUrl} />
+                  <AvatarImage src={user?.imageUrl} />
                 </Avatar>
               </Button>
             </Link>
