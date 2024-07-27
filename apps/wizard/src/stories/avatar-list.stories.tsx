@@ -3,7 +3,7 @@ import React from "react";
 import AvatarList, { AvatarListProps } from "@nxss/ui/avatar-list";
 
 export default {
-  title: "AvatarList",
+  title: "UI/AvatarList",
   component: AvatarList,
   argTypes: {
     images: {
