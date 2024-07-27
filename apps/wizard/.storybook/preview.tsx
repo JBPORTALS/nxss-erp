@@ -1,7 +1,11 @@
 import type { Preview } from "@storybook/react";
-import '../src/app/globals.css';
+
+import "../src/app/globals.css";
+
+import React from "react";
 import { Open_Sans } from "next/font/google";
-import React from "react"
+
+import { ThemeProvider } from "@nxss/ui/theme";
 
 const OpenSans = Open_Sans({
   variable: "--font-open-sans",
@@ -17,11 +21,15 @@ const preview: Preview = {
       },
     },
   },
-  decorators:[
-    (Story)=>(
-      <main className={`${OpenSans.variable}`}><Story/></main>
-    )
-  ]
+  decorators: [
+    (Story) => (
+      <main className={`${OpenSans.variable}`}>
+        <ThemeProvider>
+          <Story />
+        </ThemeProvider>
+      </main>
+    ),
+  ],
 };
 
 export default preview;
