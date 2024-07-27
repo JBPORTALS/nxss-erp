@@ -26,6 +26,7 @@
     "@trpc/client": "11.0.0-rc.459",
     "@trpc/react-query": "11.0.0-rc.459",
     "@trpc/server": "11.0.0-rc.459",
+    "@uploadthing/react": "^6.7.2",
     "date-fns": "^3.6.0",
     "geist": "^1.3.1",
     "lucide-react": "^0.408.0",
@@ -35,6 +36,7 @@
     "react-dom": "18.2.0",
     "superjson": "2.2.1",
     "svix": "^1.25.0",
+    "uploadthing": "^6.13.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

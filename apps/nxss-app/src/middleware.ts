@@ -5,36 +5,48 @@ import {
   createRouteMatcher,
 } from "@clerk/nextjs/server";
 
-const isPublicRoutes = createRouteMatcher(["/sign-in", "/api/clerk(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/sign-in",
+  "/api/clerk(.*)",
+  "/invite(.*)",
+]);
 const isHomeRoute = createRouteMatcher(["/"]);
-const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
-const isIvitationRoute = createRouteMatcher(["/invite(.*)"]);
+const isUploadthingRoute = createRouteMatcher(["/api/uploadthing(.*)"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
-    const { userId, redirectToSignIn, sessionClaims } = auth();
+    const { userId, redirectToSignIn } = auth();
 
-    if (!isPublicRoutes(request) && !isIvitationRoute(request) && !userId) {
+    if (isUploadthingRoute(request)) return NextResponse.next();
+
+    // If the user isn't signed in and the route is private, redirect to sign-in
+    if (!userId && !isPublicRoute(request))
       return redirectToSignIn({ returnBackUrl: request.url });
-    }
 
-    //if it matches public routes and authenticated. push to current organization
+    //Redirect user to their current selected organization
     if (userId && isHomeRoute(request)) {
       const organizations =
         await clerkClient().users.getOrganizationMembershipList({ userId });
 
-      const orgslug = organizations.data[0]?.organization.slug;
+      const orgSlug = organizations.data[0]?.organization.slug;
+      const orgId = organizations.data[0]?.organization.id;
+
+      await clerkClient().users.updateUser(userId, {
+        publicMetadata: {
+          orgSlug,
+          orgId,
+        },
+      });
       return NextResponse.redirect(
-        new URL(`/${orgslug}/dashboard`, request.nextUrl.origin),
+        new URL(`/${orgSlug}/dashboard`, request.nextUrl.origin),
       );
     }
   },
   {
     signInUrl: "/sign-in",
-    afterSignInUrl: "/sign-in",
   },
 );
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc|uploadthing)(.*)"],
 };

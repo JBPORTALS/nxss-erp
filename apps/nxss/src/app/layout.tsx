@@ -61,18 +61,18 @@ export default function RootLayout(props: { children: React.ReactNode }) {
             Mw.variable,
           )}
         >
-          <ThemeProvider attribute="class">
-            {props.children}
-            <Toaster
-              richColors
-              icons={{
-                success: <BadgeCheck />,
-                error: <BadgeAlert />,
-                info: <BadgeInfo />,
-                warning: <TriangleAlert />,
-              }}
-            />
-          </ThemeProvider>
+          {/* <ThemeProvider attribute="class"> */}
+          {props.children}
+          <Toaster
+            richColors
+            icons={{
+              success: <BadgeCheck />,
+              error: <BadgeAlert />,
+              info: <BadgeInfo />,
+              warning: <TriangleAlert />,
+            }}
+          />
+          {/* </ThemeProvider> */}
         </body>
       </html>
     </ClerkProvider>

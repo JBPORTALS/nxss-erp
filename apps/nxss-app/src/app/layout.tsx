@@ -8,6 +8,10 @@ import { env } from "~/env";
 
 import "~/app/globals.css";
 
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+
+import { ourFileRouter } from "./api/uploadthing/core";
 import { Providers } from "./providers";
 
 const OpenSans = Roboto({
@@ -59,7 +63,16 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           Mw.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <NextSSRPlugin
+          /**
+           * The `extractRouterConfig` will extract **only** the route configs
+           * from the router to prevent additional information from being
+           * leaked to the client. The data passed to the client is the same
+           * as if you were to fetch `/api/uploadthing` directly.
+           */
+          routerConfig={extractRouterConfig(ourFileRouter)}
+        />
+        <ThemeProvider attribute="class" defaultTheme="light">
           <Providers>{props.children}</Providers>
         </ThemeProvider>
       </body>

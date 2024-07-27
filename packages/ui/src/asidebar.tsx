@@ -6,14 +6,14 @@ import { NavItem, NavItemProps } from "./nav-item";
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function Sidebar({ children, className, ...props }: SidebarProps) {
   return (
-    <div
+    <aside
       className={cn(
-        "sticky inset-0 flex w-60 shrink-0 flex-col gap-4 border-r py-4 pl-5",
+        "sticky inset-0 -mt-24 flex h-screen w-60 shrink-0 flex-col gap-4 border-r py-4 pl-5 pt-24",
         className,
       )}
     >
       {children}
-    </div>
+    </aside>
   );
 }
 

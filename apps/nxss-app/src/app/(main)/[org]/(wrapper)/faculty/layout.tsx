@@ -30,7 +30,11 @@ export default function Template(props: { children: React.ReactNode }) {
         </Link>
 
         <TabItem>Inactive</TabItem>
-        <TabItem>Approve</TabItem>
+        <Link href={`/${org}/faculty/approve`}>
+          <TabItem isActive={pathname === `/${org}/faculty/approve`}>
+            Approve
+          </TabItem>
+        </Link>
         <Link href={`/${org}/faculty/invitations`}>
           <TabItem isActive={pathname === `/${org}/faculty/invitations`}>
             Invitations
