@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 import { env } from "./env";
@@ -13,7 +14,7 @@ const options = {
 };
 
 export default clerkMiddleware((auth, req) => {
-  if (isPublicRoute(req)) return; // if it's a public route, do nothing
+  if (isPublicRoute(req)) return NextResponse.next(); // if it's a public route, do nothing
   auth().protect(); // for any other route, require auth
 }, options);
 
