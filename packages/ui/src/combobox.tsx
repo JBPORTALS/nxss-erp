@@ -1,78 +1,104 @@
-// components/ComboboxDemo.tsx
+"use client";
 
-"use client"
+import React, { useState } from "react";
+import { AvatarIcon } from "@radix-ui/react-icons";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { cn } from "."
-import { Button } from "./button"
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "./command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "./popover"
+  CommandList,
+  CommandSeparator,
+} from "@nxss/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
 
-interface Framework {
-  value: string
-  label: string
-}
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
-interface ComboboxDemoProps {
-  frameworks: Framework[]
-}
+export function ComboboxDemo() {
+  const [selected, setSelected] = useState<string | null>(null);
 
-export function ComboboxDemo({ frameworks }: ComboboxDemoProps) {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const items = [
+    { email: null, src: null }, // Default "No Assign" item
+    { email: "Akashakashbr41@gmail.com", src: "https://github.com/shadcn.png" },
+    { email: "Rsharshitha@gmail.com", src: "https://github.com/shadcn.png" },
+    { email: "Likitha2008@gmail.com", src: "https://github.com/shadcn.png" },
+    { email: "kushal@gmail.com", src: "" },
+  ];
+
+  const handleSelect = (email: string | null) => {
+    setSelected(email);
+  };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandGroup>
-            {frameworks.map((framework) => (
-              <CommandItem
-                key={framework.value}
-                value={framework.value}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue)
-                  setOpen(false)
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {framework.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  )
+    <div>
+      <Popover>
+        <PopoverTrigger asChild>
+          <div className="flex items-center gap-3 hover:cursor-pointer">
+            {selected ? (
+              selected === null ? (
+                <>
+                  <AvatarIcon height={30} width={40} />
+                  No Assign
+                </>
+              ) : (
+                <>
+                  <Avatar>
+                    <AvatarImage
+                      src={
+                        items.find((item) => item.email === selected)?.src ||
+                        undefined
+                      }
+                      alt={selected || ""}
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <span>{selected}</span>
+                </>
+              )
+            ) : (
+              <>
+                <AvatarIcon height={30} width={40} />
+                No Assign
+              </>
+            )}
+          </div>
+        </PopoverTrigger>
+        <PopoverContent className="w-full">
+          <Command>
+            <CommandInput placeholder="Type a command or search..." />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup heading="Staffs">
+                {items.map((item, index) => (
+                  <CommandItem
+                    key={index}
+                    className="cursor-pointer gap-3"
+                    onSelect={() => handleSelect(item.email)}
+                  >
+                    {item.email === null ? (
+                      <>
+                        <AvatarIcon height={30} width={40} />
+                        No Assign
+                      </>
+                    ) : (
+                      <>
+                        <Avatar>
+                          <AvatarImage src={item.src} alt={item.email} />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <span>{item.email}</span>
+                      </>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              <CommandSeparator />
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
 }

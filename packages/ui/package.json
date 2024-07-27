@@ -32,12 +32,14 @@
     "./command": "./src/command.tsx",
     "./landing-page": "./src/landing-page.tsx",
     "./badge": "./src/badge.tsx",
-    "./progress-bar":"./src/progress-bar.tsx",
-    "./progress":"./src/progress.tsx",
-    "./image-placeholder":"./src/image-placeholder.tsx",
-    "./multi-step-form":"./src/multi-step-form.tsx",
-    "./multi-step-formdemo":"./src/multi-step-formdemo.tsx",
-    "./card":"./src/card.tsx"
+    "./progress-bar": "./src/progress-bar.tsx",
+    "./progress": "./src/progress.tsx",
+    "./image-placeholder": "./src/image-placeholder.tsx",
+    "./multi-step-form": "./src/multi-step-form.tsx",
+    "./multi-step-formdemo": "./src/multi-step-formdemo.tsx",
+    "./card": "./src/card.tsx",
+    "./avatar-list": "./src/avatar-list.tsx",
+    "./password-input":"./src/password-input.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -49,6 +51,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
+    "@nextui-org/react": "^2.4.6",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
@@ -61,6 +64,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "cmdk": "^1.0.0",
+    "framer-motion": "^11.3.8",
     "lucide": "^0.408.0",
     "lucide-react": "^0.408.0",
     "next-themes": "^0.3.0",

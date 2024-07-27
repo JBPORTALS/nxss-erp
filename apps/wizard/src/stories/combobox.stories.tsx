@@ -1,7 +1,7 @@
 // stories/ComboboxDemo.stories.tsx
 
-import { ComboboxDemo } from "@nxss/ui/combobox"
-import { Meta, StoryObj } from "@storybook/react"
+import { Meta, StoryObj } from "@storybook/react";
+import { ComboboxDemo } from "@nxss/ui/combobox";
 
 const frameworks = [
   { value: "next.js", label: "Next.js" },
@@ -9,7 +9,7 @@ const frameworks = [
   { value: "nuxt.js", label: "Nuxt.js" },
   { value: "remix", label: "Remix" },
   { value: "astro", label: "Astro" },
-]
+];
 
 const meta: Meta<typeof ComboboxDemo> = {
   title: "UI/ComboboxDemo",
@@ -18,13 +18,13 @@ const meta: Meta<typeof ComboboxDemo> = {
     layout: "centered",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof ComboboxDemo>
+} satisfies Meta<typeof ComboboxDemo>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: { frameworks },
-  render: (args) => <ComboboxDemo {...args} />,
-}
+  render: () => <ComboboxDemo />,
+};

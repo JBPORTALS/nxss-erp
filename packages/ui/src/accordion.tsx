@@ -3,18 +3,81 @@
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { cva, VariantProps } from "class-variance-authority";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, PlusCircle } from "lucide-react";
 
 import { cn } from ".";
 
-const Accordion = AccordionPrimitive.Root;
+const AccordionContext = React.createContext<{
+  value: string | undefined;
+  setValue: (value: string | undefined) => void;
+}>({
+  value: "",
+  setValue: (value: string | undefined) => {},
+});
+
+const AccordionRoot = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  const AccordionCtx = React.useContext(AccordionContext);
+
+  return (
+    <AccordionPrimitive.Root
+      {...props}
+      type="single"
+      collapsible
+      defaultValue={AccordionCtx.value}
+      onValueChange={() => {}}
+      value={AccordionCtx.value}
+      ref={ref}
+    />
+  );
+});
+
+AccordionRoot.displayName = "AccordionRoot";
+
+const Accordion = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  const [value, onChangeValue] = React.useState<string | undefined>("");
+
+  const setValue = React.useCallback((value: string | undefined) => {
+    onChangeValue(value);
+  }, []);
+
+  return (
+    <AccordionContext.Provider value={{ setValue, value }}>
+      <AccordionRoot ref={ref} {...props} />
+    </AccordionContext.Provider>
+  );
+});
+
+Accordion.displayName = "Accordion";
+
+interface CustomAccordionItemProps {
+  open?: boolean;
+}
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
->(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item ref={ref} className={cn("", className)} {...props} />
-));
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item> &
+    CustomAccordionItemProps
+>(({ className, open = false, value, ...props }, ref) => {
+  const AccordionCtx = React.useContext(AccordionContext);
+  React.useEffect(() => {
+    if (open) AccordionCtx.setValue(value);
+  }, [open]);
+
+  return (
+    <AccordionPrimitive.Item
+      ref={ref}
+      className={cn("", className)}
+      value={value}
+      {...props}
+    />
+  );
+});
 AccordionItem.displayName = "AccordionItem";
 
 const accordionTriggerVariants = cva(
@@ -42,6 +105,7 @@ const AccordionTrigger = React.forwardRef<
 >(({ className, children, isActive, ...props }, ref) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
+      data-state="closed"
       ref={ref}
       className={cn(
         "w-full",
@@ -64,8 +128,9 @@ const AccordionContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
+    data-state="closed"
     ref={ref}
-    className="ml-5 border-l text-xs"
+    className="ml-5 border-l pt-3 text-xs"
     {...props}
   >
     <div className={cn("ml-2 gap-0 pb-2 pt-0", className)}>{children}</div>

@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
+import { Button } from "@nxss/ui/button";
 import { Input } from "@nxss/ui/input";
 
 const meta: Meta<typeof Input> = {
@@ -25,6 +26,11 @@ export const Default: Story = {
 export const Password: Story = {
   args: {},
   render: (args) => {
-    return <Input type="password" placeholder="Email" />;
+    return (
+      <form>
+        <Input type="password" placeholder="Password" required />
+        <Button>submit</Button>
+      </form>
+    );
   },
 };
