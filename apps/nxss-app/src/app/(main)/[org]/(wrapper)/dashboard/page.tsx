@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Protect } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { ScanEyeIcon } from "lucide-react";
@@ -18,7 +17,6 @@ import { api } from "~/trpc/server";
 
 export default async function Page() {
   const { orgId, userId, sessionClaims } = auth();
-  const jwt = auth().sessionClaims;
 
   if (!userId) throw new Error("No user logged in");
 
