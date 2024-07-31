@@ -1,23 +1,25 @@
 // stories/ComboboxDemo.stories.tsx
 import { Meta, StoryObj } from "@storybook/react";
+import { userEvent, within } from "@storybook/test";
 import {
-    Calculator,
-    Calendar,
-    CreditCard,
-    Settings,
-    Smile,
-    User,
-  } from "lucide-react"
-  import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-    CommandShortcut,
-  } from "@nxss/ui/command"
+  Calculator,
+  Calendar,
+  CreditCard,
+  Settings,
+  Smile,
+  User,
+} from "lucide-react";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@nxss/ui/command";
 
 const meta: Meta<typeof Command> = {
   title: "UI/Command",
@@ -73,4 +75,16 @@ export const Default: Story = {
       </CommandList>
     </Command>
   ),
+};
+
+Default.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+
+  const searchInput = await canvas.getByPlaceholderText(
+    "Type a command or search...",
+  );
+
+  await userEvent.click(searchInput);
+  await userEvent.keyboard("jhuhiui");
+  await userEvent.clear(searchInput);
 };

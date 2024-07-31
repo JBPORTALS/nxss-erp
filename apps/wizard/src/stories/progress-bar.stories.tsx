@@ -17,6 +17,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   render: (args) => {
-    return <Progress value={33} />;
+    return <Progress value={33}  />;
   },
 };

@@ -23,9 +23,6 @@ import { Textarea } from "@nxss/ui/textarea";
 
 const meta: Meta = {
   title: "Admin/Invite page",
-  parameters: {
-    layout: "centered",
-  },
   tags: ["autodocs"],
 };
 
