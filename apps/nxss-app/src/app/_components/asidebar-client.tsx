@@ -1,25 +1,10 @@
-import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
-import {
-  HomeIcon,
-  Layers,
-  PlusCircle,
-  PlusIcon,
-  Users2Icon,
-} from "lucide-react";
+import { HomeIcon, Layers, Users2Icon } from "lucide-react";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionTriggerText,
-} from "@nxss/ui/accordion";
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
-import { Button } from "@nxss/ui/button";
-import { NavItem } from "@nxss/ui/nav-item";
 
-import Dailog from "./dailog/sidebar-dailog";
+import BranchListClient from "./branch-list-client";
+import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 
 export default function AsideBarClient({
@@ -34,7 +19,9 @@ export default function AsideBarClient({
       semesters: 6,
     },
   ];
+
   const hasAccordion = accordionItems.length > 0;
+
   return (
     <Sidebar>
       <SidebarLabel>MAIN MENU</SidebarLabel>
@@ -55,7 +42,7 @@ export default function AsideBarClient({
       <Protect role="org:admin">
         <SidebarLabel className="flex items-center justify-between pr-2">
           BRANCHES
-          <Dailog />
+          <CreateBranchDailog />
         </SidebarLabel>
       </Protect>
       <Protect role="org:staff">
@@ -65,23 +52,7 @@ export default function AsideBarClient({
       </Protect>
       <SidebarBody>
         {hasAccordion ? (
-          <Accordion type="single" collapsible={false} className="w-full">
-            {accordionItems.map((item) => (
-              <AccordionItem key={item.id} value={item.id} open={true}>
-                <Link href={`/${params.org}/branch/${item.id}`}>
-                  <AccordionTrigger>
-                    <PlusCircle className="size-4 flex-shrink-0" />
-                    <AccordionTriggerText>{item.title}</AccordionTriggerText>
-                  </AccordionTrigger>
-                </Link>
-                <AccordionContent>
-                  {[...Array(item.semesters)].map((_, index) => (
-                    <NavItem key={index}>Semester {index + 1}</NavItem>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <BranchListClient branchList={accordionItems} />
         ) : (
           <main className="pr-2">
             <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">

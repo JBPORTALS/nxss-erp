@@ -42,9 +42,12 @@ const Accordion = React.forwardRef<
 >(({ className, ...props }, ref) => {
   const [value, onChangeValue] = React.useState<string | undefined>("");
 
-  const setValue = React.useCallback((value: string | undefined) => {
-    onChangeValue(value);
-  }, []);
+  const setValue = React.useCallback(
+    (value: string | undefined) => {
+      onChangeValue(value);
+    },
+    [value],
+  );
 
   return (
     <AccordionContext.Provider value={{ setValue, value }}>

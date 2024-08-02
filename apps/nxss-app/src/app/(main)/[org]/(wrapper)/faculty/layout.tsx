@@ -6,7 +6,7 @@ import { useParams, usePathname } from "next/navigation";
 import { Button } from "@nxss/ui/button";
 import { TabItem, Tabs } from "@nxss/ui/tabs";
 
-import { InviteDialog } from "~/app/_components/invite-dialog";
+import { InviteDialog } from "~/app/_components/dailog/invite-dialog";
 
 export default function Template(props: { children: React.ReactNode }) {
   const { org } = useParams();

@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
 
 import { api } from "~/trpc/server";
-import { ViewApproveDetailsDialog } from "./view-approve-details-dialog";
+import { ViewApproveDetailsDialog } from "./dailog/view-approve-details-dialog";
 
 type MembershipList = Awaited<
   ReturnType<typeof api.organization.getMembershipList>

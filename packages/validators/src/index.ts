@@ -33,3 +33,8 @@ export const inviteSchema = z.object({
       );
     }, "One or more email addresses are invalid"),
 });
+
+export const CreateBranchScheme = z.object({
+  name: z.string().min(1, "Required!"),
+  description: z.string().optional(),
+});
