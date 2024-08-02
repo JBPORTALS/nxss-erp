@@ -52,6 +52,7 @@ export const academicYears = pgTable("academic_years", {
 export const branches = pgTable("branches", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  description: text("description"),
   institution_id: text("institution_id")
     .notNull()
     .references(() => institutions.id),

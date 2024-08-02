@@ -21,7 +21,7 @@ export default async function Template(props: {
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold">{branch_details.name}</h1>
           <p className="text-sm text-muted-foreground">
-            Engineering the Future of Aviation and Space Exploration.
+            {branch_details.description}
           </p>
         </div>
         {/* Invite Student */}
