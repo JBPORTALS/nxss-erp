@@ -1,6 +1,9 @@
 // stories/ComboboxDemo.stories.tsx
 
 import { Meta, StoryObj } from "@storybook/react";
+import { within } from "@storybook/test";
+import userEvent from "@testing-library/user-event";
+
 import { ComboboxDemo } from "@nxss/ui/combobox";
 
 const frameworks = [
@@ -28,3 +31,5 @@ export const Default: Story = {
   args: { frameworks },
   render: () => <ComboboxDemo />,
 };
+
+

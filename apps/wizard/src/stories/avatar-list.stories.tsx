@@ -1,10 +1,15 @@
 import React from "react";
-
 import AvatarList, { AvatarListProps } from "@nxss/ui/avatar-list";
+import { StoryFn } from "@storybook/react";
+
 
 export default {
-  title: "AvatarList",
+  title: "UI/AvatarList",
   component: AvatarList,
+  parameters: {
+    layout: "centered",
+  },
+  tags: ["autodocs"],
   argTypes: {
     images: {
       control: {
@@ -25,7 +30,7 @@ export default {
     size: {
       control: {
         type: "select",
-        options: ["small", "medium", "large"], // Options for size
+        options: ["small", "medium", "large"],
       },
       description: "Size of avatars",
       defaultValue: "medium",
@@ -33,13 +38,13 @@ export default {
   },
 };
 
-const Template = (args: AvatarListProps) => (
+const Template: StoryFn<AvatarListProps> = (args:any) => (
   <div className="p-4">
     <AvatarList {...args} />
   </div>
 );
 
-export const Basic = Template.bind({});
+export const Basic: StoryFn<AvatarListProps> = Template.bind({});
 Basic.args = {
   images: [
     "https://avatars2.githubusercontent.com/u/263385",
