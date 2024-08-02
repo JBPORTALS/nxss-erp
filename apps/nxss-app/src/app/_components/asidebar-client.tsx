@@ -76,7 +76,11 @@ export default function AsideBarClient({
                 </Link>
                 <AccordionContent>
                   {[...Array(item.semesters)].map((_, index) => (
-                    <NavItem key={index}>Semester {index + 1}</NavItem>
+                    <Link
+                      href={`/${params.org}/branch/${item.id}/${index + 1}`}
+                    >
+                      <NavItem key={index}>Semester {index + 1}</NavItem>
+                    </Link>
                   ))}
                 </AccordionContent>
               </AccordionItem>
