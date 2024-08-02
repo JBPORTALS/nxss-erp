@@ -8,16 +8,15 @@ import {
   Users2Icon,
 } from "lucide-react";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionTriggerText,
-} from "@nxss/ui/accordion";
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
-import { Button } from "@nxss/ui/button";
 import { NavItem } from "@nxss/ui/nav-item";
+import {
+  NavigationMenu,
+  NavigationMenuButton,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuText,
+} from "@nxss/ui/navigation-menu";
 
 import Dailog from "./dailog/sidebar-dailog";
 import { SidebarItemClient } from "./sidebar-item";
@@ -27,14 +26,14 @@ export default function AsideBarClient({
 }: {
   params: { org: string };
 }) {
-  const accordionItems = [
+  const navigationMenuItems = [
     {
       id: "item-1",
       title: "Aerospace Engg",
       semesters: 6,
     },
   ];
-  const hasAccordion = accordionItems.length > 0;
+  const hasAccordion = navigationMenuItems.length > 0;
   return (
     <Sidebar>
       <SidebarLabel>MAIN MENU</SidebarLabel>
@@ -65,27 +64,23 @@ export default function AsideBarClient({
       </Protect>
       <SidebarBody>
         {hasAccordion ? (
-          <Accordion type="single" collapsible={false} className="w-full">
-            {accordionItems.map((item) => (
-              <AccordionItem key={item.id} value={item.id} open={true}>
-                <Link href={`/${params.org}/branch/${item.id}`}>
-                  <AccordionTrigger>
-                    <PlusCircle className="size-4 flex-shrink-0" />
-                    <AccordionTriggerText>{item.title}</AccordionTriggerText>
-                  </AccordionTrigger>
-                </Link>
-                <AccordionContent>
-                  {[...Array(item.semesters)].map((_, index) => (
-                    <Link
-                      href={`/${params.org}/branch/${item.id}/${index + 1}`}
-                    >
-                      <NavItem key={index}>Semester {index + 1}</NavItem>
-                    </Link>
+          navigationMenuItems.map((item) => (
+            <NavigationMenu key={item.id} >
+              <NavigationMenuButton>
+                <PlusCircle className="size-4 flex-shrink-0" />
+                <NavigationMenuText>{item.title}</NavigationMenuText>
+              </NavigationMenuButton>
+              <NavigationMenuContent>
+                <NavigationMenuItem>
+                  {Array.from({ length: item.semesters }, (_, index) => (
+                    <NavItem key={index} >
+                      Semester {index + 1}
+                    </NavItem>
                   ))}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                </NavigationMenuItem>
+              </NavigationMenuContent>
+            </NavigationMenu>
+          ))
         ) : (
           <main className="pr-2">
             <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
