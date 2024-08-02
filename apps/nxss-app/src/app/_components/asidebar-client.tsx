@@ -29,9 +29,6 @@ export default async function AsideBarClient({
           <SidebarItemClient path={`/${params.org}/faculty`}>
             <Users2Icon className="size-4" /> Faculty
           </SidebarItemClient>
-          <SidebarItemClient path={`/${params.org}/subjects`}>
-            <Layers className="size-4" /> Subjects
-          </SidebarItemClient>
         </Protect>
       </SidebarBody>
       <Protect role="org:admin">
