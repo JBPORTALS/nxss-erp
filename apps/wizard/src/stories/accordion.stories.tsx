@@ -44,7 +44,7 @@ export const Default = () => (
         <AccordionItem value="item-2" open={true}>
           <AccordionTrigger >
             <PlusCircle className="size-4 flex-shrink-0" />
-            <AccordionTriggerText>Computer Science</AccordionTriggerText>
+            <AccordionTriggerText  >Computer Science</AccordionTriggerText>
           </AccordionTrigger>
           <AccordionContent>
             <NavItem>Semester 1</NavItem>
