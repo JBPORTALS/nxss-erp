@@ -19,7 +19,7 @@ export default async function Template(props: {
     <div className="flex w-full flex-col gap-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold">{branch_details.at(0)?.name}</h1>
+          <h1 className="text-2xl font-bold">{branch_details.name}</h1>
           <p className="text-sm text-muted-foreground">
             Engineering the Future of Aviation and Space Exploration.
           </p>

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { eq, schema } from "@nxss/db";
+import { and, eq, schema } from "@nxss/db";
 
 import { protectedProcedure, router } from "../trpc";
 
@@ -26,8 +26,13 @@ export const branchesRouter = router({
   getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Branch ID is required!") }))
     .query(async ({ ctx, input }) => {
-      return ctx.db.query.branches.findMany({
-        where: eq(branches.id, parseInt(input.id)),
+      const branch_details = await ctx.db.query.branches.findMany({
+        where: and(
+          eq(branches.id, parseInt(input.id)),
+          eq(branches.institution_id, ctx.auth.orgId ?? ""),
+        ),
       });
+
+      return branch_details.at(0);
     }),
 });
