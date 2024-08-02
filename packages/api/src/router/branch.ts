@@ -23,7 +23,7 @@ export const branchesRouter = router({
 
     return mapped_response;
   }),
-  getBranchDetails: protectedProcedure
+  getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Branch ID is required!") }))
     .query(async ({ ctx, input }) => {
       return ctx.db.query.branches.findMany({

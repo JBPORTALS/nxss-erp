@@ -1,19 +1,25 @@
-"use client";
-
-import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Button } from "@nxss/ui/button";
-import { TabItem, Tabs } from "@nxss/ui/tabs";
 
-export default function Template(props: { children: React.ReactNode }) {
-  const { org, branch_id } = useParams();
-  const pathname = usePathname();
+import BranchTabsClient from "~/app/_components/tabs/branch-tabs";
+import { api } from "~/trpc/server";
+
+export default async function Template(props: {
+  children: React.ReactNode;
+  params: { branch_id: string };
+}) {
+  const branch_details = await api.branch.getDetails({
+    id: props.params.branch_id,
+  });
+
+  if (!branch_details) return notFound();
+
   return (
     <div className="flex w-full flex-col gap-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold">Aerospace Engg</h1>
+          <h1 className="text-2xl font-bold">{branch_details.at(0)?.name}</h1>
           <p className="text-sm text-muted-foreground">
             Engineering the Future of Aviation and Space Exploration.
           </p>
@@ -21,41 +27,7 @@ export default function Template(props: { children: React.ReactNode }) {
         {/* Invite Student */}
         <Button>Invite Student</Button>
       </div>
-      <Tabs>
-        <Link href={`/${org}/branch/${branch_id}`}>
-          <TabItem isActive={pathname === `/${org}/branch/${branch_id}`}>
-            Overview
-          </TabItem>
-        </Link>
-        <Link href={`/${org}/branch/${branch_id}/students`}>
-          <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/students`}
-          >
-            Students
-          </TabItem>
-        </Link>
-        <Link href={`/${org}/branch/${branch_id}/inactive`}>
-          <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/inactive`}
-          >
-            Inactive
-          </TabItem>
-        </Link>
-        <Link href={`/${org}/branch/${branch_id}/invitations`}>
-          <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/invitations`}
-          >
-            Invitations
-          </TabItem>
-        </Link>
-        <Link href={`/${org}/branch/${branch_id}/settings`}>
-          <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/settings`}
-          >
-            Settings
-          </TabItem>
-        </Link>
-      </Tabs>
+      <BranchTabsClient />
       <section className="w-full">{props.children}</section>
     </div>
   );
