@@ -5,7 +5,7 @@ import { env } from "./env";
 import * as auth from "./schema/auth";
 import * as post from "./schema/post";
 import * as staff from "./schema/staff";
-
+export * from "./schema/enum";
 export const schema = { ...auth, ...post, ...staff };
 
 export { pgTable as tableCreator } from "./schema/_table";
