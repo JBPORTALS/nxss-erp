@@ -96,7 +96,6 @@ export const branchesRelations = relations(branches, ({ one, many }) => ({
     references: [institutions.id],
   }),
   branch_to_sem: many(branch_to_sem),
-  semesters: one(semesters),
 }));
 
 export const semestersRelations = relations(semesters, ({ one, many }) => ({

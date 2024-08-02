@@ -3,24 +3,19 @@ import { HomeIcon, Layers, Users2Icon } from "lucide-react";
 
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
 
+import { api } from "~/trpc/server";
 import BranchListClient from "./branch-list-client";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 
-export default function AsideBarClient({
+export default async function AsideBarClient({
   params,
 }: {
   params: { org: string };
 }) {
-  const accordionItems = [
-    {
-      id: "item-1",
-      title: "Artificial Intelligence",
-      semesters: 6,
-    },
-  ];
+  const branchList = await api.branch.getBranchList();
 
-  const hasAccordion = accordionItems.length > 0;
+  const hasAccordion = branchList.length > 0;
 
   return (
     <Sidebar>
@@ -52,7 +47,7 @@ export default function AsideBarClient({
       </Protect>
       <SidebarBody>
         {hasAccordion ? (
-          <BranchListClient branchList={accordionItems} />
+          <BranchListClient {...{ branchList }} />
         ) : (
           <main className="pr-2">
             <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">

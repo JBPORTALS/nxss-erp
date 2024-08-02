@@ -2,19 +2,23 @@ import { eq, schema } from "@nxss/db";
 
 import { protectedProcedure, router } from "../trpc";
 
-const { branches } = schema;
+const { branches, semesters } = schema;
 
 export const branchesRouter = router({
-  getBranchList: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.branches.findMany({
+  getBranchList: protectedProcedure.query(async ({ ctx }) => {
+    const branchList = await ctx.db.query.branches.findMany({
       where: eq(branches.institution_id, ctx.auth.orgId ?? ""),
-      with: {
-        semesters: {
-          columns: {
-            number: true,
-          },
-        },
-      },
     });
+
+    const semester_number = await ctx.db.query.semesters.findFirst({
+      where: eq(semesters.institution_id, ctx.auth.orgId ?? ""),
+    });
+
+    const mapped_response = branchList.map((value) => ({
+      semesters: semester_number?.number,
+      ...value,
+    }));
+
+    return mapped_response;
   }),
 });
