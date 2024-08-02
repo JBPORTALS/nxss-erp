@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { z } from "zod";
 
@@ -26,18 +26,34 @@ import {
 import { Input } from "@nxss/ui/input";
 import { Label } from "@nxss/ui/label";
 import { Textarea } from "@nxss/ui/textarea";
+import { toast } from "@nxss/ui/toast";
 import { CreateBranchScheme } from "@nxss/validators";
+
+import { createBranch } from "~/trpc/actions";
 
 export default function CreateBranchDailog() {
   const form = useForm({
     schema: CreateBranchScheme,
     mode: "onChange",
   });
+  const [open, onOpenChange] = useState(false);
 
-  async function onSubmit(values: z.infer<typeof CreateBranchScheme>) {}
+  async function onSubmit(values: z.infer<typeof CreateBranchScheme>) {
+    const response = await createBranch(values);
+
+    if (response?.error)
+      return toast.error(response.error, { richColors: true });
+
+    toast.success(`Branch ${values.name} created successfully`, {
+      richColors: true,
+    });
+
+    onOpenChange(false); //close the dialog
+    form.reset(); //reset the form
+  }
 
   return (
-    <Dialog>
+    <Dialog {...{ open, onOpenChange }}>
       <DialogTrigger asChild>
         <Plus className="pb-1 hover:cursor-pointer" />
       </DialogTrigger>
@@ -54,6 +70,7 @@ export default function CreateBranchDailog() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
+              disabled={form.formState.isSubmitting}
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -69,6 +86,7 @@ export default function CreateBranchDailog() {
             <FormField
               control={form.control}
               name="description"
+              disabled={form.formState.isSubmitting}
               render={({ field }) => (
                 <FormItem>
                   <Label>Description</Label>
@@ -82,7 +100,9 @@ export default function CreateBranchDailog() {
             />
 
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" isLoading={form.formState.isSubmitting}>
+                Save changes
+              </Button>
             </DialogFooter>
           </form>
         </Form>

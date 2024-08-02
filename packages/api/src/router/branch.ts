@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { and, eq, schema } from "@nxss/db";
-import { UpdateBranchScheme } from "@nxss/validators";
+import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
 
 import { protectedProcedure, router } from "../trpc";
 
@@ -69,6 +69,32 @@ export const branchesRouter = router({
       if (!response.at(0)?.id)
         throw new TRPCError({
           message: "Can't able to delete the branch, Retry",
+          code: "BAD_REQUEST",
+        });
+
+      return response;
+    }),
+  create: protectedProcedure
+    .input(CreateBranchScheme)
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth.orgId)
+        throw new TRPCError({
+          message: "No selected organization",
+          code: "BAD_REQUEST",
+        });
+
+      const response = await ctx.db
+        .insert(branches)
+        .values({
+          name: input.name,
+          description: input.description,
+          institution_id: ctx.auth.orgId,
+        })
+        .returning();
+
+      if (!response.at(0)?.id)
+        throw new TRPCError({
+          message: "Can't able to create the branch, Retry",
           code: "BAD_REQUEST",
         });
 
