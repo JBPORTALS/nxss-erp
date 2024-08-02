@@ -2,6 +2,7 @@ import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
+import { Slot, SlotProps } from "@radix-ui/react-slot";
 
 import { cn } from ".";
 
@@ -42,12 +43,16 @@ const navigationMenuButtonVariants = cva(
 
 interface NavigationMenuButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof navigationMenuButtonVariants> {}
+    VariantProps<typeof navigationMenuButtonVariants> {
+      asChild?:boolean;
+    }
 
 const NavigationMenuButton = React.forwardRef<
   HTMLButtonElement,
   NavigationMenuButtonProps
->(({ className, children, open, ...props }, ref) => (
+>(({ className, children, open, ...props }, ref) => {
+  const Comp = props.asChild
+  return (
   <button
     ref={ref}
     className={cn(navigationMenuButtonVariants({ open }), className)}
@@ -57,7 +62,7 @@ const NavigationMenuButton = React.forwardRef<
     {children}
     <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform duration-200" />
   </button>
-));
+)});
 NavigationMenuButton.displayName = "NavigationMenuButton";
 
 // NavigationMenuText
@@ -80,7 +85,7 @@ const NavigationMenuContent = React.forwardRef<
   NavigationMenuContentProps
 >(({ className, open, children, ...props }, ref) =>
   open ? (
-    <div ref={ref} className={cn("mt-2", className)} {...props}>
+    <div ref={ref} className={cn("mt-2 ml-5 border-l pl-2", className)} {...props}>
       {children}
     </div>
   ) : null,
@@ -92,7 +97,7 @@ const NavigationMenuItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
-  <div ref={ref} className="ml-5 border-l pt-1 text-xs" {...props}>
+  <div ref={ref} className="pt-1 text-xs" {...props}>
     <div className={cn("ml-2 gap-0 pb-2 pt-0", className)}>{children}</div>
   </div>
 ));

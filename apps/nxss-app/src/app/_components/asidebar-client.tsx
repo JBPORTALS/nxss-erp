@@ -58,23 +58,7 @@ export default function AsideBarClient({
       </Protect>
       <SidebarBody>
         {hasAccordion ? (
-          navigationMenuItems.map((item) => (
-            <NavigationMenu key={item.id} >
-              <NavigationMenuButton>
-                <PlusCircle className="size-4 flex-shrink-0" />
-                <NavigationMenuText>{item.title}</NavigationMenuText>
-              </NavigationMenuButton>
-              <NavigationMenuContent>
-                <NavigationMenuItem>
-                  {Array.from({ length: item.semesters }, (_, index) => (
-                    <NavItem key={index} >
-                      Semester {index + 1}
-                    </NavItem>
-                  ))}
-                </NavigationMenuItem>
-              </NavigationMenuContent>
-            </NavigationMenu>
-          ))
+          <BranchListClient branchList={navigationMenuItems} />
         ) : (
           <main className="pr-2">
             <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
