@@ -1,17 +1,14 @@
-
 import { relations } from "drizzle-orm";
 import { 
-  pgTable, 
-  uuid as serial, 
+  serial, 
   text, 
-  
   timestamp, 
   boolean, 
-  
 } from "drizzle-orm/pg-core";
 
 // Enums
 import { eventForEnum } from "./enum";
+import { pgTable } from "./_table";
 
 // Circular table
 export const circular = pgTable("circular", {
@@ -20,10 +17,10 @@ export const circular = pgTable("circular", {
     content: text("content").notNull(),
     media_url: text("media_url"),
     created_at: timestamp("created_at").defaultNow().notNull(),
-  });
-  
-  // Event table
-  export const event = pgTable("event", {
+});
+
+// Event table
+export const event = pgTable("event", {
     id: serial("id").primaryKey(),
     title: text("title").notNull(),
     description: text("description"),
@@ -35,24 +32,27 @@ export const circular = pgTable("circular", {
     semester_id: serial("semester_id"), // Nullable, references semester table
     created_at: timestamp("created_at").defaultNow().notNull(),
     updated_at: timestamp("updated_at"),
-  });
-  
-  // User Event Interest table
-  export const userEventInterest = pgTable("user_event_interest", {
+});
+
+// User Event Interest table
+export const userEventInterest = pgTable("user_event_interest", {
     id: serial("id").primaryKey(),
-    event_id: serial("event_id").notNull().references(() => event.id),
+    event_id: serial("event_id")
+        .notNull()
+        .references(() => event.id, { onDelete: 'cascade' }),
     user_id: text("user_id").notNull(), // References user table
     interested: boolean("interested").notNull(),
     created_at: timestamp("created_at").defaultNow().notNull(),
     updated_at: timestamp("updated_at"),
-  });
-  export const eventRelations = relations(event, ({ many }) => ({
+});
+
+export const eventRelations = relations(event, ({ many }) => ({
     userEventInterests: many(userEventInterest),
-  }));
-  
-  export const userEventInterestRelations = relations(userEventInterest, ({ one }) => ({
+}));
+
+export const userEventInterestRelations = relations(userEventInterest, ({ one }) => ({
     event: one(event, {
-      fields: [userEventInterest.event_id],
-      references: [event.id],
+        fields: [userEventInterest.event_id],
+        references: [event.id],
     }),
-  }));
+}));
