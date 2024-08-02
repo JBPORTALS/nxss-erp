@@ -81,7 +81,7 @@ const AccordionItem = React.forwardRef<
 AccordionItem.displayName = "AccordionItem";
 
 const accordionTriggerVariants = cva(
-  "flex w-full flex-1 items-center gap-2 px-3 py-4 transition-all [&[data-state=open]>svg]:rotate-180",
+  "my-1 flex w-full flex-1 items-center gap-2 px-3 py-3 transition-all [&[data-state=open]>svg]:rotate-180",
   {
     variants: {
       isActive: {
@@ -130,7 +130,7 @@ const AccordionContent = React.forwardRef<
   <AccordionPrimitive.Content
     data-state="closed"
     ref={ref}
-    className="ml-5 border-l pt-3 text-xs"
+    className="ml-5 border-l pt-1 text-xs"
     {...props}
   >
     <div className={cn("ml-2 gap-0 pb-2 pt-0", className)}>{children}</div>

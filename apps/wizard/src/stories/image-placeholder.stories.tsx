@@ -7,6 +7,7 @@ const meta: Meta<typeof ImageUploader> = {
   parameters: {
     layout: "centered",
   },
+  tags: ["autodocs"],
 } satisfies Meta<typeof ImageUploader>;
 
 export default meta;

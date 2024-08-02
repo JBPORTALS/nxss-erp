@@ -9,10 +9,7 @@ import { HStack, VStack } from "@nxss/ui/stack";
 import { Textarea } from "@nxss/ui/textarea";
 
 const meta: Meta = {
-  title: "UI/Landing-page",
-  parameters: {
-    layout: "centered",
-  },
+  title: "Dashboard/Landing-page",
   tags: ["autodocs"],
 };
 
@@ -41,7 +38,7 @@ export const Default: Story = {
           <img src="/Diamond-up-hat.png" className="absolute -z-10" />
 
           <VStack className="items-center gap-4 pb-80 pt-28">
-            <Badge variant={"secondary"} className="mb-7 drop-shadow-sm">
+            <Badge variant={"outline"} className="mb-7 drop-shadow-sm">
               Hey, Unlock the new features 🎉
             </Badge>
             <span className="w-[880px] text-center font-serif text-6xl font-extrabold">
@@ -142,11 +139,11 @@ export const Default: Story = {
               </VStack>
               <VStack>
                 <Label className="text-lg">Email</Label>
-                <Input type="name" required className="h-12 text-lg"/>
+                <Input type="name" required className="h-12 text-lg" />
               </VStack>
               <VStack>
                 <Label className="text-lg">Phone Number</Label>
-                <Input type="name" required className="h-12 text-lg"/>
+                <Input type="name" required className="h-12 text-lg" />
               </VStack>
               <VStack>
                 <Label className="text-lg">Message</Label>
