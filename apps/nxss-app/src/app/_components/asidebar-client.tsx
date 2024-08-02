@@ -1,12 +1,5 @@
-import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
-import {
-  HomeIcon,
-  Layers,
-  PlusCircle,
-  PlusIcon,
-  Users2Icon,
-} from "lucide-react";
+import { HomeIcon, Layers, PlusCircle, Users2Icon } from "lucide-react";
 
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
 import { NavItem } from "@nxss/ui/nav-item";
@@ -18,7 +11,8 @@ import {
   NavigationMenuText,
 } from "@nxss/ui/navigation-menu";
 
-import Dailog from "./dailog/sidebar-dailog";
+import BranchListClient from "./branch-list-client";
+import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 
 export default function AsideBarClient({
@@ -54,7 +48,7 @@ export default function AsideBarClient({
       <Protect role="org:admin">
         <SidebarLabel className="flex items-center justify-between pr-2">
           BRANCHES
-          <Dailog />
+          <CreateBranchDailog />
         </SidebarLabel>
       </Protect>
       <Protect role="org:staff">
