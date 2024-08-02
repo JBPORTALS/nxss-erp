@@ -1,5 +1,4 @@
 import { relations } from "drizzle-orm";
-import { datetime, time } from "drizzle-orm/mysql-core";
 import {
   boolean,
   date,
@@ -17,9 +16,8 @@ import { patternEnum, statusEnum } from "./enum";
 
 // Institution table
 export const institutions = pgTable("institutions", {
-  id: serial("id").primaryKey(),
+  id: text("id").notNull().primaryKey(), // reference the clerk_org_id
   name: text("name").notNull(),
-  clerk_org_id: text("clerk_org_id").notNull(),
 });
 
 // User table
@@ -37,21 +35,24 @@ export const users = pgTable("users", {
 // Academic Year table
 export const academicYears = pgTable("academic_years", {
   id: serial("id").primaryKey(),
-  institution_id: serial("institution_id")
+  institution_id: text("institution_id")
     .notNull()
-    .references(() => institutions.id),
+    .references(() => institutions.id, {
+      onDelete: "cascade",
+      onUpdate: "restrict",
+    }),
   year: text("year").notNull(),
   pattern: patternEnum("pattern").notNull(),
   status: statusEnum("status").notNull(),
-  start_date: timestamp("start_date").notNull(),
-  end_date: timestamp("end_date").notNull(),
+  start_date: timestamp("start_date"),
+  end_date: timestamp("end_date"),
 });
 
 // Branch table
 export const branches = pgTable("branches", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  institution_id: serial("institution_id")
+  institution_id: text("institution_id")
     .notNull()
     .references(() => institutions.id),
 });
@@ -59,14 +60,10 @@ export const branches = pgTable("branches", {
 // Semester table
 export const semesters = pgTable("semesters", {
   id: serial("id").primaryKey(),
-  institution_id: serial("institution_id")
+  institution_id: text("institution_id")
     .notNull()
     .references(() => institutions.id),
-  branch_id: serial("branch_id")
-    .notNull()
-    .references(() => branches.id),
   number: integer("number").notNull(),
-  status: statusEnum("status").notNull(),
 });
 
 // Connection table
@@ -75,9 +72,7 @@ export const branch_to_sem = pgTable("branch_to_sem", {
   branch_id: serial("branch_id")
     .notNull()
     .references(() => branches.id),
-  semester_id: serial("semester_id")
-    .notNull()
-    .references(() => semesters.id),
+  semester_id: integer("semester_id").notNull(),
   status: statusEnum("status").notNull(),
 });
 
@@ -101,6 +96,7 @@ export const branchesRelations = relations(branches, ({ one, many }) => ({
     references: [institutions.id],
   }),
   branch_to_sem: many(branch_to_sem),
+  semesters: one(semesters),
 }));
 
 export const semestersRelations = relations(semesters, ({ one, many }) => ({
