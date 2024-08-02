@@ -30,7 +30,7 @@ export default function page() {
             Delete Branch
           </span>
           <p>
-            Deleting <b>Aerospace Engineering</b> branch will permanently erase
+            Deleting <b>Aerospace Engg</b> branch will permanently erase
             all data included in this branch and this action is permanent and
             irreversible.
           </p>

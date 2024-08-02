@@ -81,12 +81,13 @@ const AccordionItem = React.forwardRef<
 AccordionItem.displayName = "AccordionItem";
 
 const accordionTriggerVariants = cva(
-  "my-1 flex w-full flex-1 items-center gap-2 px-3 py-3 transition-all [&[data-state=open]>svg]:rotate-180",
+  "my-1 flex w-full flex-1 items-center gap-2 rounded rounded-e-none border-r border-transparent px-3 py-2.5 text-accent-foreground transition-all [&[data-state=open]>svg]:rotate-180",
   {
     variants: {
       isActive: {
-        true: "w-full rounded rounded-e-none border-r border-purple-600 bg-accent py-2",
-        false: "",
+        true: "w-full justify-start border-purple-600 bg-accent",
+        false:
+          "text-accent-foreground/80 hover:border-accent-foreground/50 hover:bg-muted hover:text-black",
       },
     },
     defaultVariants: {

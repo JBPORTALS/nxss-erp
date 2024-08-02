@@ -30,7 +30,7 @@ export default function AsideBarClient({
   const accordionItems = [
     {
       id: "item-1",
-      title: "Artificial Intelligence",
+      title: "Aerospace Engg",
       semesters: 6,
     },
   ];

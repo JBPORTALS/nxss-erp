@@ -42,7 +42,7 @@ export const Default = () => (
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2" open={true}>
-          <AccordionTrigger>
+          <AccordionTrigger >
             <PlusCircle className="size-4 flex-shrink-0" />
             <AccordionTriggerText>Computer Science</AccordionTriggerText>
           </AccordionTrigger>
@@ -56,7 +56,7 @@ export const Default = () => (
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3" open={true}>
-          <AccordionTrigger >
+          <AccordionTrigger isActive={true}>
             <PlusCircle className="size-4 flex-shrink-0" />
             <AccordionTriggerText>Mechanical Engg.</AccordionTriggerText>
           </AccordionTrigger>
