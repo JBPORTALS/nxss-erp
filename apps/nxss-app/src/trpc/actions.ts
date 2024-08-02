@@ -6,7 +6,7 @@ import { staff } from "node_modules/@nxss/db/src/schema/staff";
 import { z } from "zod";
 
 import { and, db, eq } from "@nxss/db";
-import { ProfileDetailsSchema } from "@nxss/validators";
+import { ProfileDetailsSchema, UpdateBranchScheme } from "@nxss/validators";
 
 import { api } from "./server";
 
@@ -105,6 +105,23 @@ export const completeVerification = async (values: { staffId: string }) => {
     revalidatePath(`/${orgSlug}/faculty`, "layout");
 
     return { message: res.at(0)?.id };
+  } catch (err) {
+    console.log(err);
+    return { error: "There was an error updating the user metadata." };
+  }
+};
+
+export const updateBranchDetails = async (
+  values: z.infer<typeof UpdateBranchScheme>,
+) => {
+  const { orgSlug } = auth();
+
+  try {
+    await api.branch.updateDetails(values);
+
+    revalidatePath(`/${orgSlug}/branch/${values.id}`, "layout");
+
+    return { message: "Branch details updated" };
   } catch (err) {
     console.log(err);
     return { error: "There was an error updating the user metadata." };

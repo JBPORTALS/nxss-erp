@@ -38,3 +38,9 @@ export const CreateBranchScheme = z.object({
   name: z.string().min(1, "Required!"),
   description: z.string().optional(),
 });
+
+export const UpdateBranchScheme = z.object({
+  id: z.string().min(1, "Required!"),
+  name: z.string().min(1, "Required!"),
+  description: z.string().optional(),
+});

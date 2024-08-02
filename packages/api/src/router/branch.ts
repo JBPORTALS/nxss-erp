@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { and, eq, schema } from "@nxss/db";
+import { UpdateBranchScheme } from "@nxss/validators";
 
 import { protectedProcedure, router } from "../trpc";
 
@@ -34,5 +35,21 @@ export const branchesRouter = router({
       });
 
       return branch_details.at(0);
+    }),
+  updateDetails: protectedProcedure
+    .input(UpdateBranchScheme)
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .update(branches)
+        .set({
+          name: input.name,
+          description: input.description,
+        })
+        .where(
+          and(
+            eq(branches.id, parseInt(input.id)),
+            eq(branches.institution_id, ctx.auth.orgId ?? ""),
+          ),
+        );
     }),
 });
