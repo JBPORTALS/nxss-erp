@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { staff } from "node_modules/@nxss/db/src/schema/staff";
 import { z } from "zod";
@@ -124,8 +125,18 @@ export const updateBranchDetails = async (
     return { message: "Branch details updated" };
   } catch (err) {
     console.log(err);
-    return { error: "There was an error updating the user metadata." };
+    return { error: "There was an error updating the branch details." };
   }
+};
+
+export const deleteBranch = async (values: { id: string }) => {
+  try {
+    await api.branch.delete({ id: values.id });
+  } catch (err) {
+    console.log(err);
+    return { error: "There was an error deleting the branch." };
+  }
+  redirect("/");
 };
 
 export async function getOrg(slug: string) {

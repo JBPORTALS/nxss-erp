@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useFormStatus } from "react-dom";
 import { z } from "zod";
 
 import { Button } from "@nxss/ui/button";
@@ -20,8 +21,24 @@ import { Textarea } from "@nxss/ui/textarea";
 import { toast } from "@nxss/ui/toast";
 import { UpdateBranchScheme } from "@nxss/validators";
 
-import { updateBranchDetails } from "~/trpc/actions";
+import { deleteBranch, updateBranchDetails } from "~/trpc/actions";
 import { api } from "~/trpc/react";
+
+//just to track the state of the form
+function DeleteBranchButton(props: React.ComponentProps<typeof Button>) {
+  const state = useFormStatus();
+  return (
+    <Button
+      disabled={state.pending}
+      isLoading={state.pending}
+      {...props}
+      variant={"destructive_outline"}
+      size={"lg"}
+    >
+      Delete Branch
+    </Button>
+  );
+}
 
 export default function page() {
   const branch_id = useParams().branch_id as string;
@@ -102,19 +119,26 @@ export default function page() {
           </form>
         </Form>
         <hr className="w-full"></hr>
-        <VStack className="gap-1">
-          <span className="text-xl font-semibold text-red-500">
+        <VStack className="gap-2">
+          <span className="text-lg font-semibold text-destructive">
             Delete Branch
           </span>
-          <p>
+          <p className="w-2/3 text-sm text-muted-foreground">
             Deleting <b>Aerospace Engineering</b> branch will permanently erase
             all data included in this branch and this action is permanent and
             irreversible.
           </p>
         </VStack>
-        <Button variant={"destructive_outline"} size={"lg"}>
-          Delete Branch
-        </Button>
+        <form
+          action={async () => {
+            await deleteBranch({ id: branch_id }).then((value) => {
+              if (value.error)
+                return toast.error(value.error, { richColors: true });
+            });
+          }}
+        >
+          <DeleteBranchButton />
+        </form>
       </VStack>
     </div>
   );

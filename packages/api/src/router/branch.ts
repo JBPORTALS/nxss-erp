@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { and, eq, schema } from "@nxss/db";
@@ -51,5 +52,26 @@ export const branchesRouter = router({
             eq(branches.institution_id, ctx.auth.orgId ?? ""),
           ),
         );
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string().min(1, "BranchId is required") }))
+    .mutation(async ({ ctx, input }) => {
+      const response = await ctx.db
+        .delete(branches)
+        .where(
+          and(
+            eq(branches.id, parseInt(input.id)),
+            eq(branches.institution_id, ctx.auth.orgId ?? ""),
+          ),
+        )
+        .returning();
+
+      if (!response.at(0)?.id)
+        throw new TRPCError({
+          message: "Can't able to delete the branch, Retry",
+          code: "BAD_REQUEST",
+        });
+
+      return response;
     }),
 });
