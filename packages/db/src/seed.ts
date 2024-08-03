@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
 import { sql } from "drizzle-orm";
-
+import pg from 'pg';
+const { Pool } = pg;
 import {
   institutions,
   users,
@@ -29,24 +29,24 @@ async function reset(tableName: string) {
   const query = sql`TRUNCATE TABLE ${sql.identifier(tableName)} RESTART IDENTITY CASCADE`;
   return db.execute(query);
 }
-
+const phoneNumber = faker.helpers.fromRegExp(/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/);
 async function main() {
   console.log("Resetting tables 🧹");
   await Promise.all([
-    reset("institutions"),
-    reset("users"),
-    reset("academic_years"),
-    reset("branches"),
-    reset("semesters"),
-    reset("branch_to_sem"),
-    reset("staff"),
+    reset("nxss_institutions"),
+    reset("nxss_users"),
+    reset("nxss_academic_years"),
+    reset("nxss_branches"),
+    reset("nxss_semesters"),
+    reset("nxss_branch_to_sem"),
+    reset("nxss_staff"),
   ]);
 
   console.log("Seeding institutions 🏫");
   const institutionsData = await db
     .insert(institutions)
     .values(
-      Array.from({ length: 5 }, () => ({
+      Array.from({ length:10 }, () => ({
         id: faker.string.uuid(),
         name: faker.company.name(),
       }))
@@ -60,13 +60,14 @@ async function main() {
         full_name: faker.person.fullName(),
         date_of_birth: faker.date.past({ years: 30 }).toISOString().split('T')[0], // Convert to YYYY-MM-DD string
         year_of_join: faker.number.int({ min: 2010, max: 2024 }),
-        phone_num: parseInt(faker.phone.number("##########")),
+        phone_num: phoneNumber,      
         is_phone_verified: faker.datatype.boolean(),
       }))
     );
   
     console.log("Seeding academic years 📅");
     await db.insert(academicYears).values(
+      
       institutionsData.flatMap((institution) =>
         Array.from({ length: 3 }, () => ({
           institution_id: institution.id,

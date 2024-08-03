@@ -26,7 +26,7 @@ export const institutions = pgTable("institutions", {
    full_name: text("full_name").notNull(),
    date_of_birth: date("date_of_birth"),
    year_of_join: integer("year_of_join"),
-   phone_num: integer("phone_num"),
+   phone_num: text("phone_num"),
    is_phone_verified: boolean("is_phone_verified").default(false),
    created_at: timestamp("created_at").defaultNow().notNull(),
    updated_at: timestamp("updated_at"),
