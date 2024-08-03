@@ -1,40 +1,30 @@
-import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
-import {
-  HomeIcon,
-  Layers,
-  PlusCircle,
-  PlusIcon,
-  Users2Icon,
-} from "lucide-react";
+import { HomeIcon, Layers, PlusCircle, Users2Icon } from "lucide-react";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionTriggerText,
-} from "@nxss/ui/accordion";
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
-import { Button } from "@nxss/ui/button";
 import { NavItem } from "@nxss/ui/nav-item";
+import {
+  NavigationMenu,
+  NavigationMenuButton,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuText,
+} from "@nxss/ui/navigation-menu";
 
-import Dailog from "./dailog/sidebar-dailog";
+import { api } from "~/trpc/server";
+import BranchListClient from "./branch-list-client";
+import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 
-export default function AsideBarClient({
+export default async function AsideBarClient({
   params,
 }: {
   params: { org: string };
 }) {
-  const accordionItems = [
-    {
-      id: "item-1",
-      title: "Artificial Intelligence",
-      semesters: 6,
-    },
-  ];
-  const hasAccordion = accordionItems.length > 0;
+  const branchList = await api.branch.getBranchList();
+
+  const hasAccordion = branchList.length > 0;
+
   return (
     <Sidebar>
       <SidebarLabel>MAIN MENU</SidebarLabel>
@@ -47,15 +37,12 @@ export default function AsideBarClient({
           <SidebarItemClient path={`/${params.org}/faculty`}>
             <Users2Icon className="size-4" /> Faculty
           </SidebarItemClient>
-          <SidebarItemClient path={`/${params.org}/subjects`}>
-            <Layers className="size-4" /> Subjects
-          </SidebarItemClient>
         </Protect>
       </SidebarBody>
       <Protect role="org:admin">
         <SidebarLabel className="flex items-center justify-between pr-2">
           BRANCHES
-          <Dailog />
+          <CreateBranchDailog />
         </SidebarLabel>
       </Protect>
       <Protect role="org:staff">
@@ -63,25 +50,11 @@ export default function AsideBarClient({
           SUBJECTS
         </SidebarLabel>
       </Protect>
-      <SidebarBody>
+      <SidebarBody className="space-y-4">
         {hasAccordion ? (
-          <Accordion type="single" collapsible={false} className="w-full">
-            {accordionItems.map((item) => (
-              <AccordionItem key={item.id} value={item.id} open={true}>
-                <Link href={`/${params.org}/branch/${item.id}`}>
-                  <AccordionTrigger>
-                    <PlusCircle className="size-4 flex-shrink-0" />
-                    <AccordionTriggerText>{item.title}</AccordionTriggerText>
-                  </AccordionTrigger>
-                </Link>
-                <AccordionContent>
-                  {[...Array(item.semesters)].map((_, index) => (
-                    <NavItem key={index}>Semester {index + 1}</NavItem>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <Protect role="org:admin">
+            <BranchListClient {...{ branchList }} />
+          </Protect>
         ) : (
           <main className="pr-2">
             <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">

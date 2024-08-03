@@ -41,7 +41,8 @@
     "./password-input": "./src/password-input.tsx",
     "./seperator": "./src/seperator.tsx",
     "./radio-group": "./src/radio-group.tsx",
-    "./check-card": "./src/check-card.tsx"
+    "./check-card": "./src/check-card.tsx",
+    "./navigation-menu": "./src/navigation-menu.tsx"
   },
   "license": "MIT",
   "scripts": {

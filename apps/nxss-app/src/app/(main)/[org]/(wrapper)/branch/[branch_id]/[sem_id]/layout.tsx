@@ -7,7 +7,7 @@ import { Button } from "@nxss/ui/button";
 import { TabItem, Tabs } from "@nxss/ui/tabs";
 
 export default function Template(props: { children: React.ReactNode }) {
-  const { org, branch_id } = useParams();
+  const { org, branch_id, sem_id } = useParams();
   const pathname = usePathname();
   return (
     <div className="flex w-full flex-col gap-8">
@@ -22,35 +22,37 @@ export default function Template(props: { children: React.ReactNode }) {
         <Button>Invite Student</Button>
       </div>
       <Tabs>
-        <Link href={`/${org}/branch/${branch_id}`}>
-          <TabItem isActive={pathname === `/${org}/branch/${branch_id}`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
+          <TabItem
+            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
+          >
             Overview
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/students`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/students`}
+            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
           >
             Students
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/inactive`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/inactive`}
+            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
           >
             Inactive
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/invitations`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/invitations`}
+            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
           >
             Invitations
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/settings`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/settings`}
+            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
           >
             Settings
           </TabItem>

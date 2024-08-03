@@ -1,22 +1,28 @@
 import { relations } from "drizzle-orm";
-import { integer, serial, text ,timestamp,boolean,date} from "drizzle-orm/pg-core";
+import {
+  boolean,
+  date,
+  integer,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
+
 import { pgTable } from "./_table";
-import { statusEnum, patternEnum } from "./enum";
-import { datetime, time } from "drizzle-orm/mysql-core";
+import { patternEnum, statusEnum } from "./enum";
 
 // Rest of your schema definitions...
 //const userTypeEnum = pgEnum('user_type', ['student', 'admin']);
 
 // Institution table
 export const institutions = pgTable("institutions", {
-  id: serial("id").primaryKey(),
+  id: text("id").notNull().primaryKey(), // reference the clerk_org_id
   name: text("name").notNull(),
-  clerk_org_id: text("clerk_org_id").notNull(),
 });
 
 // User table
  export const users = pgTable("users", {
-   id: text("id",).primaryKey(),
+   id: text("id").primaryKey(),
    full_name: text("full_name").notNull(),
    date_of_birth: date("date_of_birth"),
    year_of_join: integer("year_of_join"),
@@ -29,35 +35,45 @@ export const institutions = pgTable("institutions", {
 // Academic Year table
 export const academicYears = pgTable("academic_years", {
   id: serial("id").primaryKey(),
-  institution_id: serial("institution_id").notNull().references(() => institutions.id),
+  institution_id: text("institution_id")
+    .notNull()
+    .references(() => institutions.id, {
+      onDelete: "cascade",
+      onUpdate: "restrict",
+    }),
   year: text("year").notNull(),
-  pattern: patternEnum("pattern").notNull(), 
+  pattern: patternEnum("pattern").notNull(),
   status: statusEnum("status").notNull(),
-  start_date: timestamp("start_date").notNull(),
-  end_date: timestamp("end_date").notNull(),
+  start_date: timestamp("start_date"),
+  end_date: timestamp("end_date"),
 });
 
 // Branch table
 export const branches = pgTable("branches", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  institution_id: serial("institution_id").notNull().references(() => institutions.id),
+  description: text("description"),
+  institution_id: text("institution_id")
+    .notNull()
+    .references(() => institutions.id),
 });
 
 // Semester table
 export const semesters = pgTable("semesters", {
   id: serial("id").primaryKey(),
-  institution_id: serial("institution_id").notNull().references(() => institutions.id),
-  branch_id: serial("branch_id").notNull().references(() => branches.id),
+  institution_id: text("institution_id")
+    .notNull()
+    .references(() => institutions.id),
   number: integer("number").notNull(),
-  status: statusEnum("status").notNull(),
 });
 
 // Connection table
 export const branch_to_sem = pgTable("branch_to_sem", {
   id: serial("id").primaryKey(),
-  branch_id: serial("branch_id").notNull().references(() => branches.id),
-  semester_id: serial("semester_id").notNull().references(() => semesters.id),
+  branch_id: serial("branch_id")
+    .notNull()
+    .references(() => branches.id),
+  semester_id: integer("semester_id").notNull(),
   status: statusEnum("status").notNull(),
 });
 
