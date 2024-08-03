@@ -41,14 +41,15 @@ export default function BranchListClient({
           <NavigationMenuContent>
             {[...Array(item.semesters)].map((_, index) => (
               <Link href={`/${params.org}/branch/${item.id}/${index + 1}`}>
-                <NavItem
+                <NavigationMenuItem
                   key={index}
+                  status="completed"
                   isActive={pathname.startsWith(
                     `/${params.org}/branch/${item.id}/${index + 1}`,
                   )}
                 >
                   Semester {index + 1}
-                </NavItem>
+                </NavigationMenuItem>
               </Link>
             ))}
           </NavigationMenuContent>

@@ -2,9 +2,10 @@ import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Slot, SlotProps } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, DotIcon } from "lucide-react";
 
 import { cn } from ".";
+import { NavItem, NavItemProps } from "./nav-item";
 
 // NavigationMenu
 interface NavigationMenuProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -87,7 +88,7 @@ const NavigationMenuContent = React.forwardRef<
   open ? (
     <div
       ref={ref}
-      className={cn("ml-5 mt-2 border-l pl-2", className)}
+      className={cn("ml-5 mt-2 flex flex-col gap-2 border-l pl-2", className)}
       {...props}
     >
       {children}
@@ -97,16 +98,41 @@ const NavigationMenuContent = React.forwardRef<
 NavigationMenuContent.displayName = "NavigationMenuContent";
 
 // NavigationMenuItem
-const NavigationMenuItem = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-  <div ref={ref} className="pt-1 text-xs" {...props}>
-    <div className={cn("ml-2 gap-0 pb-2 pt-0", className)}>{children}</div>
-  </div>
-));
-NavigationMenuItem.displayName = "NavigationMenuItem";
 
+type StatusVariant = "default" | "completed" | "active";
+
+interface NavigationMenuItemProps extends NavItemProps {
+  status?: StatusVariant;
+}
+
+const NavigationMenuItem = React.forwardRef<
+  React.ElementRef<typeof NavItem>,
+  NavigationMenuItemProps
+>(({ className, children, status = "default", ...props }, ref) => {
+  return (
+    <NavItem className={`text-sm ${className}`} {...props}>
+      {children}
+      <span className="relative ml-auto flex size-6">
+        <DotIcon
+          className={cn(
+            "absolute inline-flex size-full animate-ping rounded-full text-amber-400",
+            status !== "active" && "hidden",
+          )}
+        />
+        <DotIcon
+          className={cn(
+            `relative ml-auto inline-flex size-6`,
+            status == "default" && "text-muted-foreground",
+            status == "active" && "text-amber-500",
+            status == "completed" && "text-green-500",
+          )}
+        />
+      </span>
+    </NavItem>
+  );
+});
+
+NavigationMenuItem.displayName = "NavigationMenuItem";
 export {
   NavigationMenu,
   NavigationMenuButton,
