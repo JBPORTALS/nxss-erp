@@ -2,7 +2,16 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@nxss/ui/breadcrumb";
 import { Button } from "@nxss/ui/button";
 import { TabItem, Tabs } from "@nxss/ui/tabs";
 
@@ -11,16 +20,25 @@ export default function Template(props: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
     <div className="flex w-full flex-col gap-8">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold">Aerospace Engg</h1>
-          <p className="text-sm text-muted-foreground">
-            Engineering the Future of Aviation and Space Exploration.
-          </p>
-        </div>
-        {/* Invite Student */}
-        <Button>Invite Student</Button>
+      <div className="flex flex-col gap-2">
+        <Breadcrumb>
+          <BreadcrumbList className="text-accent-foreground/80">
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/${org}/branch/${branch_id}`}>
+                Computer Science
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ArrowRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem className="text-foreground">
+              Semester 1
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <h1 className="text-2xl font-bold">Semester 1</h1>
       </div>
+
       <Tabs>
         <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
           <TabItem
@@ -29,30 +47,38 @@ export default function Template(props: { children: React.ReactNode }) {
             Overview
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}/subjects`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
+            isActive={
+              pathname === `/${org}/branch/${branch_id}/${sem_id}/subjects`
+            }
           >
-            Students
+            Subjects
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}/sessions`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
+            isActive={
+              pathname === `/${org}/branch/${branch_id}/${sem_id}/sessions`
+            }
           >
-            Inactive
+            Sessions
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}/timeTable`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
+            isActive={
+              pathname === `/${org}/branch/${branch_id}/${sem_id}/timeTable`
+            }
           >
-            Invitations
+            Timetable
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/${sem_id}`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}/settings`}>
           <TabItem
-            isActive={pathname === `/${org}/branch/${branch_id}/${sem_id}`}
+            isActive={
+              pathname === `/${org}/branch/${branch_id}/${sem_id}/settings`
+            }
           >
             Settings
           </TabItem>

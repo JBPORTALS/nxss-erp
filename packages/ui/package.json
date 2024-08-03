@@ -42,7 +42,9 @@
     "./seperator": "./src/seperator.tsx",
     "./radio-group": "./src/radio-group.tsx",
     "./check-card": "./src/check-card.tsx",
-    "./navigation-menu": "./src/navigation-menu.tsx"
+    "./navigation-menu": "./src/navigation-menu.tsx",
+    "./breadcrumb": "./src/breadcrumb.tsx",
+    "./scrollarea": "./src/scrollarea.tsx"
   },
   "license": "MIT",
   "scripts": {

@@ -2,14 +2,7 @@ import { Protect } from "@clerk/nextjs";
 import { HomeIcon, Layers, PlusCircle, Users2Icon } from "lucide-react";
 
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
-import { NavItem } from "@nxss/ui/nav-item";
-import {
-  NavigationMenu,
-  NavigationMenuButton,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuText,
-} from "@nxss/ui/navigation-menu";
+import { ScrollArea } from "@nxss/ui/scrollarea";
 
 import { api } from "~/trpc/server";
 import BranchListClient from "./branch-list-client";
@@ -50,7 +43,8 @@ export default async function AsideBarClient({
           SUBJECTS
         </SidebarLabel>
       </Protect>
-      <SidebarBody className="space-y-4">
+      <SidebarBody className="flex flex-grow flex-col overflow-hidden">
+        {/*  */}
         {hasAccordion ? (
           <Protect role="org:admin">
             <BranchListClient {...{ branchList }} />
