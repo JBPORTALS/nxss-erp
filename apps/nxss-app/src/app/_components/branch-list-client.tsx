@@ -6,14 +6,14 @@ import { useParams, usePathname } from "next/navigation";
 import { BoxIcon, PlusCircle } from "lucide-react";
 
 import { RouterOutputs } from "@nxss/api";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionTriggerText,
-} from "@nxss/ui/accordion";
 import { NavItem } from "@nxss/ui/nav-item";
+import {
+  NavigationMenu,
+  NavigationMenuButton,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuText,
+} from "@nxss/ui/navigation-menu";
 
 export default function BranchListClient({
   branchList,
@@ -23,28 +23,38 @@ export default function BranchListClient({
   const pathname = usePathname();
   const params = useParams();
   return (
-    <Accordion type="single" collapsible={false} className="w-full">
+    <div className="w-full">
       {branchList.map((item) => (
-        <AccordionItem
+        <NavigationMenu
           key={item.id}
-          value={item.id.toString()}
           open={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
         >
           <Link href={`/${params.org}/branch/${item.id}`}>
-            <AccordionTrigger
-              isActive={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
+            {/* open is used to make the button active */}
+            <NavigationMenuButton
+              open={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
             >
               <BoxIcon className="size-4 flex-shrink-0" />
-              <AccordionTriggerText>{item.name}</AccordionTriggerText>
-            </AccordionTrigger>
+              <NavigationMenuText>{item.name}</NavigationMenuText>
+            </NavigationMenuButton>
           </Link>
-          <AccordionContent>
+          <NavigationMenuContent>
             {[...Array(item.semesters)].map((_, index) => (
-              <NavItem key={index}>Semester {index + 1}</NavItem>
+              <Link href={`/${params.org}/branch/${item.id}/${index + 1}`}>
+                <NavigationMenuItem
+                  key={index}
+                  status="completed"
+                  isActive={pathname.startsWith(
+                    `/${params.org}/branch/${item.id}/${index + 1}`,
+                  )}
+                >
+                  Semester {index + 1}
+                </NavigationMenuItem>
+              </Link>
             ))}
-          </AccordionContent>
-        </AccordionItem>
+          </NavigationMenuContent>
+        </NavigationMenu>
       ))}
-    </Accordion>
+    </div>
   );
 }

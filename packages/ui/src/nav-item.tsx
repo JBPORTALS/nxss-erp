@@ -7,7 +7,7 @@ const navItemVariants = cva(
   {
     variants: {
       isActive: {
-        true: "justify-start border-purple-600 bg-accent",
+        true: "justify-start rounded rounded-e-none border-purple-600 bg-accent",
         false: "text-accent-foreground/60 hover:border-accent-foreground/50",
       },
     },
