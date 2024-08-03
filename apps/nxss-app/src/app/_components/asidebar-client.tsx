@@ -11,23 +11,20 @@ import {
   NavigationMenuText,
 } from "@nxss/ui/navigation-menu";
 
+import { api } from "~/trpc/server";
 import BranchListClient from "./branch-list-client";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 
-export default function AsideBarClient({
+export default async function AsideBarClient({
   params,
 }: {
   params: { org: string };
 }) {
-  const navigationMenuItems = [
-    {
-      id: "item-1",
-      title: "Aerospace Engg",
-      semesters: 6,
-    },
-  ];
-  const hasAccordion = navigationMenuItems.length > 0;
+  const branchList = await api.branch.getBranchList();
+
+  const hasAccordion = branchList.length > 0;
+
   return (
     <Sidebar>
       <SidebarLabel>MAIN MENU</SidebarLabel>
@@ -39,9 +36,6 @@ export default function AsideBarClient({
         <Protect role="org:admin">
           <SidebarItemClient path={`/${params.org}/faculty`}>
             <Users2Icon className="size-4" /> Faculty
-          </SidebarItemClient>
-          <SidebarItemClient path={`/${params.org}/subjects`}>
-            <Layers className="size-4" /> Subjects
           </SidebarItemClient>
         </Protect>
       </SidebarBody>
@@ -58,7 +52,7 @@ export default function AsideBarClient({
       </Protect>
       <SidebarBody>
         {hasAccordion ? (
-          <BranchListClient branchList={navigationMenuItems} />
+          <BranchListClient {...{ branchList }} />
         ) : (
           <main className="pr-2">
             <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">

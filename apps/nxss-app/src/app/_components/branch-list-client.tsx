@@ -3,8 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { PlusCircle } from "lucide-react";
+import { BoxIcon, PlusCircle } from "lucide-react";
 
+import { RouterOutputs } from "@nxss/api";
 import { NavItem } from "@nxss/ui/nav-item";
 import {
   NavigationMenu,
@@ -17,7 +18,7 @@ import {
 export default function BranchListClient({
   branchList,
 }: {
-  branchList: { id: string; title: string; semesters: number }[];
+  branchList: RouterOutputs["branch"]["getBranchList"];
 }) {
   const pathname = usePathname();
   const params = useParams();
@@ -26,6 +27,7 @@ export default function BranchListClient({
       {branchList.map((item) => (
         <NavigationMenu
           key={item.id}
+          value={item.id.toString()}
           open={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
         >
           <Link href={`/${params.org}/branch/${item.id}`}>
