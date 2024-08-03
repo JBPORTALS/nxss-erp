@@ -50,9 +50,11 @@ export default async function AsideBarClient({
           SUBJECTS
         </SidebarLabel>
       </Protect>
-      <SidebarBody>
+      <SidebarBody className="space-y-4">
         {hasAccordion ? (
-          <BranchListClient {...{ branchList }} />
+          <Protect role="org:admin">
+            <BranchListClient {...{ branchList }} />
+          </Protect>
         ) : (
           <main className="pr-2">
             <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">

@@ -1,8 +1,8 @@
 import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
+import { Slot, SlotProps } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
-import { Slot, SlotProps } from "@radix-ui/react-slot";
 
 import { cn } from ".";
 
@@ -26,13 +26,13 @@ NavigationMenu.displayName = "NavigationMenu";
 
 // NavigationMenuButton
 const navigationMenuButtonVariants = cva(
-  "my-1 flex w-full flex-1 items-center gap-2 rounded rounded-e-none border-r border-transparent px-3 py-2.5 text-accent-foreground transition-all [&[data-state=open]>svg]:rotate-180",
+  "my-1 flex w-full flex-1 items-center justify-start gap-2 rounded rounded-e-none border-r border-transparent px-3 px-4 py-2 py-2.5 text-sm font-normal text-accent-foreground transition-all [&[data-state=open]>.chevron]:rotate-180",
   {
     variants: {
       open: {
-        true: "w-full justify-start border-purple-600 bg-accent",
+        true: "justify-start rounded rounded-e-none border-purple-600 bg-accent",
         false:
-          "text-accent-foreground/80 hover:border-accent-foreground/50 hover:bg-muted hover:text-black",
+          "text-accent-foreground/60 hover:border-accent-foreground/50 hover:bg-accent hover:text-foreground",
       },
     },
     defaultVariants: {
@@ -44,25 +44,25 @@ const navigationMenuButtonVariants = cva(
 interface NavigationMenuButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof navigationMenuButtonVariants> {
-      asChild?:boolean;
-    }
+  asChild?: boolean;
+}
 
 const NavigationMenuButton = React.forwardRef<
   HTMLButtonElement,
   NavigationMenuButtonProps
 >(({ className, children, open, ...props }, ref) => {
-  const Comp = props.asChild
   return (
-  <button
-    ref={ref}
-    className={cn(navigationMenuButtonVariants({ open }), className)}
-    data-state={open ? "open" : "closed"}
-    {...props}
-  >
-    {children}
-    <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform duration-200" />
-  </button>
-)});
+    <button
+      ref={ref}
+      className={cn(navigationMenuButtonVariants({ open }), className)}
+      data-state={open ? "open" : "closed"}
+      {...props}
+    >
+      {children}
+      <ChevronDown className="chevron ml-auto h-4 w-4 shrink-0 transition-transform duration-200" />
+    </button>
+  );
+});
 NavigationMenuButton.displayName = "NavigationMenuButton";
 
 // NavigationMenuText
@@ -85,7 +85,11 @@ const NavigationMenuContent = React.forwardRef<
   NavigationMenuContentProps
 >(({ className, open, children, ...props }, ref) =>
   open ? (
-    <div ref={ref} className={cn("mt-2 ml-5 border-l pl-2", className)} {...props}>
+    <div
+      ref={ref}
+      className={cn("ml-5 mt-2 border-l pl-2", className)}
+      {...props}
+    >
       {children}
     </div>
   ) : null,
