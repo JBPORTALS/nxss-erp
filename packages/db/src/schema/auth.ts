@@ -16,7 +16,7 @@ export const institutions = pgTable("institutions", {
 
 // User table
  export const users = pgTable("users", {
-   id: text("id").primaryKey(),
+   id: text("id",).primaryKey(),
    full_name: text("full_name").notNull(),
    date_of_birth: date("date_of_birth"),
    year_of_join: integer("year_of_join"),
