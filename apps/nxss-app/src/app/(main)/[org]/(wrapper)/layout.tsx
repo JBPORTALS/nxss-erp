@@ -18,7 +18,7 @@ import AsideBarClient from "~/app/_components/asidebar-client";
 
 export default async function Template(props: {
   children: React.ReactNode;
-  params: { org: string };
+  params: { org: string; subject_id: string };
 }) {
   const { userId } = auth();
 

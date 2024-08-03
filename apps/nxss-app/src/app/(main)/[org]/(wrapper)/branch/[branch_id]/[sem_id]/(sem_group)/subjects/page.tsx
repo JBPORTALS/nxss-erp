@@ -21,6 +21,7 @@ export default function Subjects() {
         <Button>Add Subject</Button>
       </HStack>
       <div className="grid w-full grid-cols-3 gap-5">
+        
         <Card className="h-full w-full">
           <CardHeader className="">
             <CardTitle className="flex gap-4">
@@ -34,7 +35,7 @@ export default function Subjects() {
               components of digital technology and computing systems.
             </span>
           </CardContent>
-          <CardFooter className="flex w-full items-center justify-between border-t py-4 pb-0">
+          <CardFooter className="flex w-full items-center justify-between border-t py-4 ">
             <AvatarList
               images={[
                 "https://avatars2.githubusercontent.com/u/263385",
