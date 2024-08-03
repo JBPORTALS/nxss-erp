@@ -27,7 +27,6 @@ export default function BranchListClient({
       {branchList.map((item) => (
         <NavigationMenu
           key={item.id}
-          value={item.id.toString()}
           open={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
         >
           <Link href={`/${params.org}/branch/${item.id}`}>
@@ -35,8 +34,8 @@ export default function BranchListClient({
             <NavigationMenuButton
               open={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
             >
-              <PlusCircle className="size-4 flex-shrink-0" />
-              <NavigationMenuText>{item.title}</NavigationMenuText>
+              <BoxIcon className="size-4 flex-shrink-0" />
+              <NavigationMenuText>{item.name}</NavigationMenuText>
             </NavigationMenuButton>
           </Link>
           <NavigationMenuContent>
