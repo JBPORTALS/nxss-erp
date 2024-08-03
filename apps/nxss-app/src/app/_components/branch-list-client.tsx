@@ -40,9 +40,11 @@ export default function BranchListClient({
           </Link>
           <NavigationMenuContent>
             {[...Array(item.semesters)].map((_, index) => (
-              <Link href={`/${params.org}/branch/${item.id}/${index + 1}`}>
+              <Link
+                key={index}
+                href={`/${params.org}/branch/${item.id}/${index + 1}`}
+              >
                 <NavigationMenuItem
-                  key={index}
                   status="completed"
                   isActive={pathname.startsWith(
                     `/${params.org}/branch/${item.id}/${index + 1}`,
