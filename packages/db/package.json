@@ -14,13 +14,14 @@
     "push": "pnpm with-env drizzle-kit push",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "seed": "pnpm with-env dotenv -v SEED_MODE=true tsx src/seed.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@planetscale/database": "^1.18.0",
     "drizzle-orm": "^0.32.0",
-    "pg": "^8.12.0",
+    "pg": "^8.7.1",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "drizzle-kit": "^0.23.0",
     "eslint": "^8.56.0",
     "prettier": "^3.3.2",
+    "tsx": "^4.16.5",
     "typescript": " ~5.3.3"
   },
   "eslintConfig": {
