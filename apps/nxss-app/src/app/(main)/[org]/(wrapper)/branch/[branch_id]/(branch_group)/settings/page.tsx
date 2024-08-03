@@ -60,9 +60,10 @@ export default function page() {
   async function onSubmit(values: z.infer<typeof UpdateBranchScheme>) {
     const response = await updateBranchDetails(values);
 
-    if (response.error)
+    if (response?.error)
       return toast.error("Something went wrong, Retry again!");
-    toast.info(response.message);
+
+    toast.info("Branch updated successfully");
   }
 
   return (

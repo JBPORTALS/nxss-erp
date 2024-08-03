@@ -53,7 +53,7 @@ export default async function AsideBarClient({
       <SidebarBody className="space-y-4">
         {hasAccordion ? (
           <Protect role="org:admin">
-            <BranchListClient {...{ branchList }} />
+            <BranchListClient {...{ branchList, params }} />
           </Protect>
         ) : (
           <main className="pr-2">
