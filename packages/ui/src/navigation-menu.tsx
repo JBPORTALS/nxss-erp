@@ -27,7 +27,7 @@ NavigationMenu.displayName = "NavigationMenu";
 
 // NavigationMenuButton
 const navigationMenuButtonVariants = cva(
-  "my-1 flex w-full flex-1 items-center justify-start gap-2 rounded rounded-e-none border-r border-transparent px-3 px-4 py-2 py-2.5 text-sm font-normal text-accent-foreground transition-all [&[data-state=open]>.chevron]:rotate-180",
+  "my-1 flex w-full flex-1 items-center justify-start gap-2 rounded rounded-e-none border-r border-transparent px-4 py-2.5 text-sm font-normal text-accent-foreground transition-all [&[data-state=open]>.chevron]:rotate-180",
   {
     variants: {
       open: {
@@ -99,7 +99,12 @@ NavigationMenuContent.displayName = "NavigationMenuContent";
 
 // NavigationMenuItem
 
-type StatusVariant = "default" | "completed" | "active";
+type StatusVariant =
+  | "default"
+  | "completed"
+  | "current"
+  | "upcoming"
+  | undefined;
 
 interface NavigationMenuItemProps extends NavItemProps {
   status?: StatusVariant;
@@ -116,14 +121,14 @@ const NavigationMenuItem = React.forwardRef<
         <DotIcon
           className={cn(
             "absolute inline-flex size-full animate-ping rounded-full text-amber-400",
-            status !== "active" && "hidden",
+            status !== "current" && "hidden",
           )}
         />
         <DotIcon
           className={cn(
             `relative ml-auto inline-flex size-6`,
             status == "default" && "text-muted-foreground",
-            status == "active" && "text-amber-500",
+            status == "current" && "text-amber-500",
             status == "completed" && "text-green-500",
           )}
         />

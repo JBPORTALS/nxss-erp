@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Boxes, Link2Off } from "lucide-react";
+import { Boxes } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
 

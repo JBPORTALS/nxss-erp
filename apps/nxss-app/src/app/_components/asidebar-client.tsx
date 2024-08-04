@@ -38,6 +38,7 @@ export default async function AsideBarClient({
             <SidebarItemClient path={`/${params.org}/faculty`}>
               <Users2Icon className="size-4" /> Faculty
             </SidebarItemClient>
+            <BranchListClient {...{ branchList, params }} />
           </Protect>
         </SidebarBody>
         <Protect role="org:admin">
@@ -55,7 +56,7 @@ export default async function AsideBarClient({
           {/*  */}
           {hasAccordion ? (
             <Protect role="org:admin">
-              <BranchListClient {...{ branchList }} />
+            <BranchListClient {...{ branchList, params }} />
             </Protect>
           ) : (
             <main className="pr-2">

@@ -124,7 +124,7 @@ export const updateBranchDetails = async (
   try {
     await api.branch.updateDetails(values);
 
-    revalidatePath(`/${orgSlug}/branch/${values.id}`, "layout");
+    await revalidatePath(`/${orgSlug}/branch/${values.id}`, "layout");
 
     return { message: "Branch details updated" };
   } catch (err) {
