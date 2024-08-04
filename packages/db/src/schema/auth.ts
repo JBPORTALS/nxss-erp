@@ -63,7 +63,7 @@ export const semesters = pgTable("semesters", {
   id: serial("id").primaryKey(),
   institution_id: text("institution_id")
     .notNull()
-    .references(() => institutions.id),
+    .references(() => institutions.id, { onDelete: "cascade" }),
   number: integer("number").notNull(),
 });
 
@@ -72,7 +72,7 @@ export const branch_to_sem = pgTable("branch_to_sem", {
   id: serial("id").primaryKey(),
   branch_id: serial("branch_id")
     .notNull()
-    .references(() => branches.id),
+    .references(() => branches.id, { onDelete: "cascade" }),
   semester_id: integer("semester_id").notNull(),
   status: statusEnum("status").notNull(),
 });
