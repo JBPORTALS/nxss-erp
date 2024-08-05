@@ -16,14 +16,10 @@ export default function Page() {
     <div className="grid w-full grid-cols-4 gap-5">
       <Card x-chunk="dashboard-05-chunk-2 " className="w-full">
         <CardHeader className="pb-2">
-          <CardDescription>Total no. of Staff</CardDescription>
+          <CardDescription>Attendence</CardDescription>
           <CardTitle className="text-4xl">68%</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-xs text-muted-foreground">
-            Overall academic year attendance.
-          </div>
-        </CardContent>
+        <CardContent></CardContent>
         <CardFooter>
           <Progress value={68} />
         </CardFooter>

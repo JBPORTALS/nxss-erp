@@ -65,10 +65,10 @@ export default function Template(props: { children: React.ReactNode }) {
             Sessions
           </TabItem>
         </Link>
-        <Link href={`/${org}/branch/${branch_id}/${sem_id}/timeTable`}>
+        <Link href={`/${org}/branch/${branch_id}/${sem_id}/time-table`}>
           <TabItem
             isActive={
-              pathname === `/${org}/branch/${branch_id}/${sem_id}/timeTable`
+              pathname === `/${org}/branch/${branch_id}/${sem_id}/time-table`
             }
           >
             Timetable

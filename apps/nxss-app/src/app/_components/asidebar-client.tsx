@@ -23,6 +23,7 @@ export default async function AsideBarClient({
       <SidebarSwitcher type="subject">
         <SidebarLabel>Subject Menu</SidebarLabel>
         
+        
       </SidebarSwitcher>
       <SidebarSwitcher type="main">
         <SidebarLabel>MAIN MENU</SidebarLabel>
