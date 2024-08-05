@@ -37,7 +37,7 @@ export function NavigationMenuItemClient({
 
   console.log(pathname, params);
 
-  return <NavigationMenuItem {...props} isActive={params.sem_id === "5"} />;
+  return <NavigationMenuItem {...props} isActive={params.sem_id === "4"} />;
 }
 
 export function NavigationMenuContentClient({

@@ -1,8 +1,19 @@
+import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
-import { HomeIcon, Layers, PlusCircle, Users2Icon } from "lucide-react";
+import {
+  ArrowLeft,
+  HomeIcon,
+  Layers,
+  PlusCircle,
+  Users2Icon,
+} from "lucide-react";
+
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
+import { HStack, VStack } from "@nxss/ui/stack";
+
 import { api } from "~/trpc/server";
 import BranchListClient from "./branch-list-client";
+import { ComboboxDemo } from "./combobox";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 import SidebarSwitcher from "./sidebar-switcher";
@@ -22,8 +33,17 @@ export default async function AsideBarClient({
     <Sidebar>
       <SidebarSwitcher type="subject">
         <SidebarLabel>Subject Menu</SidebarLabel>
-        
-        
+        <VStack className="space-y-4 border-b pb-4">
+          <ComboboxDemo />
+
+          <Link href={"/"} className="flex gap-3 font-semibold">
+            <ArrowLeft />
+            Back to Dashboard{" "}
+          </Link>
+        </VStack>
+        <SidebarItemClient path={`/${params.org}/dashboard`}>
+          <HomeIcon className="size-4" /> Overview
+        </SidebarItemClient>
       </SidebarSwitcher>
       <SidebarSwitcher type="main">
         <SidebarLabel>MAIN MENU</SidebarLabel>
@@ -53,7 +73,7 @@ export default async function AsideBarClient({
           {/*  */}
           {hasAccordion ? (
             <Protect role="org:admin">
-            <BranchListClient {...{ branchList, params }} />
+              <BranchListClient {...{ branchList, params }} />
             </Protect>
           ) : (
             <main className="pr-2">

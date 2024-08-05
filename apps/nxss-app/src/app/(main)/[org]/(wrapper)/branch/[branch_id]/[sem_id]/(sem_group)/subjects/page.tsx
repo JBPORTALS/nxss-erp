@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Ellipsis } from "lucide-react";
 
 import { AvatarList } from "@nxss/ui/avatar-list";
@@ -20,19 +21,19 @@ export default function Subjects() {
         <Input placeholder="Search..." className="w-2/3" />
         <Button>Add Subject</Button>
       </HStack>
-      <div className="grid w-full grid-cols-4 gap-5">
+      <div className="grid w-full grid-cols-3 gap-5">
         <Card className="h-full w-full">
           <CardHeader>
             <CardTitle className="flex items-center gap-4">
               <div className="size-6 rounded-full bg-blue-400"></div>{" "}
               <VStack className="gap-0">
                 <h1 className="text-lg">Fundamentals of computers</h1>
-                <span className="text-sm text-muted-foreground">15CS10T</span>
+                <span className="text-sm text-muted-foreground font-normal">15CS10T</span>
               </VStack>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex w-full">
-            <span className="text-muted-foreground">
+            <span className="text-muted-foreground text-sm">
               Fundamentals of computers cover the core principles and essential
               components of digital technology and computing systems.
             </span>
