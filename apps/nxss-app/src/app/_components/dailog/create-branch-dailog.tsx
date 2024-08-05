@@ -55,7 +55,9 @@ export default function CreateBranchDailog() {
   return (
     <Dialog {...{ open, onOpenChange }}>
       <DialogTrigger asChild>
-        <Plus className="pb-1 hover:cursor-pointer" />
+        <Button size={"icon"} variant={"ghost"}>
+          <Plus className="size-5" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
