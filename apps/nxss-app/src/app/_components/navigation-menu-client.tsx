@@ -34,14 +34,10 @@ export function NavigationMenuItemClient({
 }: React.ComponentProps<typeof NavigationMenuItem>) {
   const pathname = usePathname();
   const params = useParams();
-  return (
-    <NavigationMenuItem
-      isActive={pathname.startsWith(
-        `/${params.org}/branch/${params.branch_id}/1`,
-      )}
-      {...props}
-    />
-  );
+
+  console.log(pathname, params);
+
+  return <NavigationMenuItem {...props} isActive={params.sem_id === "5"} />;
 }
 
 export function NavigationMenuContentClient({
