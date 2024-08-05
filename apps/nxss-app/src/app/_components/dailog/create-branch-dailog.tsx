@@ -61,8 +61,7 @@ export default function CreateBranchDailog() {
         <DialogHeader>
           <DialogTitle>Add Branch</DialogTitle>
           <DialogDescription className="text-xs">
-            Creating a new, separate pathway within the project's repository to
-            isolate changes and developments.
+            Essential Steps for Successful Branch Expansion.
           </DialogDescription>
         </DialogHeader>
 
@@ -101,7 +100,7 @@ export default function CreateBranchDailog() {
 
             <DialogFooter>
               <Button type="submit" isLoading={form.formState.isSubmitting}>
-                Save changes
+                Create
               </Button>
             </DialogFooter>
           </form>
