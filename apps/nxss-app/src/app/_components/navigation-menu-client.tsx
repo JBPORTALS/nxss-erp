@@ -6,6 +6,7 @@ import {
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuContent,
+  NavigationMenuItem,
 } from "@nxss/ui/navigation-menu";
 
 export function NavigationMenuButtonClient({
@@ -23,10 +24,24 @@ export function NavigationMenuButtonClient({
 }
 
 export function NavigationMenuClient({
-  branch_id,
   ...props
 }: React.ComponentProps<typeof NavigationMenu> & { branch_id: number }) {
   return <NavigationMenu {...props} />;
+}
+
+export function NavigationMenuItemClient({
+  ...props
+}: React.ComponentProps<typeof NavigationMenuItem>) {
+  const pathname = usePathname();
+  const params = useParams();
+  return (
+    <NavigationMenuItem
+      isActive={pathname.startsWith(
+        `/${params.org}/branch/${params.branch_id}/1`,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function NavigationMenuContentClient({
