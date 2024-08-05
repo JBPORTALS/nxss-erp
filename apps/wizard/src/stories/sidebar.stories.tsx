@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Home, Plus, Users } from "lucide-react";
 
-import { AccordionDemo } from "@nxss/ui/accordiondemo";
 import {
   Sidebar,
   SidebarBody,
@@ -22,7 +20,6 @@ import {
 } from "@nxss/ui/dialog";
 import { Input } from "@nxss/ui/input";
 import { Label } from "@nxss/ui/label";
-import { ComboboxDemo } from "@nxss/ui/combobox";
 
 const meta: Meta<typeof Sidebar> = {
   title: "UI/Sidebar",
@@ -104,7 +101,6 @@ export const Multiple: Story = {
               </Dialog>
             </div>
           </SidebarLabel>
-          <AccordionDemo />
         </SidebarBody>
       </Sidebar>
     );
