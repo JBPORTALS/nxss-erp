@@ -19,7 +19,11 @@ export default async function SemesterItemServer({
 
   return (
     <Link href={`/${params.org}/branch/${branch_id}/${semester_id}`}>
-      <NavigationMenuItemClient status={semester?.status} {...props} />
+      <NavigationMenuItemClient
+        status={semester?.status}
+        sem_id={semester_id}
+        {...props}
+      />
     </Link>
   );
 }
