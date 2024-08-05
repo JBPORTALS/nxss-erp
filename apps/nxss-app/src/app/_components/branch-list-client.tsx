@@ -31,7 +31,7 @@ export default function BranchListClient({
           </Link>
           <NavigationMenuContentClient branch_id={branch.id}>
             {[...Array(branch.semesters)].map((_, index) => (
-              <SemesterItemServer 
+              <SemesterItemServer
                 key={branch.id}
                 branch_id={branch.id}
                 semester_id={index + 1}
