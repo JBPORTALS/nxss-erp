@@ -49,7 +49,7 @@ export default async function AsideBarClient({
 
           <Link
             href={`/${params.org}/dashboard`}
-            className="flex gap-3 font-semibold"
+            className="flex gap-3 font-medium"
           >
             <ArrowLeft />
             Back to Dashboard{" "}
