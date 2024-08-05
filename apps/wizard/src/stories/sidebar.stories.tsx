@@ -2,8 +2,6 @@ import Link from "next/link";
 import { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Home, Plus, Users } from "lucide-react";
-
-import { AccordionDemo } from "@nxss/ui/accordiondemo";
 import {
   Sidebar,
   SidebarBody,
