@@ -6,13 +6,11 @@ import { ArrowRight } from "lucide-react";
 
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@nxss/ui/breadcrumb";
-import { Button } from "@nxss/ui/button";
 import { TabItem, Tabs } from "@nxss/ui/tabs";
 
 export default function Template(props: { children: React.ReactNode }) {
@@ -24,8 +22,10 @@ export default function Template(props: { children: React.ReactNode }) {
         <Breadcrumb>
           <BreadcrumbList className="text-accent-foreground/80">
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${org}/branch/${branch_id}`}>
-                Computer Science
+              <BreadcrumbLink asChild>
+                <Link href={`/${org}/branch/${branch_id}`}>
+                  Computer Science
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
