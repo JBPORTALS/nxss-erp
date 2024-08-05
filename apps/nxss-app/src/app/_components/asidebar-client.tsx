@@ -1,9 +1,6 @@
 import { Protect } from "@clerk/nextjs";
 import { HomeIcon, Layers, PlusCircle, Users2Icon } from "lucide-react";
-
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
-import { ScrollArea } from "@nxss/ui/scrollarea";
-
 import { api } from "~/trpc/server";
 import BranchListClient from "./branch-list-client";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
@@ -38,7 +35,6 @@ export default async function AsideBarClient({
             <SidebarItemClient path={`/${params.org}/faculty`}>
               <Users2Icon className="size-4" /> Faculty
             </SidebarItemClient>
-            <BranchListClient {...{ branchList, params }} />
           </Protect>
         </SidebarBody>
         <Protect role="org:admin">
