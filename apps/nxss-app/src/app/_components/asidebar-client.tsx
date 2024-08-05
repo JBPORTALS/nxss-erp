@@ -17,7 +17,6 @@ import { ComboboxDemo } from "./combobox";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 import SidebarSwitcher from "./sidebar-switcher";
-import { Button } from "@nxss/ui/button";
 
 export default async function AsideBarClient({
   params,
