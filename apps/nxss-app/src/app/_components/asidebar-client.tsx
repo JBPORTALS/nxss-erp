@@ -1,6 +1,8 @@
 import { Protect } from "@clerk/nextjs";
-import { HomeIcon, Layers, PlusCircle, Users2Icon } from "lucide-react";
+import { HomeIcon, Users2Icon } from "lucide-react";
+
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
+
 import { api } from "~/trpc/server";
 import BranchListClient from "./branch-list-client";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
@@ -22,8 +24,6 @@ export default async function AsideBarClient({
     <Sidebar>
       <SidebarSwitcher type="subject">
         <SidebarLabel>Subject Menu</SidebarLabel>
-        
-        
       </SidebarSwitcher>
       <SidebarSwitcher type="main">
         <SidebarLabel>MAIN MENU</SidebarLabel>
@@ -38,44 +38,46 @@ export default async function AsideBarClient({
             </SidebarItemClient>
           </Protect>
         </SidebarBody>
-        <Protect role="org:admin">
-          <SidebarLabel className="flex items-center justify-between pr-2">
-            BRANCHES
-            <CreateBranchDailog />
-          </SidebarLabel>
-        </Protect>
-        <Protect role="org:staff">
-          <SidebarLabel className="flex items-center justify-between pr-2">
-            SUBJECTS
-          </SidebarLabel>
-        </Protect>
-        <SidebarBody className="flex flex-grow flex-col overflow-hidden">
-          {/*  */}
-          {hasAccordion ? (
-            <Protect role="org:admin">
-            <BranchListClient {...{ branchList, params }} />
-            </Protect>
-          ) : (
-            <main className="pr-2">
-              <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
-                <Protect role="org:admin">
-                  <span className="text-sm font-semibold">No Branches</span>
-                  <p className="text-xs text-muted-foreground">
-                    Create new branch by clicking on the BRANCHES plus icon.
-                  </p>
-                </Protect>
-                <Protect role="org:staff">
-                  <span className="text-sm font-semibold">
-                    No Subjects Assigned
-                  </span>
-                  <p className="text-xs text-muted-foreground">
-                    Wait for subject allocation by your institution admin.
-                  </p>
-                </Protect>
-              </div>
-            </main>
-          )}
-        </SidebarBody>
+        <div className="space-y-1">
+          <Protect role="org:admin">
+            <SidebarLabel className="flex items-center justify-between pr-2">
+              BRANCHES
+              <CreateBranchDailog />
+            </SidebarLabel>
+          </Protect>
+          <Protect role="org:staff">
+            <SidebarLabel className="flex items-center justify-between pr-2">
+              SUBJECTS
+            </SidebarLabel>
+          </Protect>
+          <SidebarBody className="flex flex-grow flex-col overflow-hidden">
+            {/*  */}
+            {hasAccordion ? (
+              <Protect role="org:admin">
+                <BranchListClient {...{ branchList, params }} />
+              </Protect>
+            ) : (
+              <main className="pr-2">
+                <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
+                  <Protect role="org:admin">
+                    <span className="text-sm font-semibold">No Branches</span>
+                    <p className="text-xs text-muted-foreground">
+                      Create new branch by clicking on the BRANCHES plus icon.
+                    </p>
+                  </Protect>
+                  <Protect role="org:staff">
+                    <span className="text-sm font-semibold">
+                      No Subjects Assigned
+                    </span>
+                    <p className="text-xs text-muted-foreground">
+                      Wait for subject allocation by your institution admin.
+                    </p>
+                  </Protect>
+                </div>
+              </main>
+            )}
+          </SidebarBody>
+        </div>
       </SidebarSwitcher>
     </Sidebar>
   );
