@@ -9,8 +9,8 @@ export interface AvatarListProps {
 }
 
 const sizeClasses = {
-  small: "w-6 h-6",
-  medium: "w-8 h-8",
+  small: "size-6",
+  medium: "size-8",
   large: "w-12 h-12",
 };
 
@@ -34,7 +34,7 @@ export const AvatarList: React.FC<AvatarListProps> = (
       {remainingCount > 0 && (
         <div
           className={cn(
-            `flex items-center justify-center ${sizeClasses[size]} rounded-full  bg-gray-400 text-xs font-medium text-white`,
+            `flex items-center justify-center ${sizeClasses[size]} rounded-full bg-gray-400 text-xs font-medium text-white`,
             className,
           )}
         >

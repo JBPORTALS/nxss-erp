@@ -20,13 +20,15 @@ export default function Subjects() {
         <Input placeholder="Search..." className="w-2/3" />
         <Button>Add Subject</Button>
       </HStack>
-      <div className="grid w-full grid-cols-3 gap-5">
-        
+      <div className="grid w-full grid-cols-4 gap-5">
         <Card className="h-full w-full">
-          <CardHeader className="">
-            <CardTitle className="flex gap-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-4">
               <div className="size-6 rounded-full bg-blue-400"></div>{" "}
-              Fundamentals of computers
+              <VStack className="gap-0">
+                <h1 className="text-lg">Fundamentals of computers</h1>
+                <span className="text-sm text-muted-foreground">15CS10T</span>
+              </VStack>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex w-full">
@@ -35,7 +37,7 @@ export default function Subjects() {
               components of digital technology and computing systems.
             </span>
           </CardContent>
-          <CardFooter className="flex w-full items-center justify-between border-t py-4 ">
+          <CardFooter className="flex w-full items-center justify-between border-t py-4">
             <AvatarList
               images={[
                 "https://avatars2.githubusercontent.com/u/263385",
@@ -44,7 +46,7 @@ export default function Subjects() {
                 "https://avatars2.githubusercontent.com/u/132554",
               ]}
               maxAvatars={3}
-              size="medium"
+              size="small"
             />
             <Ellipsis className="text-muted-foreground" />
           </CardFooter>
