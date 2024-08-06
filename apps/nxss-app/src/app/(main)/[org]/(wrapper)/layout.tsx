@@ -80,7 +80,7 @@ export default async function Template(props: {
         </header>
       </div>
       <section className="flex flex-1">
-        <AsideBarClient params={props.params} />
+        <AsideBarClient params={props.params}    />
         <main className="w-full px-10 py-8">{props.children}</main>
       </section>
     </div>

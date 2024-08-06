@@ -30,8 +30,6 @@ export default async function AsideBarClient({
   params: {
     org: string;
     subject_id: string;
-    branch_id: string;
-    sem_id: string;
   };
 }) {
   const branchList = await api.branch.getBranchList();
