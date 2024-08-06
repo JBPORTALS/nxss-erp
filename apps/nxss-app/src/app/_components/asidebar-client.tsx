@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
-import { HStack, VStack } from "@nxss/ui/stack";
+import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
 import BranchListClient from "./branch-list-client";
