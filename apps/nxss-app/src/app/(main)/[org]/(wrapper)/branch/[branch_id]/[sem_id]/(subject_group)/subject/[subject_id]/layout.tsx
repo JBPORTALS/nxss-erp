@@ -24,11 +24,21 @@ export default async function Template(props: any) {
               <Link href={`#`}>Computer Science</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
+          
+          <BreadcrumbSeparator>
+            <ArrowRight />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href={`#`}>Semester 1</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          
           <BreadcrumbSeparator>
             <ArrowRight />
           </BreadcrumbSeparator>
           <BreadcrumbItem className="text-foreground">
-            Semester 1
+            FOC
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
+import { Button } from "@nxss/ui/button";
 import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
@@ -41,18 +42,11 @@ export default async function AsideBarClient({
   return (
     <Sidebar>
       <SidebarSwitcher type="subject">
-        <SidebarLabel>Subject Menu</SidebarLabel>
         <VStack className="space-y-4 border-b pb-4">
           <ComboboxDemo />
-
-          <Link
-            href={`/${params.org}/dashboard`}
-            className="flex gap-3 font-medium"
-          >
-            <ArrowLeft />
-            Back to Dashboard{" "}
-          </Link>
         </VStack>
+
+        <SidebarLabel>Subject Menu</SidebarLabel>
         <SidebarItemClient path={``}>
           <LayoutDashboard className="size-4" /> Overview
         </SidebarItemClient>

@@ -17,7 +17,7 @@ export default function Settings() {
         </span>
       </VStack>
       <hr className="my-5 w-full"></hr>
-      <VStack className="gap-9">
+      <VStack className="w-full gap-9">
         <VStack>
           <Label>Subject</Label>
           <HStack className="items-center">
@@ -38,7 +38,7 @@ export default function Settings() {
         <Button size={"lg"}>Save details</Button>
       </VStack>
       <hr className="my-5 w-full"></hr>
-      <VStack className="gap-8">
+      <VStack className="gap-8 w-full">
         <VStack>
           <span className="text-lg font-semibold text-red-500">
             Clear data of semester
