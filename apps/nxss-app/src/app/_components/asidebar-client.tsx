@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
 import {
@@ -24,6 +25,7 @@ import { ComboboxDemo } from "./combobox";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 import SidebarSwitcher from "./sidebar-switcher";
+import { SubjectSidebarItem } from "./subject-sidebar-item";
 
 export default async function AsideBarClient({
   params,
@@ -37,40 +39,54 @@ export default async function AsideBarClient({
 
   const hasAccordion = branchList.length > 0;
 
-  console.log(params);
-
   return (
     <Sidebar>
+      <SidebarSwitcher type="setting" path={`/${params.org}/settings`}>
+        <SidebarLabel>General</SidebarLabel>
+        <SubjectSidebarItem path="/">
+          <LayoutDashboard className="size-4" /> Overview
+        </SubjectSidebarItem>
+        <SubjectSidebarItem path="/">
+          <UsersRound className="size-4" />
+          Allocations
+        </SubjectSidebarItem>
+        <SubjectSidebarItem path={`/settings`}>
+          <Settings className="size-4" />
+          Settings
+        </SubjectSidebarItem>
+        <SidebarLabel>Institution</SidebarLabel>
+        <SubjectSidebarItem path="">
+          <LayoutDashboard className="size-4" /> Overview
+        </SubjectSidebarItem>
+        <SubjectSidebarItem path="/allocations">
+          <UsersRound className="size-4" />
+          Allocations
+        </SubjectSidebarItem>
+        <SubjectSidebarItem path={`/settings`}>
+          <Settings className="size-4" />
+          Settings
+        </SubjectSidebarItem>
+      </SidebarSwitcher>
+
       <SidebarSwitcher type="subject">
         <VStack className="space-y-4 border-b pb-4">
           <ComboboxDemo />
         </VStack>
 
         <SidebarLabel>Subject Menu</SidebarLabel>
-        <SidebarItemClient path={``}>
+        <SubjectSidebarItem path="">
           <LayoutDashboard className="size-4" /> Overview
-        </SidebarItemClient>
-        <SidebarItemClient path={`#`}>
+        </SubjectSidebarItem>
+        <SubjectSidebarItem path="/allocations">
           <UsersRound className="size-4" />
           Allocations
-        </SidebarItemClient>
-        <SidebarItemClient path={`#`}>
-          <Files className="size-4" />
-          Notes
-        </SidebarItemClient>
-        <SidebarItemClient path={`#`}>
-          <Layers2 className="size-4" />
-          Assignments
-        </SidebarItemClient>
-        <SidebarItemClient path={`#`}>
-          <BookMarked className="size-4" />
-          Marks
-        </SidebarItemClient>
-        <SidebarItemClient path={`#`}>
+        </SubjectSidebarItem>
+        <SubjectSidebarItem path={`/settings`}>
           <Settings className="size-4" />
           Settings
-        </SidebarItemClient>
+        </SubjectSidebarItem>
       </SidebarSwitcher>
+
       <SidebarSwitcher type="main">
         <SidebarLabel>MAIN MENU</SidebarLabel>
         <SidebarBody>

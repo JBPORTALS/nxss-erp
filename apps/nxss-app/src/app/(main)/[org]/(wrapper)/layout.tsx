@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { RocketIcon, SlashIcon } from "lucide-react";
 
@@ -12,9 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@nxss/ui/select";
-import { ThemeToggle } from "@nxss/ui/theme";
 
 import AsideBarClient from "~/app/_components/asidebar-client";
+import ProfilePopover from "~/app/_components/popovers/profile-popover";
 
 export default async function Template(props: {
   children: React.ReactNode;
@@ -73,14 +72,12 @@ export default async function Template(props: {
               </Select>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <UserButton />
-          </div>
+
+          <ProfilePopover params={props.params} />
         </header>
       </div>
       <section className="flex flex-1">
-        <AsideBarClient params={props.params}    />
+        <AsideBarClient params={props.params} />
         <main className="w-full px-10 py-8">{props.children}</main>
       </section>
     </div>

@@ -15,7 +15,7 @@ const isUploadthingRoute = createRouteMatcher(["/api/uploadthing(.*)"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
-    const { userId, redirectToSignIn, sessionId } = auth();
+    const { userId, redirectToSignIn } = auth();
 
     const headers = new Headers(request.headers);
     headers.set("x-current-path", request.nextUrl.pathname);
