@@ -17,7 +17,10 @@ export default clerkMiddleware(
   async (auth, request) => {
     const { userId, redirectToSignIn, sessionId } = auth();
 
-    if (isUploadthingRoute(request)) return NextResponse.next();
+    const headers = new Headers(request.headers);
+    headers.set("x-current-path", request.nextUrl.pathname);
+
+    if (isUploadthingRoute(request)) return NextResponse.next({ headers });
 
     // If the user isn't signed in and the route is private, redirect to sign-in
     if (!userId && !isPublicRoute(request))
@@ -45,6 +48,8 @@ export default clerkMiddleware(
         new URL(`/${org_slug}/dashboard`, request.nextUrl.origin),
       );
     }
+
+    return NextResponse.next({ headers });
   },
   {
     signInUrl: "/sign-in",
@@ -52,5 +57,9 @@ export default clerkMiddleware(
 );
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc|uploadthing)(.*)"],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/",
+    "/(api|trpc|uploadthing)(.*)",
+  ],
 };

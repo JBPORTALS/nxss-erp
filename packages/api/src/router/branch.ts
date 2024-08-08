@@ -1,17 +1,18 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { and, eq, schema } from "@nxss/db";
+import { and, asc, eq, schema } from "@nxss/db";
 import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
 
 import { protectedProcedure, router } from "../trpc";
 
-const { branches, semesters } = schema;
+const { branches, semesters, branch_to_sem } = schema;
 
 export const branchesRouter = router({
   getBranchList: protectedProcedure.query(async ({ ctx }) => {
     const branchList = await ctx.db.query.branches.findMany({
       where: eq(branches.institution_id, ctx.auth.orgId ?? ""),
+      orderBy: asc(branches.name),
     });
 
     const semester_number = await ctx.db.query.semesters.findFirst({
@@ -97,6 +98,12 @@ export const branchesRouter = router({
           message: "Can't able to create the branch, Retry",
           code: "BAD_REQUEST",
         });
+      //make the  1st semester as current semester when new branch created successfully
+      await ctx.db.insert(branch_to_sem).values({
+        branch_id: response.at(0)?.id,
+        semester_id: 1,
+        status: "current",
+      });
 
       return response;
     }),

@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function page() {
-  return <div>Semester Overview</div>;
+  return <div>Subject Details</div>;
 }

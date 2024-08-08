@@ -42,6 +42,7 @@ export const SidebarBody = ({
   ...props
 }: SidebarBodyProps) => {
   return (
+    
     <div
       className={cn("-mr-px flex h-fit flex-col gap-2", className)}
       {...props}

@@ -1,7 +1,7 @@
 import React from "react";
-import AvatarList, { AvatarListProps } from "@nxss/ui/avatar-list";
 import { StoryFn } from "@storybook/react";
 
+import { AvatarList, AvatarListProps } from "@nxss/ui/avatar-list";
 
 export default {
   title: "UI/AvatarList",
@@ -38,7 +38,7 @@ export default {
   },
 };
 
-const Template: StoryFn<AvatarListProps> = (args:any) => (
+const Template: StoryFn<AvatarListProps> = (args: any) => (
   <div className="p-4">
     <AvatarList {...args} />
   </div>

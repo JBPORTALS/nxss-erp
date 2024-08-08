@@ -1,5 +1,5 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 
 import { env } from "./env";
 import * as auth from "./schema/auth";
@@ -13,5 +13,5 @@ export { pgTable as tableCreator } from "./schema/_table";
 
 export * from "drizzle-orm";
 
-const client = postgres(env.DATABASE_URL, { prepare: false, debug: true });
+const client = neon(env.DATABASE_URL);
 export const db = drizzle(client, { schema });

@@ -1,59 +1,47 @@
-"use client";
-
-import React from "react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-import { BoxIcon, PlusCircle } from "lucide-react";
+import { BoxIcon } from "lucide-react";
 
 import { RouterOutputs } from "@nxss/api";
-import { NavItem } from "@nxss/ui/nav-item";
+import { NavigationMenuText } from "@nxss/ui/navigation-menu";
+
 import {
-  NavigationMenu,
-  NavigationMenuButton,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuText,
-} from "@nxss/ui/navigation-menu";
+  NavigationMenuButtonClient,
+  NavigationMenuClient,
+  NavigationMenuContentClient,
+} from "./navigation-menu-client";
+import SemesterItemServer from "./semester-item-server";
 
 export default function BranchListClient({
   branchList,
+  params,
 }: {
   branchList: RouterOutputs["branch"]["getBranchList"];
+  params: { org: string };
 }) {
-  const pathname = usePathname();
-  const params = useParams();
   return (
     <div className="w-full">
-      {branchList.map((item) => (
-        <NavigationMenu
-          key={item.id}
-          open={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
-        >
-          <Link href={`/${params.org}/branch/${item.id}`}>
+      {branchList.map((branch) => (
+        <NavigationMenuClient key={branch.id} branch_id={branch.id}>
+          <Link href={`/${params.org}/branch/${branch.id}`}>
             {/* open is used to make the button active */}
-            <NavigationMenuButton
-              open={pathname.startsWith(`/${params.org}/branch/${item.id}`)}
-            >
+            <NavigationMenuButtonClient branch_id={branch.id}>
               <BoxIcon className="size-4 flex-shrink-0" />
-              <NavigationMenuText>{item.name}</NavigationMenuText>
-            </NavigationMenuButton>
+              <NavigationMenuText>{branch.name}</NavigationMenuText>
+            </NavigationMenuButtonClient>
           </Link>
-          <NavigationMenuContent>
-            {[...Array(item.semesters)].map((_, index) => (
-              <Link href={`/${params.org}/branch/${item.id}/${index + 1}`}>
-                <NavigationMenuItem
-                  key={index}
-                  status="completed"
-                  isActive={pathname.startsWith(
-                    `/${params.org}/branch/${item.id}/${index + 1}`,
-                  )}
-                >
-                  Semester {index + 1}
-                </NavigationMenuItem>
-              </Link>
+          <NavigationMenuContentClient branch_id={branch.id}>
+            {[...Array(branch.semesters)].map((_, index) => (
+              <SemesterItemServer
+                key={branch.id}
+                branch_id={branch.id}
+                semester_id={index + 1}
+                params={params}
+              >
+                Semester {index + 1}
+              </SemesterItemServer>
             ))}
-          </NavigationMenuContent>
-        </NavigationMenu>
+          </NavigationMenuContentClient>
+        </NavigationMenuClient>
       ))}
     </div>
   );
