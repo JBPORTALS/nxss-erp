@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Button } from "@nxss/ui/button";
+import { ColorDot } from "@nxss/ui/color-dot";
 import { Input } from "@nxss/ui/input";
 import { Label } from "@nxss/ui/label";
 import { HStack, VStack } from "@nxss/ui/stack";
@@ -10,7 +11,7 @@ export default function Settings() {
   return (
     <div className="w-full">
       {" "}
-      <VStack className="gap-2">
+      <VStack className="w-full gap-2">
         <h1 className="text-2xl font-bold">Settings</h1>
         <span className="text-muted-foreground">
           An journey throughout space with engineering
@@ -19,11 +20,12 @@ export default function Settings() {
       <hr className="my-5 w-full"></hr>
       <VStack className="w-full gap-9">
         <VStack>
-          <Label>Subject</Label>
-          <HStack className="items-center">
-            <div className={`size-6 rounded-full bg-blue-400`}></div>
-            <Input defaultValue={"Fundamentals of computer"} className="w-96" />
-          </HStack>
+          <Label>Color</Label>
+          <ColorDot number={4} enablePopover={true} />
+
+          <Label>Name</Label>
+
+          <Input defaultValue={"Fundamentals of computer"} className="w-96" />
         </VStack>
         <VStack>
           {" "}
@@ -38,7 +40,7 @@ export default function Settings() {
         <Button size={"lg"}>Save details</Button>
       </VStack>
       <hr className="my-5 w-full"></hr>
-      <VStack className="gap-8 w-full">
+      <VStack className="w-full gap-8">
         <VStack>
           <span className="text-lg font-semibold text-red-500">
             Clear data of semester

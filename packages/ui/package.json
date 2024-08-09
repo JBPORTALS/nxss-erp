@@ -44,7 +44,8 @@
     "./check-card": "./src/check-card.tsx",
     "./navigation-menu": "./src/navigation-menu.tsx",
     "./breadcrumb": "./src/breadcrumb.tsx",
-    "./scrollarea": "./src/scrollarea.tsx"
+    "./scrollarea": "./src/scrollarea.tsx",
+    "./color-dot": "./src/color-dot.tsx"
   },
   "license": "MIT",
   "scripts": {

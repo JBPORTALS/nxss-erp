@@ -1,5 +1,3 @@
-import { headers } from "next/headers";
-import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
 import {
   ArrowLeft,
@@ -17,11 +15,12 @@ import {
 
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
 import { Button } from "@nxss/ui/button";
+import { ComboboxDemo } from "@nxss/ui/combobox";
 import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
+import BackButton from "./back-button-client";
 import BranchListClient from "./branch-list-client";
-import { ComboboxDemo } from "./combobox";
 import CreateBranchDailog from "./dailog/create-branch-dailog";
 import { SidebarItemClient } from "./sidebar-item";
 import SidebarSwitcher from "./sidebar-switcher";
@@ -42,30 +41,37 @@ export default async function AsideBarClient({
   return (
     <Sidebar>
       <SidebarSwitcher type="setting" path={`/${params.org}/settings`}>
+        <div className="pr-5">
+          <BackButton />
+        </div>
         <SidebarLabel>General</SidebarLabel>
-        <SubjectSidebarItem path="/">
-          <LayoutDashboard className="size-4" /> Overview
-        </SubjectSidebarItem>
-        <SubjectSidebarItem path="/">
-          <UsersRound className="size-4" />
-          Allocations
-        </SubjectSidebarItem>
-        <SubjectSidebarItem path={`/settings`}>
-          <Settings className="size-4" />
-          Settings
-        </SubjectSidebarItem>
+        <SidebarBody>
+          <SubjectSidebarItem path="/">
+            <LayoutDashboard className="size-4" /> Overview
+          </SubjectSidebarItem>
+          <SubjectSidebarItem path="/">
+            <UsersRound className="size-4" />
+            Allocations
+          </SubjectSidebarItem>
+          <SubjectSidebarItem path={`/settings`}>
+            <Settings className="size-4" />
+            Settings
+          </SubjectSidebarItem>
+        </SidebarBody>
         <SidebarLabel>Institution</SidebarLabel>
-        <SubjectSidebarItem path="">
-          <LayoutDashboard className="size-4" /> Overview
-        </SubjectSidebarItem>
-        <SubjectSidebarItem path="/allocations">
-          <UsersRound className="size-4" />
-          Allocations
-        </SubjectSidebarItem>
-        <SubjectSidebarItem path={`/settings`}>
-          <Settings className="size-4" />
-          Settings
-        </SubjectSidebarItem>
+        <SidebarBody>
+          <SubjectSidebarItem path="">
+            <LayoutDashboard className="size-4" /> Overview
+          </SubjectSidebarItem>
+          <SubjectSidebarItem path="/allocations">
+            <UsersRound className="size-4" />
+            Allocations
+          </SubjectSidebarItem>
+          <SubjectSidebarItem path={`/settings`}>
+            <Settings className="size-4" />
+            Settings
+          </SubjectSidebarItem>
+        </SidebarBody>
       </SidebarSwitcher>
 
       <SidebarSwitcher type="subject">
@@ -74,17 +80,19 @@ export default async function AsideBarClient({
         </VStack>
 
         <SidebarLabel>Subject Menu</SidebarLabel>
-        <SubjectSidebarItem path="">
-          <LayoutDashboard className="size-4" /> Overview
-        </SubjectSidebarItem>
-        <SubjectSidebarItem path="/allocations">
-          <UsersRound className="size-4" />
-          Allocations
-        </SubjectSidebarItem>
-        <SubjectSidebarItem path={`/settings`}>
-          <Settings className="size-4" />
-          Settings
-        </SubjectSidebarItem>
+        <SidebarBody>
+          <SubjectSidebarItem path="">
+            <LayoutDashboard className="size-4" /> Overview
+          </SubjectSidebarItem>
+          <SubjectSidebarItem path="/allocations">
+            <UsersRound className="size-4" />
+            Allocations
+          </SubjectSidebarItem>
+          <SubjectSidebarItem path={`/settings`}>
+            <Settings className="size-4" />
+            Settings
+          </SubjectSidebarItem>
+        </SidebarBody>
       </SidebarSwitcher>
 
       <SidebarSwitcher type="main">

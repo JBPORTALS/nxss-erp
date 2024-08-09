@@ -14,15 +14,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@nxss/ui/card";
+import { ColorDot } from "@nxss/ui/color-dot";
 import { Input } from "@nxss/ui/input";
 import { HStack, VStack } from "@nxss/ui/stack";
-
-const colorClasses = {
-  "red-400": "bg-red-400",
-  "blue-400": "bg-blue-400",
-  "pink-400": "bg-pink-400",
-  // Add more colors as needed
-} as any;
 
 const subjects = [
   {
@@ -37,7 +31,7 @@ const subjects = [
       "https://avatars2.githubusercontent.com/u/263385",
       "https://avatars2.githubusercontent.com/u/132554",
     ],
-    color: "red-400",
+    color: 1,
   },
   {
     id: 2,
@@ -50,7 +44,7 @@ const subjects = [
       "https://avatars2.githubusercontent.com/u/263385",
       "https://avatars2.githubusercontent.com/u/132554",
     ],
-    color: "blue-400",
+    color: 2,
   },
   {
     id: 3,
@@ -62,7 +56,7 @@ const subjects = [
       "https://avatars2.githubusercontent.com/u/263385",
       "https://avatars2.githubusercontent.com/u/132554",
     ],
-    color: "pink-400",
+    color: 3,
   },
 ];
 
@@ -84,9 +78,7 @@ export default function Subjects() {
               <Card className="relative flex h-full w-full flex-col">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-4">
-                    <div
-                      className={`size-6 rounded-full ${colorClasses[subject.color]}`}
-                    ></div>
+                    <ColorDot number={subject.color} />
                     <VStack className="gap-0 overflow-hidden">
                       <h1 className="truncate text-lg">{subject.title}</h1>
                       <span className="truncate text-sm font-normal text-muted-foreground">
