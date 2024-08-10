@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { LogOut, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";

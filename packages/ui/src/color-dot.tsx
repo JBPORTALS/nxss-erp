@@ -16,56 +16,55 @@ import { Input } from "./input";
 import { HStack } from "./stack";
 
 const colorVariants = [
-  { colorClass: "bg-blue-400", name: "Blue" },
-  { colorClass: "bg-red-400", name: "Red" },
-  { colorClass: "bg-green-400", name: "Green" },
-  { colorClass: "bg-yellow-400", name: "Yellow" },
-  { colorClass: "bg-purple-400", name: "Purple" },
-  { colorClass: "bg-pink-400", name: "Pink" },
-  { colorClass: "bg-indigo-400", name: "Indigo" },
-  { colorClass: "bg-teal-400", name: "Teal" },
-  { colorClass: "bg-orange-400", name: "Orange" },
-  { colorClass: "bg-gray-400", name: "Gray" },
+  { colorcode: 1, colorValue: "#60a5fa", name: "Blue" },
+  { colorcode: 2, colorValue: "#f87171", name: "Red" },
+  { colorcode: 3, colorValue: "#34d399", name: "Green" },
+  { colorcode: 4, colorValue: "#facc15", name: "Yellow" },
+  { colorcode: 5, colorValue: "#c084fc", name: "Purple" },
+  { colorcode: 6, colorValue: "#f472b6", name: "Pink" },
+  { colorcode: 7, colorValue: "#818cf8", name: "Indigo" },
+  { colorcode: 8, colorValue: "#14b8a6", name: "Teal" },
+  { colorcode: 9, colorValue: "#fb923c", name: "Orange" },
+  { colorcode: 10, colorValue: "#9ca3af", name: "Gray" },
 ];
 
 export function ColorDot({
-  number,
+  colorcode,
   onChange,
   enablePopover = false,
 }: {
-  number: number;
-  onChange?: (newNumber: number) => void;
+  colorcode: number;
+  onChange?: (newId: number) => void;
   enablePopover?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const [selectedNumber, setSelectedNumber] = useState(number);
+  const [selectedId, setSelectedId] = useState(colorcode);
   const [search, setSearch] = useState("");
 
-  const safeNumber = selectedNumber % colorVariants.length;
-  const { colorClass, name } = colorVariants[safeNumber] ?? {
-    colorClass: "",
-    name: "",
-  };
+  const selectedColor = colorVariants.find(
+    (color) => color.colorcode === selectedId,
+  ) || { colorValue: "#000", name: "" };
+  const { colorValue, name } = selectedColor;
 
   const filteredColors = colorVariants.filter((color) =>
     color.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const handleColorSelect = (index: number) => {
-    setSelectedNumber(index);
+  const handleColorSelect = (newId: number) => {
+    setSelectedId(newId);
     if (onChange) {
-      onChange(index);
+      onChange(newId);
     }
-    setOpen(false); // Close the popover after selecting the color
+    setOpen(false);
   };
 
   if (!enablePopover) {
     return (
-      <div className={`size-6 rounded-full ${colorClass}`} title={name}>
-        {number === selectedNumber && (
-          <CheckIcon className="absolute right-1 top-1 text-white" />
-        )}
-      </div>
+      <div
+        className="relative size-6 rounded-full"
+        style={{ backgroundColor: colorValue }}
+        title={name}
+      ></div>
     );
   }
 
@@ -80,7 +79,8 @@ export function ColorDot({
         >
           <HStack className="items-center">
             <div
-              className={`size-6 rounded-full ${colorClass} relative`}
+              className="relative size-6 rounded-full"
+              style={{ backgroundColor: colorValue }}
               title={name}
             ></div>
             {name}
@@ -102,18 +102,19 @@ export function ColorDot({
           <CommandList>
             <CommandGroup>
               {filteredColors.length > 0 ? (
-                filteredColors.map((color, index) => (
+                filteredColors.map((color) => (
                   <CommandItem
-                    key={index}
-                    onSelect={() => handleColorSelect(index)}
+                    key={color.colorcode}
+                    onSelect={() => handleColorSelect(color.colorcode)}
                   >
                     <HStack className="items-center">
                       <div
-                        className={`size-6 rounded-full ${color.colorClass} relative`}
+                        className="relative size-6 rounded-full"
+                        style={{ backgroundColor: color.colorValue }}
                       ></div>
                       <span className="ml-2">{color.name}</span>
                     </HStack>
-                    {index === safeNumber && (
+                    {color.colorcode === selectedId && (
                       <CheckIcon className="ml-auto h-4 w-4" />
                     )}
                   </CommandItem>

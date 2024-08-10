@@ -78,7 +78,7 @@ export default function Subjects() {
               <Card className="relative flex h-full w-full flex-col">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-4">
-                    <ColorDot number={subject.color} />
+                    <ColorDot colorcode={subject.color} />
                     <VStack className="gap-0 overflow-hidden">
                       <h1 className="truncate text-lg">{subject.title}</h1>
                       <span className="truncate text-sm font-normal text-muted-foreground">

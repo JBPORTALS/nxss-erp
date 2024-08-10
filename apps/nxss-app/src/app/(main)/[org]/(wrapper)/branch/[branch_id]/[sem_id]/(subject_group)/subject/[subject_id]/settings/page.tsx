@@ -21,7 +21,7 @@ export default function Settings() {
       <VStack className="w-full gap-9">
         <VStack>
           <Label>Color</Label>
-          <ColorDot number={4} enablePopover={true} />
+          <ColorDot colorcode={1} enablePopover={true} />
 
           <Label>Name</Label>
 
