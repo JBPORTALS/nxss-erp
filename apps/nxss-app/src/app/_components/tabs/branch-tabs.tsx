@@ -10,31 +10,27 @@ export default function BranchTabsClient() {
   const pathname = usePathname();
   return (
     <Tabs>
-      <Link href={`/${org}/branch/${branch_id}`}>
-        <TabItem isActive={pathname === `/${org}/branch/${branch_id}`}>
-          Overview
-        </TabItem>
-      </Link>
       <Link href={`/${org}/branch/${branch_id}/students`}>
         <TabItem isActive={pathname === `/${org}/branch/${branch_id}/students`}>
           Students
         </TabItem>
       </Link>
-      <Link href={`/${org}/branch/${branch_id}/inactive`}>
-        <TabItem isActive={pathname === `/${org}/branch/${branch_id}/inactive`}>
-          Inactive
+      <Link href={`/${org}/branch/${branch_id}/students/inactive`}>
+        <TabItem
+          isActive={
+            pathname === `/${org}/branch/${branch_id}/students/inactive`
+          }
+        >
+          Inactive 
         </TabItem>
       </Link>
-      <Link href={`/${org}/branch/${branch_id}/invitations`}>
+      <Link href={`/${org}/branch/${branch_id}/students/invitations`}>
         <TabItem
-          isActive={pathname === `/${org}/branch/${branch_id}/invitations`}
+          isActive={
+            pathname === `/${org}/branch/${branch_id}/students/invitations`
+          }
         >
           Invitations
-        </TabItem>
-      </Link>
-      <Link href={`/${org}/branch/${branch_id}/settings`}>
-        <TabItem isActive={pathname === `/${org}/branch/${branch_id}/settings`}>
-          Settings
         </TabItem>
       </Link>
     </Tabs>

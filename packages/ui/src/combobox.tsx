@@ -16,24 +16,24 @@ import { cn } from ".";
 
 const frameworks = [
   {
-    value: "next.js",
-    label: "Next.js",
+    value: "foc",
+    label: "Fundamentals of computer",
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
+    value: "maths",
+    label: "Maths",
   },
   {
-    value: "nuxt.js",
-    label: "Nuxt.js",
+    value: "itskill",
+    label: "IT Skills",
   },
   {
-    value: "remix",
-    label: "Remix",
+    value: "fsd",
+    label: "Full stack development ",
   },
   {
-    value: "astro",
-    label: "Astro",
+    value: "feee",
+    label: "FEEE",
   },
 ];
 
@@ -50,7 +50,9 @@ export function ComboboxDemo() {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {frameworks.find((framework) => framework.value === value)?.label}
+          <p className="w-44 truncate">
+            {frameworks.find((framework) => framework.value === value)?.label}
+          </p>
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

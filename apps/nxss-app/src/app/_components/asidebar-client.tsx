@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
 import {
   ArrowLeft,
@@ -7,6 +8,7 @@ import {
   Layers,
   Layers2,
   LayoutDashboard,
+  Plus,
   PlusCircle,
   Settings,
   Users2Icon,
@@ -20,8 +22,8 @@ import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
 import BackButton from "./back-button-client";
-import BranchListClient from "./branch-list-client";
-import CreateBranchDailog from "./dailog/create-branch-dailog";
+import SectionListClient from "./branch-list-client";
+import { BranchSidebarItem } from "./branch-sidebar-item";
 import { SidebarItemClient } from "./sidebar-item";
 import SidebarSwitcher from "./sidebar-switcher";
 import { SubjectSidebarItem } from "./subject-sidebar-item";
@@ -31,7 +33,6 @@ export default async function AsideBarClient({
 }: {
   params: {
     org: string;
-    subject_id: string;
   };
 }) {
   const branchList = await api.branch.getBranchList();
@@ -74,6 +75,77 @@ export default async function AsideBarClient({
         </SidebarBody>
       </SidebarSwitcher>
 
+      <SidebarSwitcher type="branch">
+        <div className="pr-5">
+          <Link href={`/${params.org}/branch`}>
+            <Button
+              variant={"ghost"}
+              className="w-full justify-start text-sm text-accent-foreground/60 hover:border-accent-foreground/50"
+            >
+              <ArrowLeft className="size-5" />
+              Back
+            </Button>
+          </Link>
+        </div>
+        <SidebarLabel>Branch</SidebarLabel>
+        <SidebarBody>
+          <BranchSidebarItem path={``}>
+            <LayoutDashboard className="size-4" /> Overview
+          </BranchSidebarItem>
+          <BranchSidebarItem path={`/faculty`}>
+            <UsersRound className="size-4" /> Faculty
+          </BranchSidebarItem>
+          <BranchSidebarItem path={`/students`}>
+            <UsersRound className="size-4" />
+            Students
+          </BranchSidebarItem>
+          <BranchSidebarItem path={`/settings`}>
+            <Settings className="size-4" />
+            Settings
+          </BranchSidebarItem>
+        </SidebarBody>
+        <SidebarLabel>Semester</SidebarLabel>
+        <SidebarBody>
+          <SidebarItemClient
+            path={`/${params.org}/branch/1/1`}
+            startsWith={false}
+          >
+            <LayoutDashboard className="size-4" /> Overview
+          </SidebarItemClient>
+          <SidebarItemClient path={`/${params.org}/branch/1/1/subjects`}>
+            <UsersRound className="size-4" />
+            Subjects
+          </SidebarItemClient>
+          <SidebarItemClient path={`/${params.org}/branch/1/1/settings`}>
+            <Settings className="size-4" />
+            Settings
+          </SidebarItemClient>
+          <SidebarLabel className="flex justify-between">
+            Section
+            <Plus className="mr-4 size-4" />
+          </SidebarLabel>
+        </SidebarBody>
+        <SidebarBody className="flex flex-grow flex-col overflow-hidden">
+          {/*  */}
+          {hasAccordion ? (
+            <Protect role="org:admin">
+              <SectionListClient branchList={branchList} params={params} />
+            </Protect>
+          ) : (
+            <main className="pr-2">
+              <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
+                <Protect role="org:admin">
+                  <span className="text-sm font-semibold">No Section</span>
+                  <p className="text-xs text-muted-foreground">
+                    Create new Section by clicking on the Section plus icon.
+                  </p>
+                </Protect>
+              </div>
+            </main>
+          )}
+        </SidebarBody>
+      </SidebarSwitcher>
+
       <SidebarSwitcher type="subject">
         <VStack className="space-y-4 border-b pb-4">
           <ComboboxDemo />
@@ -81,7 +153,7 @@ export default async function AsideBarClient({
 
         <SidebarLabel>Subject Menu</SidebarLabel>
         <SidebarBody>
-          <SubjectSidebarItem path="">
+          <SubjectSidebarItem path={`/${params.org}/dashboard`}>
             <LayoutDashboard className="size-4" /> Overview
           </SubjectSidebarItem>
           <SubjectSidebarItem path="/allocations">
@@ -107,48 +179,10 @@ export default async function AsideBarClient({
               <Users2Icon className="size-4" /> Faculty
             </SidebarItemClient>
           </Protect>
+          <SidebarItemClient path={`/${params.org}/branch`}>
+            <HomeIcon className="size-4" /> Branch
+          </SidebarItemClient>
         </SidebarBody>
-
-        <div className="space-y-1">
-          <Protect role="org:admin">
-            <SidebarLabel className="flex items-center justify-between pr-2">
-              BRANCHES
-              <CreateBranchDailog />
-            </SidebarLabel>
-          </Protect>
-          <Protect role="org:staff">
-            <SidebarLabel className="flex items-center justify-between pr-2">
-              SUBJECTS
-            </SidebarLabel>
-          </Protect>
-          <SidebarBody className="flex flex-grow flex-col overflow-hidden">
-            {/*  */}
-            {hasAccordion ? (
-              <Protect role="org:admin">
-                <BranchListClient {...{ branchList, params }} />
-              </Protect>
-            ) : (
-              <main className="pr-2">
-                <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
-                  <Protect role="org:admin">
-                    <span className="text-sm font-semibold">No Branches</span>
-                    <p className="text-xs text-muted-foreground">
-                      Create new branch by clicking on the BRANCHES plus icon.
-                    </p>
-                  </Protect>
-                  <Protect role="org:staff">
-                    <span className="text-sm font-semibold">
-                      No Subjects Assigned
-                    </span>
-                    <p className="text-xs text-muted-foreground">
-                      Wait for subject allocation by your institution admin.
-                    </p>
-                  </Protect>
-                </div>
-              </main>
-            )}
-          </SidebarBody>
-        </div>
       </SidebarSwitcher>
     </Sidebar>
   );

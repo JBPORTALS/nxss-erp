@@ -10,29 +10,31 @@ import {
 } from "@nxss/ui/navigation-menu";
 
 export function NavigationMenuButtonClient({
-  branch_id,
+  section_id,
   ...props
-}: React.ComponentProps<typeof NavigationMenuButton> & { branch_id: number }) {
+}: React.ComponentProps<typeof NavigationMenuButton> & { section_id: number }) {
   const pathname = usePathname();
   const params = useParams();
   return (
     <NavigationMenuButton
       {...props}
-      open={pathname.startsWith(`/${params.org}/branch/${branch_id}`)}
+      open={pathname.startsWith(
+        `/${params.org}/branch/${params.branch_id}/${params.sem_id}/${section_id}`,
+      )}
     />
   );
 }
 
 export function NavigationMenuClient({
   ...props
-}: React.ComponentProps<typeof NavigationMenu> & { branch_id: number }) {
+}: React.ComponentProps<typeof NavigationMenu> & { section_id: number }) {
   return <NavigationMenu {...props} />;
 }
 
 export function NavigationMenuItemClient({
-  sem_id,
+  batch_id,
   ...props
-}: React.ComponentProps<typeof NavigationMenuItem> & { sem_id: number }) {
+}: React.ComponentProps<typeof NavigationMenuItem> & { batch_id: number }) {
   const pathname = usePathname();
   const params = useParams();
 
@@ -43,24 +45,28 @@ export function NavigationMenuItemClient({
       {...props}
       isActive={
         pathname.startsWith(
-          `/${params.org}/branch/${params.branch_id}/${params.sem_id}`,
-        ) && params.sem_id == sem_id.toString()
+          `/${params.org}/branch/${params.branch_id}/${params.sem_id}/${params.section_id}/${batch_id}`,
+        ) && params.batch_id == batch_id.toString()
       }
     />
   );
 }
 
 export function NavigationMenuContentClient({
-  branch_id,
+  section_id,
   ...props
-}: React.ComponentProps<typeof NavigationMenuContent> & { branch_id: number }) {
+}: React.ComponentProps<typeof NavigationMenuContent> & {
+  section_id: number;
+}) {
   const pathname = usePathname();
   const params = useParams();
 
   return (
     <NavigationMenuContent
       {...props}
-      open={pathname.startsWith(`/${params.org}/branch/${branch_id}`)}
+      open={pathname.startsWith(
+        `/${params.org}/branch/${params.branch_id}/${params.sem_id}/${section_id}`,
+      )}
     />
   );
 }

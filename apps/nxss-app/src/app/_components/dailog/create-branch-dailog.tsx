@@ -54,10 +54,8 @@ export default function CreateBranchDailog() {
 
   return (
     <Dialog {...{ open, onOpenChange }}>
-      <DialogTrigger asChild>
-        <Button size={"icon"} variant={"ghost"}>
-          <Plus className="size-5" />
-        </Button>
+      <DialogTrigger asChild className="w-fit">
+        <Button>Add Branch</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

@@ -22,13 +22,10 @@ export default async function Template(props: {
           <h1 className="text-2xl font-bold">{branch_details.name}</h1>
           <p className="text-sm text-muted-foreground">
             {branch_details.description}
-            
           </p>
         </div>
-        {/* Invite Student */}
-        <Button>Invite Student</Button>
       </div>
-      <BranchTabsClient />
+
       <section className="w-full">{props.children}</section>
     </div>
   );

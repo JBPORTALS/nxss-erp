@@ -17,7 +17,7 @@ import ProfilePopover from "~/app/_components/popovers/profile-popover";
 
 export default async function Template(props: {
   children: React.ReactNode;
-  params: { org: string; subject_id: string };
+  params: { org: string; };
 }) {
   const { userId } = auth();
 

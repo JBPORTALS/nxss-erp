@@ -99,40 +99,15 @@ NavigationMenuContent.displayName = "NavigationMenuContent";
 
 // NavigationMenuItem
 
-type StatusVariant =
-  | "default"
-  | "completed"
-  | "current"
-  | "upcoming"
-  | undefined;
-
-interface NavigationMenuItemProps extends NavItemProps {
-  status?: StatusVariant;
-}
+interface NavigationMenuItemProps extends NavItemProps {}
 
 const NavigationMenuItem = React.forwardRef<
   React.ElementRef<typeof NavItem>,
   NavigationMenuItemProps
->(({ className, children, status = "default", ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   return (
     <NavItem className={`text-sm ${className}`} {...props}>
       {children}
-      <span className="relative ml-auto flex size-6">
-        <DotIcon
-          className={cn(
-            "absolute inline-flex size-full animate-ping rounded-full text-amber-400",
-            status !== "current" && "hidden",
-          )}
-        />
-        <DotIcon
-          className={cn(
-            `relative ml-auto inline-flex size-6`,
-            status == "default" && "text-muted-foreground",
-            status == "current" && "text-amber-500",
-            status == "completed" && "text-green-500",
-          )}
-        />
-      </span>
     </NavItem>
   );
 });

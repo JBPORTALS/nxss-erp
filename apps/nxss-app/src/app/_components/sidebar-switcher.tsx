@@ -8,7 +8,7 @@ export default function SidebarSwitcher({
   path,
 }: {
   children: React.ReactNode;
-  type: "subject" | "main" | "setting";
+  type: "subject" | "main" | "setting" | "branch";
   path?: string;
 }) {
   const params = useParams();
@@ -20,10 +20,17 @@ export default function SidebarSwitcher({
   else if (
     type == "main" &&
     !params.subject_id &&
-    !pathname.startsWith(`/${params.org}/settings`)
+    !pathname.startsWith(`/${params.org}/settings`) &&
+    !pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
   )
     return <>{children}</>;
   else if (type == "setting" && path && pathname.startsWith(path))
+    return <>{children}</>;
+  else if (
+    type == "branch" &&
+    !params.subject_id &&
+    pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
+  )
     return <>{children}</>;
   else return null;
 }
