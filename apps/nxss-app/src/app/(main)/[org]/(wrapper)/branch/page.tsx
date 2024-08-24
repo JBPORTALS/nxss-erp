@@ -42,7 +42,7 @@ export default async function Page({
         />
         <CreateBranchDailog />
       </HStack>
-      <div className="grid grid-cols-3 gap-10">
+      <div className="grid grid-cols-3 w-full gap-10">
         {branchList && branchList.length > 0 ? (
           branchList.map((branch) => (
             <Link key={branch.id} href={`/${params.org}/branch/${branch.id}`}>

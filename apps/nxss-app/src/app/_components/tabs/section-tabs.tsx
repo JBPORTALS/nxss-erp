@@ -30,6 +30,30 @@ export default function SectionTabsClient() {
         >
           Inactive
         </TabItem>
+        </Link>
+        <Link
+        href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/fees`}
+      >
+        <TabItem
+          isActive={
+            pathname ===
+            `/${org}/branch/${branch_id}/${sem_id}/${section_id}/fees`
+          }
+        >
+          Fees
+        </TabItem>
+        </Link>
+        <Link
+        href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/settings`}
+      >
+        <TabItem
+          isActive={
+            pathname ===
+            `/${org}/branch/${branch_id}/${sem_id}/${section_id}/settings`
+          }
+        >
+          Settings
+        </TabItem>
       </Link>
     </Tabs>
   );

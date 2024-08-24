@@ -17,14 +17,14 @@ export default function Settings() {
                 <VStack>
 
 
-                    <Label>Batch Name</Label>
+                    <Label>Section Name</Label>
 
-                    <Input defaultValue={"Batch 1"} className="w-96" />
+                    <Input defaultValue={"Section A"} className="w-96" />
                 </VStack>
                 <VStack>
                     {" "}
-                    <Label>Description</Label>
-                    <Textarea defaultValue={"Facilities and Tools for Sections"} className="w-96 " rows={4}/>
+                    <Label>No. of Batches</Label>
+                    <Input defaultValue={"3"} className="w-96" />
                 </VStack>
                 <Button size={"lg"}>Save details</Button>
             </VStack>
@@ -32,16 +32,16 @@ export default function Settings() {
             <VStack className="w-full gap-8">
                 <VStack>
                     <span className="text-lg font-semibold text-red-500">
-                        Delete Batch 1
+                        Delete Section A
                     </span>
                     <p className="w-2/3 text-muted-foreground">
-                        Deleting <b> Batch 1 </b>branch will permanently erase all data included in
-                        this batch and this action is   {" "}
+                        Deleting <b> Section A </b>branch will permanently erase all data included in
+                        this section and this action is   {" "}
                         <span className="text-red-500">permanent and irreversible.</span>
                     </p>
                 </VStack>
                 <Button size={"lg"} variant={"destructive_outline"}>
-                    Delete Batch 1
+                    Delete Section A
                 </Button>
             </VStack>
         </div>

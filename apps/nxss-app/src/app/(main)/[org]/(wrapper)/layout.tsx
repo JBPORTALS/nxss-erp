@@ -14,6 +14,8 @@ import {
 
 import AsideBarClient from "~/app/_components/asidebar-client";
 import ProfilePopover from "~/app/_components/popovers/profile-popover";
+import NavbarItems from "~/app/_components/navbar-client-item";
+import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 
 export default async function Template(props: {
   children: React.ReactNode;
@@ -70,7 +72,18 @@ export default async function Template(props: {
                   <SelectItem value="2022">Year 2022</SelectItem>
                 </SelectContent>
               </Select>
+
+
+              <NavbarItems />
+
+
             </div>
+
+
+
+
+
+
           </div>
 
           <ProfilePopover params={props.params} />
