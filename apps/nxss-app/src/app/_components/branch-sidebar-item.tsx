@@ -16,7 +16,7 @@ export function BranchSidebarItem({
     .concat(path);
   return (
     <SidebarItemClient
-      startsWith={false}
+      startsWith={true}
       path={baseSubjectPathname}
       {...props}
     />

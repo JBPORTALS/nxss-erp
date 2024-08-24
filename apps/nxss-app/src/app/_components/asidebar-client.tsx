@@ -18,6 +18,17 @@ import {
 import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
 import { Button } from "@nxss/ui/button";
 import { ComboboxDemo } from "@nxss/ui/combobox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@nxss/ui/dialog";
+import { Input } from "@nxss/ui/input";
+import { Label } from "@nxss/ui/label";
 import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
@@ -89,13 +100,13 @@ export default async function AsideBarClient({
         </div>
         <SidebarLabel>Branch</SidebarLabel>
         <SidebarBody>
-          <BranchSidebarItem path={``}>
+          <BranchSidebarItem startsWith={false} path={``}>
             <LayoutDashboard className="size-4" /> Overview
           </BranchSidebarItem>
           <BranchSidebarItem path={`/faculty`}>
             <UsersRound className="size-4" /> Faculty
           </BranchSidebarItem>
-          <BranchSidebarItem path={`/students`}>
+          <BranchSidebarItem path="/students">
             <UsersRound className="size-4" />
             Students
           </BranchSidebarItem>
@@ -120,9 +131,40 @@ export default async function AsideBarClient({
             <Settings className="size-4" />
             Settings
           </SidebarItemClient>
+        </SidebarBody>
+        <SidebarBody>
           <SidebarLabel className="flex justify-between">
             Section
-            <Plus className="mr-4 size-4" />
+            <Dialog>
+              <DialogTrigger asChild>
+                <Plus className="mr-4 size-4 hover:cursor-pointer" />
+              </DialogTrigger>
+              <DialogContent className="gap-6 p-6 sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Create Section</DialogTitle>
+                  <DialogDescription>
+                    Organization and Scheduling of Classes and Groups.
+                  </DialogDescription>
+                </DialogHeader>
+                <VStack className="gap-6">
+                  <VStack className="w-full gap-2">
+                    <Label htmlFor="name" className="text-right text-xs">
+                      Section Name
+                    </Label>
+                    <Input id="name" placeholder="Section Name" />
+                  </VStack>
+                  <VStack className="w-full gap-2">
+                    <Label htmlFor="number" className="text-right text-xs">
+                      No. of Batches
+                    </Label>
+                    <Input id="number" placeholder="No. of Batches" />
+                  </VStack>
+                </VStack>
+                <DialogFooter>
+                  <Button type="submit">Save changes</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </SidebarLabel>
         </SidebarBody>
         <SidebarBody className="flex flex-grow flex-col overflow-hidden">
