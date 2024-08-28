@@ -34,7 +34,13 @@ import { UpdateBranchScheme } from "@nxss/validators";
 import { deleteBranch, updateBranchDetails } from "~/trpc/actions";
 import { api } from "~/trpc/react";
 
-//just to track the state of the form
+type BranchData = {
+  id: number;
+  name: string;
+  description: string;
+  institution_id: string;
+};
+
 function DeleteBranchButton(props: React.ComponentProps<typeof Button>) {
   const state = useFormStatus();
   return (
@@ -50,10 +56,10 @@ function DeleteBranchButton(props: React.ComponentProps<typeof Button>) {
   );
 }
 
-export default function page({
+export default function Page({
   params,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   params: {
     org: string;
     branch_id: string;
@@ -61,7 +67,9 @@ export default function page({
   };
 }) {
   const branch_id = useParams().branch_id as string;
-  const { data } = api.branch.getDetails.useQuery({ id: branch_id });
+  const { data, isLoading } = api.branch.getDetails.useQuery<BranchData>({
+    id: branch_id,
+  });
   const form = useForm({
     schema: UpdateBranchScheme,
     defaultValues: {
@@ -93,7 +101,7 @@ export default function page({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link href={`/${params.org}/branch/${params.branch_id}`}>
-                  {data?.name}
+                  {isLoading ? "Loading..." : data?.name}
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>

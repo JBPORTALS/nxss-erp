@@ -117,20 +117,17 @@ export default async function AsideBarClient({
         </SidebarBody>
         <SidebarLabel>Semester</SidebarLabel>
         <SidebarBody>
-          <SidebarItemClient
-            path={`/${params.org}/branch/1/1`}
-            startsWith={false}
-          >
+          <BranchSidebarItem path={`/1`} startsWith={false}>
             <LayoutDashboard className="size-4" /> Overview
-          </SidebarItemClient>
-          <SidebarItemClient path={`/${params.org}/branch/1/1/subjects`}>
+          </BranchSidebarItem>
+          <BranchSidebarItem path={`/1/subjects`}>
             <UsersRound className="size-4" />
             Subjects
-          </SidebarItemClient>
-          <SidebarItemClient path={`/${params.org}/branch/1/1/settings`}>
+          </BranchSidebarItem>
+          <BranchSidebarItem path={`/1/settings`}>
             <Settings className="size-4" />
             Settings
-          </SidebarItemClient>
+          </BranchSidebarItem>
         </SidebarBody>
         <SidebarBody>
           <SidebarLabel className="flex justify-between">
