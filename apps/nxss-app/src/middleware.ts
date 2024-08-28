@@ -12,15 +12,32 @@ const isPublicRoute = createRouteMatcher([
 ]);
 const isHomeRoute = createRouteMatcher(["/"]);
 const isUploadthingRoute = createRouteMatcher(["/api/uploadthing(.*)"]);
+const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
-    const { userId, redirectToSignIn } = auth();
+    const { userId, redirectToSignIn, orgRole, sessionClaims } = auth();
 
     const headers = new Headers(request.headers);
     headers.set("x-current-path", request.nextUrl.pathname);
 
+    // For users visiting /onboarding, don't try to redirect
+    if (userId && isOnboardingRoute(request)) {
+      return NextResponse.next();
+    }
+
     if (isUploadthingRoute(request)) return NextResponse.next({ headers });
+
+    // Catch admin's who do not have `onboardingComplete: true` in their publicMetadata
+    // Redirect them to the /onboading route to complete onboarding
+    if (
+      userId &&
+      orgRole === "org:admin" &&
+      !sessionClaims?.metadata?.onboardingComplete
+    ) {
+      const onboardingUrl = new URL("/onboarding", request.url);
+      return NextResponse.redirect(onboardingUrl);
+    }
 
     // If the user isn't signed in and the route is private, redirect to sign-in
     if (!userId && !isPublicRoute(request))

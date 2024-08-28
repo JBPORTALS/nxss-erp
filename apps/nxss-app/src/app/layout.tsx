@@ -59,7 +59,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen w-full bg-background font-sans text-foreground antialiased",
+          "light min-h-screen w-full bg-background font-sans text-foreground antialiased",
           OpenSans.variable,
           Mw.variable,
         )}
@@ -73,9 +73,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <Providers>{props.children}</Providers>
-        </ThemeProvider>
+        {/* <ThemeProvider attribute="class" defaultTheme="light"> */}
+        <Providers>{props.children}</Providers>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );
