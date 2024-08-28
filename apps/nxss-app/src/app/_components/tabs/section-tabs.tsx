@@ -19,21 +19,8 @@ export default function SectionTabsClient() {
           Students
         </TabItem>
       </Link>
-      <Link
-        href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/inactive`}
-      >
-        <TabItem
-          isActive={
-            pathname ===
-            `/${org}/branch/${branch_id}/${sem_id}/${section_id}/inactive`
-          }
-        >
-          Inactive
-        </TabItem>
-        </Link>
-        <Link
-        href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/fees`}
-      >
+
+      <Link href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/fees`}>
         <TabItem
           isActive={
             pathname ===
@@ -42,8 +29,8 @@ export default function SectionTabsClient() {
         >
           Fees
         </TabItem>
-        </Link>
-        <Link
+      </Link>
+      <Link
         href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/settings`}
       >
         <TabItem

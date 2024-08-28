@@ -22,18 +22,7 @@ export default function BatchTabsClient() {
           Students
         </TabItem>
       </Link>
-      <Link
-        href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}/inactive`}
-      >
-        <TabItem
-          isActive={
-            pathname ===
-            `/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}/inactive`
-          }
-        >
-          Inactive
-        </TabItem>
-      </Link>
+
       <Link
         href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}/time-table`}
       >
@@ -46,18 +35,7 @@ export default function BatchTabsClient() {
           Timetable
         </TabItem>
       </Link>
-      <Link
-        href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}/fees`}
-      >
-        <TabItem
-          isActive={
-            pathname ===
-            `/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}/fees`
-          }
-        >
-          Fees
-        </TabItem>
-      </Link>
+
       <Link
         href={`/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}/settings`}
       >
