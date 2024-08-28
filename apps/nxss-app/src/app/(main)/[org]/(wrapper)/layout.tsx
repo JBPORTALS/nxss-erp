@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { RocketIcon, SlashIcon } from "lucide-react";
 
@@ -12,13 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@nxss/ui/select";
-import { ThemeToggle } from "@nxss/ui/theme";
 
 import AsideBarClient from "~/app/_components/asidebar-client";
+import ProfilePopover from "~/app/_components/popovers/profile-popover";
+import NavbarItems from "~/app/_components/navbar-client-item";
+import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 
 export default async function Template(props: {
   children: React.ReactNode;
-  params: { org: string; subject_id: string };
+  params: { org: string; };
 }) {
   const { userId } = auth();
 
@@ -71,12 +72,21 @@ export default async function Template(props: {
                   <SelectItem value="2022">Year 2022</SelectItem>
                 </SelectContent>
               </Select>
+
+
+              <NavbarItems />
+
+
             </div>
+
+
+
+
+
+
           </div>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <UserButton />
-          </div>
+
+          <ProfilePopover params={props.params} />
         </header>
       </div>
       <section className="flex flex-1">

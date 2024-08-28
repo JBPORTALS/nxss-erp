@@ -22,13 +22,13 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         destructive_outline:
-          "border border-input bg-background  text-red-500 shadow-sm hover:bg-accent",
+          "border border-input bg-background text-red-500 shadow-sm hover:bg-accent",
       },
       size: {
         sm: "h-8 rounded-md px-3 text-xs",
         md: "h-9 px-4 py-2",
         lg: "h-10 rounded-md px-8",
-        xl:"h-10 p-20",
+        xl: "h-10 p-20",
         icon: "size-9",
       },
     },
@@ -44,12 +44,14 @@ interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isLoading?: boolean;
+  loadingText?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className,
+      loadingText,
       variant,
       children,
       isLoading,
@@ -72,7 +74,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {isLoading && (
               <LoaderPinwheelIcon className="h-5 w-5 animate-spin duration-500" />
             )}
-            {children}
+
+            {isLoading && loadingText ? loadingText : children}
           </>
         }
       />

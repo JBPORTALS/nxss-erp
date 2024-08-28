@@ -34,7 +34,7 @@ export const AvatarList: React.FC<AvatarListProps> = (
       {remainingCount > 0 && (
         <div
           className={cn(
-            `flex items-center justify-center ${sizeClasses[size]} rounded-full bg-gray-400 text-xs font-medium text-white`,
+            `flex items-center justify-center ${sizeClasses[size]} rounded-full bg-gray-300 text-xs font-medium text-white`,
             className,
           )}
         >
