@@ -2,40 +2,44 @@
 
 import * as React from "react";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { LaptopMinimal } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
 
 import { Button } from "./button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./dropdown-menu";
 
 function ThemeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          <SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <MoonIcon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex w-full items-center border-t px-4 pt-3">
+      <Button
+        variant={theme === "light" ? "primary" : "outline"}
+        size="icon"
+        onClick={() => setTheme("light")}
+        className={`w-full rounded-e-none border-r-0 transition-transform duration-300`}
+      >
+        <SunIcon />
+        <span className="sr-only">Light mode</span>
+      </Button>
+      <Button
+        variant={theme === "dark" ? "primary" : "outline"}
+        size="icon"
+        onClick={() => setTheme("dark")}
+        className={`w-full rounded-none transition-transform duration-300`}
+      >
+        <MoonIcon />
+        <span className="sr-only">Dark mode</span>
+      </Button>
+      <Button
+        variant={theme === "system" ? "primary" : "outline"}
+        size="icon"
+        onClick={() => setTheme("system")}
+        className={`w-full rounded-s-none border-l-0 transition-transform duration-300`}
+      >
+        <LaptopMinimal />
+        <span className="sr-only">System mode</span>
+      </Button>
+    </div>
   );
 }
 

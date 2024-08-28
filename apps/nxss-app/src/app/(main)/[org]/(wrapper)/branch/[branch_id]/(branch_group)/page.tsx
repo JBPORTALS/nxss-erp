@@ -1,5 +1,14 @@
 import React from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@nxss/ui/breadcrumb";
 import {
   Card,
   CardContent,
@@ -10,23 +19,52 @@ import {
 } from "@nxss/ui/card";
 import { Progress } from "@nxss/ui/progress";
 
-export default function Page() {
+import { api } from "~/trpc/server";
+
+export default async function Page({
+  params,
+}: {
+  children: React.ReactNode;
+  params: {
+    org: string;
+    branch_id: string;
+    sem_id: string;
+  };
+}) {
+  const branch_details = await api.branch.getDetails({ id: params.branch_id });
   return (
-    <div className="w-full">
-      <Card x-chunk="dashboard-05-chunk-2 " className="w-1/4">
-        <CardHeader className="pb-2">
-          <CardDescription>Attendance</CardDescription>
-          <CardTitle className="text-4xl">68%</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-xs text-muted-foreground">
-            Overall academic year attendance.
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Progress value={68} />
-        </CardFooter>
-      </Card>
+    <div className="flex w-full flex-col gap-8">
+      <Breadcrumb>
+        <BreadcrumbList className="text-accent-foreground/80">
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href={`/${params.org}/branch/${params.branch_id}`}>
+                {branch_details?.name}
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ArrowRight />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem className="text-foreground">Overview</BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="w-full">
+        <Card x-chunk="dashboard-05-chunk-2 " className="w-1/4">
+          <CardHeader className="pb-2">
+            <CardDescription>Attendance</CardDescription>
+            <CardTitle className="text-4xl">68%</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xs text-muted-foreground">
+              Overall academic year attendance.
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Progress value={68} />
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }
