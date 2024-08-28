@@ -30,14 +30,14 @@ export default clerkMiddleware(
 
     // Catch admin's who do not have `onboardingComplete: true` in their publicMetadata
     // Redirect them to the /onboading route to complete onboarding
-    if (
-      userId &&
-      orgRole === "org:admin" &&
-      !sessionClaims?.metadata?.onboardingComplete
-    ) {
-      const onboardingUrl = new URL("/onboarding", request.url);
-      return NextResponse.redirect(onboardingUrl);
-    }
+    // if (
+    //   userId &&
+    //   orgRole === "org:admin" &&
+    //   !sessionClaims?.metadata?.onboardingComplete
+    // ) {
+    //   const onboardingUrl = new URL("/onboarding", request.url);
+    //   return NextResponse.redirect(onboardingUrl);
+    // }
 
     // If the user isn't signed in and the route is private, redirect to sign-in
     if (!userId && !isPublicRoute(request))
