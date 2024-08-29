@@ -24,7 +24,7 @@ export default async function Template({
 }) {
   const branch_details = await api.branch.getDetails({ id: params.branch_id });
   return (
-    <div className="flex w-full flex-col gap-8">
+    <div className="flex w-full flex-col gap-2">
       <div className="flex flex-col gap-2">
         <Breadcrumb>
           <BreadcrumbList className="text-accent-foreground/80">
@@ -43,7 +43,6 @@ export default async function Template({
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <h1 className="text-2xl font-bold">Semester {params.sem_id}</h1>
       </div>
       <section className="w-full">{children}</section>
     </div>

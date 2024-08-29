@@ -11,6 +11,7 @@ import {
 } from "@nxss/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
 
+import { cn } from ".";
 import { Button } from "./button";
 import { Input } from "./input";
 import { HStack } from "./stack";
@@ -31,11 +32,13 @@ const colorVariants = [
 export function ColorDot({
   colorcode,
   onChange,
+  className,
   enablePopover = false,
 }: {
   colorcode: number;
   onChange?: (newId: number) => void;
   enablePopover?: boolean;
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(colorcode);
@@ -61,7 +64,7 @@ export function ColorDot({
   if (!enablePopover) {
     return (
       <div
-        className="relative size-6 rounded-full"
+        className={cn("relative size-6 rounded-full", className)}
         style={{ backgroundColor: colorValue }}
         title={name}
       ></div>

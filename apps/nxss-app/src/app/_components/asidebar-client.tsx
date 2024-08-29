@@ -120,9 +120,13 @@ export default async function AsideBarClient({
           <BranchSidebarItem path={`/1`} startsWith={false}>
             <LayoutDashboard className="size-4" /> Overview
           </BranchSidebarItem>
+
           <BranchSidebarItem path={`/1/subjects`}>
             <UsersRound className="size-4" />
             Subjects
+          </BranchSidebarItem>
+          <BranchSidebarItem path={`/1/exam-schedule`}>
+            <LayoutDashboard className="size-4" /> Exam Schedule
           </BranchSidebarItem>
           <BranchSidebarItem path={`/1/settings`}>
             <Settings className="size-4" />
