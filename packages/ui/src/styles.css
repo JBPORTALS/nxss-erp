@@ -1,0 +1,39 @@
+/* calendar-styles.css */
+.rbc-calendar {
+  @apply font-sans;
+}
+
+.rbc-header {
+  @apply border-b border-border py-2 font-semibold text-muted-foreground;
+}
+
+.rbc-month-view {
+  @apply overflow-hidden rounded-lg border border-border;
+}
+
+.rbc-day-bg {
+  @apply transition-colors duration-200;
+}
+
+.rbc-day-bg:hover {
+  @apply bg-muted;
+}
+
+.rbc-off-range-bg {
+  @apply bg-muted/50;
+}
+
+.rbc-today {
+  @apply bg-accent/20;
+}
+
+.rbc-event {
+  @apply border-none bg-red-500;
+}
+
+.rbc-event-content {
+  @apply border-none bg-transparent;
+}
+.rbc-show-more {
+  @apply text-xs font-medium text-primary;
+}
