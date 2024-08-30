@@ -46,8 +46,7 @@
     "./breadcrumb": "./src/breadcrumb.tsx",
     "./scrollarea": "./src/scrollarea.tsx",
     "./color-dot": "./src/color-dot.tsx",
-    "./calendar":"./src/calendar.tsx",
-    "./date-range-picker":"./src/date-range-picker"
+    "./sheet": "./src/sheet.tsx"
   },
   "license": "MIT",
   "scripts": {
