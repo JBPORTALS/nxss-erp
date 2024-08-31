@@ -3,6 +3,7 @@ import { Protect } from "@clerk/nextjs";
 import {
   ArrowLeft,
   BookMarked,
+  Box,
   Files,
   HomeIcon,
   Layers,
@@ -196,12 +197,16 @@ export default async function AsideBarClient({
 
         <SidebarLabel>Subject Menu</SidebarLabel>
         <SidebarBody>
-          <SubjectSidebarItem path={`/${params.org}/dashboard`}>
+          <SubjectSidebarItem path={``} startsWith={false}>
             <LayoutDashboard className="size-4" /> Overview
           </SubjectSidebarItem>
           <SubjectSidebarItem path="/allocations">
             <UsersRound className="size-4" />
             Allocations
+          </SubjectSidebarItem>
+          <SubjectSidebarItem path={`/test`}>
+            <Box className="size-4" />
+            Test
           </SubjectSidebarItem>
           <SubjectSidebarItem path={`/settings`}>
             <Settings className="size-4" />
@@ -223,7 +228,7 @@ export default async function AsideBarClient({
             </SidebarItemClient>
           </Protect>
           <SidebarItemClient path={`/${params.org}/branch`}>
-            <HomeIcon className="size-4" /> Branch
+            <Box className="size-4" /> Branch
           </SidebarItemClient>
         </SidebarBody>
       </SidebarSwitcher>

@@ -12,7 +12,7 @@ export default function BranchTabsClient() {
     <Tabs>
       <Link href={`/${org}/branch/${branch_id}/students`}>
         <TabItem isActive={pathname === `/${org}/branch/${branch_id}/students`}>
-          Students
+          Student List
         </TabItem>
       </Link>
       <Link href={`/${org}/branch/${branch_id}/students/inactive`}>
@@ -21,7 +21,7 @@ export default function BranchTabsClient() {
             pathname === `/${org}/branch/${branch_id}/students/inactive`
           }
         >
-          Inactive 
+          Inactive
         </TabItem>
       </Link>
       <Link href={`/${org}/branch/${branch_id}/students/invitations`}>

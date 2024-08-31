@@ -11,7 +11,7 @@ import {
 import { Button } from "@nxss/ui/button";
 
 import { InviteDialog } from "~/app/_components/dailog/invite-dialog";
-import FacultyTabsClient from "~/app/_components/tabs/faculty-tabs";
+import BranchFacultyTabsClient from "~/app/_components/tabs/branch-faculty-tabs";
 import { api } from "~/trpc/server";
 
 export default async function Template({
@@ -28,25 +28,27 @@ export default async function Template({
   const branch_details = await api.branch.getDetails({ id: params.branch_id });
 
   return (
-    <div className="flex w-full flex-col gap-8">
-      <Breadcrumb>
-        <BreadcrumbList className="text-accent-foreground/80">
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href={`/${params.org}/branch/${params.branch_id}`}>
-                {branch_details?.name}
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ArrowRight />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem className="text-foreground">Overview</BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="w-full">
       <div className="flex w-full flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2">
+            <Breadcrumb>
+              <BreadcrumbList className="text-accent-foreground/80">
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href={`/${params.org}/branch/${params.branch_id}`}>
+                      {branch_details?.name}
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>
+                  <ArrowRight />
+                </BreadcrumbSeparator>
+                <BreadcrumbItem className="text-foreground">
+                  Faculty
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
             <h1 className="text-xl font-bold">Faculty</h1>
             <p className="text-sm text-muted-foreground">
               All staff members with access to <b>Computer Science</b> Branch
@@ -56,7 +58,7 @@ export default async function Template({
             <Button>Invite Member</Button>
           </InviteDialog>
         </div>
-        <FacultyTabsClient />
+        <BranchFacultyTabsClient />
         <section className="w-full">{children}</section>
       </div>
     </div>

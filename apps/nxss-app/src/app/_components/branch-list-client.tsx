@@ -61,7 +61,6 @@ import {
 
 export default function SectionListClient({
   params,
-  branchList,
 }: {
   params: { org: string };
   branchList: RouterOutputs["branch"]["getBranchList"];

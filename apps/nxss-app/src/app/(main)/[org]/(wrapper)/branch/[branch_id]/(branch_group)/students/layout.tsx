@@ -41,7 +41,7 @@ export default async function Template({
           <BreadcrumbSeparator>
             <ArrowRight />
           </BreadcrumbSeparator>
-          <BreadcrumbItem className="text-foreground">Overview</BreadcrumbItem>
+          <BreadcrumbItem className="text-foreground">Students</BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 

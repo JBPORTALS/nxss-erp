@@ -1,11 +1,11 @@
 import React from "react";
 
-import StudentListComponent from "~/app/_components/data-table/student-data-table";
+import { BatchStudentListComponent } from "~/app/_components/data-table/batch-student-datatable";
 
 export default function page() {
   return (
     <div>
-      <StudentListComponent />
+      <BatchStudentListComponent />
     </div>
   );
 }

@@ -10,19 +10,10 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Edit, MoreVertical, Move, Search, UserPlus } from "lucide-react";
+import { FileText, Search } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@nxss/ui/dropdown-menu";
 import { Input } from "@nxss/ui/input";
 import {
   Table,
@@ -33,23 +24,45 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
-import { InviteDialog } from "../dailog/invite-dialog";
-import { StudentInviteDialog } from "../dailog/student-invite-dialog";
-
 type Student = {
   id: string;
   name: string;
-  Attendence: number;
+  totalFee: number;
+  feePaid: number;
+  balance: number;
+  status: "pending" | "partial" | "paid";
   avatarSrc: string;
 };
 
 const data: Student[] = [
-  { id: "465CS21001", name: "Narayan R", Attendence: 90, avatarSrc: "" },
-  { id: "465CS21002", name: "Kiran", Attendence: 90, avatarSrc: "" },
-  { id: "465CS21003", name: "Shivan", Attendence: 80, avatarSrc: "" },
+  {
+    id: "465CS21006",
+    name: "Kethan",
+    totalFee: 120300,
+    feePaid: 120300,
+    balance: 120300,
+    status: "pending",
+    avatarSrc: "",
+  },
+  {
+    id: "465CS21007",
+    name: "Charan",
+    totalFee: 120300,
+    feePaid: 120300,
+    balance: 120300,
+    status: "paid",
+    avatarSrc: "",
+  },
+  {
+    id: "465CS21009",
+    name: "Kumar",
+    totalFee: 120300,
+    feePaid: 120300,
+    balance: 120300,
+    status: "partial",
+    avatarSrc: "",
+  },
 ];
-const sections = ["Section A", "Section B", "Section C", "Section D"];
-const batches = ["Batch 1", "Batch 2", "Batch 3"];
 
 const columns: ColumnDef<Student>[] = [
   {
@@ -59,56 +72,70 @@ const columns: ColumnDef<Student>[] = [
   },
   {
     accessorKey: "name",
-    header: "Student's",
+    header: "Student Profile",
     cell: ({ row }) => (
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <Avatar>
           <AvatarImage src={row.original.avatarSrc} alt={row.original.name} />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>{row.original.name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div>
-          <div className="">{row.original.name}</div>
+          <div className="font-medium">{row.original.name}</div>
           <div className="text-sm text-muted-foreground">{row.original.id}</div>
         </div>
       </div>
     ),
   },
   {
-    accessorKey: "attendence",
-    header: "Attendence",
-    cell: ({ row }) => <div className="pl-4">{row.original.Attendence} %</div>,
+    accessorKey: "totalFee",
+    header: "Total fee",
+    cell: ({ row }) => (
+      <div>₹ {row.original.totalFee.toLocaleString("en-IN")}</div>
+    ),
   },
   {
-    id: "actions",
-    cell: () => (
-      <div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="text-muted-foreground">
-              <Move className="size-4" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {sections.map((section) => (
-              <DropdownMenuSub key={section}>
-                <DropdownMenuSubTrigger>{section}</DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="w-32">
-                  {batches.map((batch) => (
-                    <DropdownMenuItem key={`${section}-${batch}`}>
-                      {batch}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+    accessorKey: "feePaid",
+    header: "Fee paid",
+    cell: ({ row }) => (
+      <div>₹ {row.original.feePaid.toLocaleString("en-IN")}</div>
+    ),
+  },
+  {
+    accessorKey: "balance",
+    header: "Balance",
+    cell: ({ row }) => (
+      <div>₹ {row.original.balance.toLocaleString("en-IN")}</div>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="flex items-center">
+        <div
+          className={`size-4 rounded-full ${
+            row.original.status === "paid"
+              ? "bg-green-500"
+              : row.original.status === "partial"
+                ? "bg-red-500"
+                : "bg-yellow-500"
+          }`}
+        ></div>
       </div>
+    ),
+  },
+  {
+    id: "history",
+    header: "History",
+    cell: () => (
+      <Button variant="ghost" size="sm">
+        <FileText className="h-4 w-4" />
+      </Button>
     ),
   },
 ];
 
-export function StudentListComponent() {
+export function StudentFeeListComponent() {
   const [globalFilter, setGlobalFilter] = React.useState("");
 
   const table = useReactTable({
@@ -125,28 +152,28 @@ export function StudentListComponent() {
   });
 
   return (
-    <div className="mx-auto w-full">
-      <div className="flex items-center justify-between py-4">
+    <div className="w-full">
+      <div className="mb-4">
         <div className="relative">
           <Input
-            placeholder="Search..."
+            placeholder="Search by name or register number..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="w-96 py-2 pl-10 pr-4"
+            className="w-full max-w-sm py-2 pl-10 pr-4"
           />
           <Search className="absolute left-3 top-2 text-gray-400" size={20} />
         </div>
-        <StudentInviteDialog>
-          <Button>Add Students</Button>
-        </StudentInviteDialog>
       </div>
 
       <Table>
-        <TableHeader className="border-none">
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  className="font-medium text-gray-500"
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -164,7 +191,6 @@ export function StudentListComponent() {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="border-none"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -174,7 +200,7 @@ export function StudentListComponent() {
               </TableRow>
             ))
           ) : (
-            <TableRow className="border-none">
+            <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
               </TableCell>
@@ -186,4 +212,4 @@ export function StudentListComponent() {
   );
 }
 
-export default StudentListComponent;
+export default StudentFeeListComponent;

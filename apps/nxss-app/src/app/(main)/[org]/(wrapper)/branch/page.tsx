@@ -11,38 +11,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@nxss/ui/card";
-import { Input } from "@nxss/ui/input";
-import { HStack, VStack } from "@nxss/ui/stack";
+import { VStack } from "@nxss/ui/stack";
 
-import CreateBranchDailog from "~/app/_components/dailog/create-branch-dailog";
-import { api } from "~/trpc/server";
+import { BranchSearch } from "~/app/_components/branchsearch-client";
+import { api } from "~/trpc/server"; // Import the Client Component
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: {
     org: string;
   };
+  searchParams: {
+    searchTerm?: string;
+  };
 }) {
-  const branchList = await api.branch.getBranchList();
+  const { searchTerm = "" } = searchParams;
+  const branchList = await api.branch.getBranchList({ searchTerm });
+
   return (
     <VStack>
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2 pb-8">
           <h1 className="text-2xl font-bold">Branch</h1>
           <p className="text-sm text-muted-foreground">
-            Branches of Innovation , Strategies for Success
+            Branches of Innovation, Strategies for Success
           </p>
         </div>
       </div>
-      <HStack className="mb-8 w-full justify-between">
-        <Input
-          className="w-1/2"
-          placeholder="Search by subject name or Id ..."
-        />
-        <CreateBranchDailog />
-      </HStack>
-      <div className="grid grid-cols-3 w-full gap-10">
+      {/* Render the Client Component */}
+      <BranchSearch initialSearchTerm={searchTerm} />
+      <div className="grid w-full grid-cols-3 gap-10">
         {branchList && branchList.length > 0 ? (
           branchList.map((branch) => (
             <Link key={branch.id} href={`/${params.org}/branch/${branch.id}`}>
@@ -76,7 +76,7 @@ export default async function Page({
             </Link>
           ))
         ) : (
-          <p>No branches available.</p> // Handle the case where branchList is empty or undefined
+          <p>No branches available.</p>
         )}
       </div>
     </VStack>

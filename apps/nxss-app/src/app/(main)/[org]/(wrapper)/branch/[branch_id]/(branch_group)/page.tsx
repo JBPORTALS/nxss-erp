@@ -33,22 +33,30 @@ export default async function Page({
 }) {
   const branch_details = await api.branch.getDetails({ id: params.branch_id });
   return (
-    <div className="flex w-full flex-col gap-8">
-      <Breadcrumb>
-        <BreadcrumbList className="text-accent-foreground/80">
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href={`/${params.org}/branch/${params.branch_id}`}>
-                {branch_details?.name}
-              </Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ArrowRight />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem className="text-foreground">Overview</BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="w-full">
+      <div className="flex flex-col gap-2 pb-8">
+        <Breadcrumb>
+          <BreadcrumbList className="text-accent-foreground/80">
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={`/${params.org}/branch/${params.branch_id}`}>
+                  {branch_details?.name}
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ArrowRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem className="text-foreground">
+              Overview
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <h1 className="text-2xl font-bold">Overview</h1>
+        <p className="text-sm text-muted-foreground">
+          An journey throughout space with engineering
+        </p>
+      </div>
       <div className="w-full">
         <Card x-chunk="dashboard-05-chunk-2 " className="w-1/4">
           <CardHeader className="pb-2">

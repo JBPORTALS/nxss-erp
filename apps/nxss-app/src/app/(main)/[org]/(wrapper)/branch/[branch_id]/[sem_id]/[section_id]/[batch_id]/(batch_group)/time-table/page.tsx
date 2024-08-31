@@ -138,14 +138,14 @@ const Schedule: React.FC = () => {
     <VStack className="w-full">
       <div className="flex w-fit">
         <Button
-          variant={activeTab === "Timetable" ? "switch" : "none"}
+          variant={activeTab === "Timetable" ? "primary" : "switch"}
           className="min-h-full rounded-e-none text-sm font-medium"
           onClick={() => setActiveTab("Timetable")}
         >
           Timetable
         </Button>
         <Button
-          variant={activeTab === "History" ? "switch" : "none"}
+          variant={activeTab === "History" ? "primary" : "switch"}
           className="min-h-full rounded-s-none text-sm font-medium"
           onClick={() => setActiveTab("History")}
         >

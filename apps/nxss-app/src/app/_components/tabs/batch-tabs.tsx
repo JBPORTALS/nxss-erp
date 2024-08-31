@@ -19,7 +19,7 @@ export default function BatchTabsClient() {
             `/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}`
           }
         >
-          Students
+          Student List
         </TabItem>
       </Link>
 
@@ -32,7 +32,7 @@ export default function BatchTabsClient() {
             `/${org}/branch/${branch_id}/${sem_id}/${section_id}/${batch_id}/time-table`
           }
         >
-          Timetable
+          Time Table
         </TabItem>
       </Link>
 

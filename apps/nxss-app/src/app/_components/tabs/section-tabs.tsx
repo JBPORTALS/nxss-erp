@@ -16,7 +16,7 @@ export default function SectionTabsClient() {
             pathname === `/${org}/branch/${branch_id}/${sem_id}/${section_id}`
           }
         >
-          Students
+          Student List
         </TabItem>
       </Link>
 
@@ -27,7 +27,7 @@ export default function SectionTabsClient() {
             `/${org}/branch/${branch_id}/${sem_id}/${section_id}/fees`
           }
         >
-          Fees
+          Fee Details
         </TabItem>
       </Link>
       <Link

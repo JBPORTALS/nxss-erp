@@ -24,7 +24,6 @@ const buttonVariants = cva(
         destructive_outline:
           "border border-input bg-background text-red-500 shadow-sm hover:bg-accent",
         switch: "border bg-accent",
-        none: "border",
       },
       size: {
         sm: "h-8 rounded-md px-3 text-xs",

@@ -1,6 +1,6 @@
 import React from "react";
 
-import StudentFeeListComponent from "~/app/_components/data-table/fees-data-table";
+import StudentFeeListComponent from "~/app/_components/data-table/fees-datatable";
 
 export default function Fees() {
   return (
