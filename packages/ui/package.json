@@ -48,7 +48,8 @@
     "./color-dot": "./src/color-dot.tsx",
     "./calendar": "./src/calendar.tsx",
     "./date-range-picker": "./src/date-range-picker.tsx",
-    "./schedular": "./src/schedular.tsx"
+    "./schedular": "./src/schedular.tsx",
+    "./sheet": "./src/sheet.tsx"
   },
   "license": "MIT",
   "scripts": {
