@@ -46,7 +46,9 @@
     "./breadcrumb": "./src/breadcrumb.tsx",
     "./scrollarea": "./src/scrollarea.tsx",
     "./color-dot": "./src/color-dot.tsx",
-    "./sheet": "./src/sheet.tsx"
+    "./calendar": "./src/calendar.tsx",
+    "./date-range-picker": "./src/date-range-picker.tsx",
+    "./schedular": "./src/schedular.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -72,14 +74,18 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
     "framer-motion": "^11.3.8",
     "lucide": "^0.408.0",
     "lucide-react": "^0.408.0",
+    "moment": "^2.30.1",
     "next-themes": "^0.3.0",
+    "react-big-calendar": "^1.13.4",
     "react-hook-form": "^7.52.1",
     "sonner": "^1.5.0",
-    "tailwind-merge": "^2.4.0",
+    "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
@@ -87,6 +93,7 @@
     "@nxss/prettier-config": "workspace:^",
     "@nxss/tailwind-config": "workspace:^",
     "@nxss/tsconfig": "workspace:^",
+    "@types/react-big-calendar": "^1.8.10",
     "eslint": "^8.56.0",
     "prettier": "^3.3.2",
     "tailwindcss": "3.4.4",

@@ -67,6 +67,20 @@ export const semesters = pgTable("semesters", {
   number: integer("number").notNull(),
 });
 
+//Sections Table
+export const sections = pgTable("sections", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  branch_id: integer("branch_id")
+    .notNull()
+    .references(() => branches.id, { onDelete: "cascade" }),
+  semester_id: integer("semester_id")
+    .notNull()
+    .references(() => semesters.id, { onDelete: "cascade" }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at"),
+});
+
 // Connection table
 export const branch_to_sem = pgTable("branch_to_sem", {
   id: serial("id").primaryKey(),
@@ -114,6 +128,17 @@ export const connectionsRelations = relations(branch_to_sem, ({ one }) => ({
   }),
   semester: one(semesters, {
     fields: [branch_to_sem.semester_id],
+    references: [semesters.id],
+  }),
+}));
+
+export const sectionsRelations = relations(sections, ({ one }) => ({
+  branch: one(branches, {
+    fields: [sections.branch_id],
+    references: [branches.id],
+  }),
+  semester: one(semesters, {
+    fields: [sections.semester_id],
     references: [semesters.id],
   }),
 }));

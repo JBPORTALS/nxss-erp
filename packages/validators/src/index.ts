@@ -44,3 +44,31 @@ export const UpdateBranchScheme = z.object({
   name: z.string().min(1, "Required!"),
   description: z.string().optional(),
 });
+
+export const CreateSemesterScheme = z.object({
+  number: z.number().int().positive("Semester number is required"),
+  institution_id: z.string().min(1, "Institution ID is required"),
+});
+
+export const UpdateSemesterScheme = z.object({
+  id: z.number().int().positive("Semester ID is required"),
+  number: z.number().int().positive("Semester number must be a positive integer"),
+});
+
+export const GetSemesterStatusScheme = z.object({
+  semester_id: z.number().int().positive("Semester ID is required"),
+  branch_id: z.number().int().positive("Branch ID is required"),
+});
+
+export const CreateSectionScheme = z.object({
+  name: z.string().min(1, "Section name is required!"),
+  branch_id: z.number().int().positive("Branch ID must be a positive integer"),
+  semester_id: z.number().int().positive("Semester ID must be a positive integer"),
+});
+
+export const UpdateSectionScheme = z.object({
+  id: z.number().int().positive("Section ID is required!"),
+  name: z.string().min(1, "Section name is required!"),
+  branch_id: z.number().int().positive("Branch ID must be a positive integer"),
+  semester_id: z.number().int().positive("Semester ID must be a positive integer"),
+});

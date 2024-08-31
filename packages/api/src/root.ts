@@ -1,3 +1,4 @@
+import { sections } from "../../db/src/schema/auth";
 import { authRouter } from "./router/auth";
 import { branchesRouter } from "./router/branch";
 import { organizationRouter } from "./router/organization";
@@ -10,7 +11,7 @@ export const appRouter = router({
   post: postRouter,
   organization: organizationRouter,
   branch: branchesRouter,
-  semester: semestersRouter,
+  semester: semestersRouter
 });
 
 // export type definition of API
