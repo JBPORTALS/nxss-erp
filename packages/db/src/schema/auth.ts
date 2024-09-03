@@ -64,8 +64,41 @@ export const semesters = pgTable("semesters", {
   institution_id: text("institution_id")
     .notNull()
     .references(() => institutions.id, { onDelete: "cascade" }),
+  branch_id: integer("branch_id")
+    .notNull()
+    .references(() => branches.id, { onDelete: "cascade" }), // Added branch_id field
   number: integer("number").notNull(),
 });
+
+export const sections = pgTable("sections", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  branch_id: integer("branch_id")
+    .notNull()
+    .references(() => branches.id, { onDelete: "cascade" }),
+  semester_id: integer("semester_id")
+    .notNull()
+    .references(() => semesters.id, { onDelete: "cascade" }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at"),
+});
+
+export const batches = pgTable("batches", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  branch_id: integer("branch_id")
+    .notNull()
+    .references(() => branches.id, { onDelete: "cascade" }),
+  semester_id: integer("semester_id")
+    .notNull()
+    .references(() => semesters.id, { onDelete: "cascade" }),
+  section_id: integer("section_id")
+    .notNull()
+    .references(() => sections.id, { onDelete: "cascade" }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at"),
+});
+
 
 // Connection table
 export const branch_to_sem = pgTable("branch_to_sem", {
@@ -99,13 +132,8 @@ export const branchesRelations = relations(branches, ({ one, many }) => ({
   branch_to_sem: many(branch_to_sem),
 }));
 
-export const semestersRelations = relations(semesters, ({ one, many }) => ({
-  institution: one(institutions, {
-    fields: [semesters.institution_id],
-    references: [institutions.id],
-  }),
-  branch_to_sem: many(branch_to_sem),
-}));
+
+
 
 export const connectionsRelations = relations(branch_to_sem, ({ one }) => ({
   branch: one(branches, {
@@ -117,3 +145,32 @@ export const connectionsRelations = relations(branch_to_sem, ({ one }) => ({
     references: [semesters.id],
   }),
 }));
+
+// Updated Semester Relations
+export const semestersRelations = relations(semesters, ({ one, many }) => ({
+  institution: one(institutions, {
+    fields: [semesters.institution_id],
+    references: [institutions.id],
+  }),
+  branch: one(branches, {
+    fields: [semesters.branch_id],
+    references: [branches.id],
+  }),
+  sections: many(sections), // One-to-many: a semester can have many sections
+  batches: many(batches),   // One-to-many: a semester can have many batches
+  branch_to_sem: many(branch_to_sem),
+}));
+
+// Updated Section Relations
+export const sectionsRelations = relations(sections, ({ one, many }) => ({
+  branch: one(branches, {
+    fields: [sections.branch_id],
+    references: [branches.id],
+  }),
+  semester: one(semesters, {
+    fields: [sections.semester_id],
+    references: [semesters.id],
+  }),
+  batches: many(batches),   // One-to-many: a section can have many batches
+}));
+
