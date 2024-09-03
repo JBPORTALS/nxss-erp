@@ -33,7 +33,7 @@ export default function Template({ params, children }: any) {
     <div className="flex flex-col gap-2">
       <HStack className="w-full justify-between">
         <VStack className="gap-2">
-          <h1 className="text-2xl font-bold">Tests</h1>
+          <h1 className="text-2xl font-bold">Marks</h1>
           <span className="text-muted-foreground">
             Test Guidelines and Requirements.
           </span>

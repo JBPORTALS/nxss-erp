@@ -43,7 +43,7 @@ export default function TestTypeClient({
       <Link href={`/${params.org}/branch/1/1/subject/1/test`}>
         <TestMenuButtonClient>
           <Box className="size-4" />
-          <NavigationMenuText>Test</NavigationMenuText>
+          <NavigationMenuText>Marks</NavigationMenuText>
         </TestMenuButtonClient>
       </Link>
       {/* Looping through NavigationMenuContentClient */}
