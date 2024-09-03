@@ -90,8 +90,6 @@ const EventComponent = ({
 
 const EventDialog = (props: React.ComponentProps<typeof Dialog>) => {
   const [selectedType, setSelectedType] = useState("Holiday");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [date, setDate] = React.useState<Date>();
 
   const renderForm = () => {
@@ -181,6 +179,45 @@ const EventDialog = (props: React.ComponentProps<typeof Dialog>) => {
             </div>
           </>
         );
+
+      case "Opportunity":
+        return (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Opportunity for
+              </label>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {/* Add more options as needed */}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="mb-4 flex items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[280px] justify-start text-left font-normal",
+                      !date && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar mode="single" selected={date} onSelect={setDate} />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </>
+        );
       // Add cases for 'Opportunity' and 'Exam Schedule' as needed
       default:
         return null;
@@ -189,7 +226,7 @@ const EventDialog = (props: React.ComponentProps<typeof Dialog>) => {
 
   return (
     <Dialog {...props}>
-      <DialogContent className="sm:max-w-[470px]">
+      <DialogContent className="sm:max-w-[900px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             Add {selectedType}
@@ -221,6 +258,8 @@ const EventDialog = (props: React.ComponentProps<typeof Dialog>) => {
 };
 
 export const Scheduler = () => {
+  const [date, setDate] = React.useState<Date>();
+
   const [events] = useState([
     {
       title: "Ethnic day",
@@ -270,6 +309,23 @@ export const Scheduler = () => {
   return (
     <>
       <div className="h-[980px] w-full bg-background [&_*]:!border-border [&_.rbc-event.rbc-selected]:scale-105 [&_.rbc-event.rbc-selected]:bg-transparent [&_.rbc-event.rbc-selected]:text-primary-foreground [&_.rbc-event.rbc-selected]:opacity-100 [&_.rbc-event.rbc-selected]:shadow-lg [&_.rbc-event]:border-none [&_.rbc-event]:p-0 [&_.rbc-event]:text-primary-foreground [&_.rbc-event]:opacity-90 [&_.rbc-header]:border-border [&_.rbc-header]:bg-secondary/15 [&_.rbc-now>.rbc-button-link]:text-xl [&_.rbc-now>.rbc-button-link]:font-bold [&_.rbc-now>.rbc-button-link]:text-primary">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[280px] justify-start text-left font-normal",
+                !date && "text-muted-foreground",
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar mode="single" selected={date} onSelect={setDate} />
+          </PopoverContent>
+        </Popover>
         <ScheduleCalendar
           view="month"
           localizer={localizer}
