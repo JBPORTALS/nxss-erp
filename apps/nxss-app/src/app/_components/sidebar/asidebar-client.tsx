@@ -33,11 +33,12 @@ import { Label } from "@nxss/ui/label";
 import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
-import BackButton from "./back-button-client";
-import SectionListClient from "./branch-list-client";
+import BackButton from "../button/back-button-client";
+import SidebarSwitcher from "../switcher/sidebar-switcher";
+import TestTypeClient from "../test-type-client";
+import { SectionListClient } from "./branch-list-client";
 import { BranchSidebarItem } from "./branch-sidebar-item";
 import { SidebarItemClient } from "./sidebar-item";
-import SidebarSwitcher from "./sidebar-switcher";
 import { SubjectSidebarItem } from "./subject-sidebar-item";
 
 export default async function AsideBarClient({
@@ -204,10 +205,7 @@ export default async function AsideBarClient({
             <UsersRound className="size-4" />
             Allocations
           </SubjectSidebarItem>
-          <SubjectSidebarItem path={`/test`}>
-            <Box className="size-4" />
-            Test
-          </SubjectSidebarItem>
+          <TestTypeClient params={params} />
           <SubjectSidebarItem path={`/settings`}>
             <Settings className="size-4" />
             Settings

@@ -1,11 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { Edit, Search } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
+import { Checkbox } from "@nxss/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@nxss/ui/dialog";
 import { Input } from "@nxss/ui/input";
+import { Label } from "@nxss/ui/label";
 import {
   Table,
   TableBody,
@@ -15,7 +34,16 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
-const studentsData = [
+type Student = {
+  id: string;
+  name: string;
+  avatarSrc: string;
+  totalWrittenTest: number;
+  writtenTestAvg: number;
+  result: string;
+};
+
+const studentsData: Student[] = [
   {
     id: "465CS21001",
     name: "Olivia Rhye",
@@ -27,12 +55,83 @@ const studentsData = [
   // Add more student data here...
 ];
 
-export default function StudentTestTable() {
-  const [searchTerm, setSearchTerm] = useState("");
+const columns: ColumnDef<Student>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <Avatar>
+          <AvatarImage src={row.original.avatarSrc} alt={row.original.name} />
+          <AvatarFallback>{row.original.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+        <div>
+          <div>{row.original.name}</div>
+          <div className="text-sm text-muted-foreground">{row.original.id}</div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "totalWrittenTest",
+    header: "Total Written Test (90)",
+  },
+  {
+    accessorKey: "writtenTestAvg",
+    header: "Written Test (AVG) (60)",
+  },
+  {
+    accessorKey: "result",
+    header: "Results Pass/Fail",
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: () => (
+      <Button variant="ghost" size="sm" className="border">
+        <Edit className="size-4" />
+      </Button>
+    ),
+  },
+];
 
-  const filteredStudents = studentsData.filter((student) =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+export function StudentTestTable() {
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  const table = useReactTable({
+    data: studentsData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
+    },
+    onGlobalFilterChange: setGlobalFilter,
+  });
 
   return (
     <div className="w-full p-4">
@@ -40,56 +139,88 @@ export default function StudentTestTable() {
         <div className="relative">
           <Input
             placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-64 pl-10"
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            className="w-96 pl-10"
           />
           <Search className="absolute left-3 top-2 text-gray-400" size={20} />
         </div>
-        <Button variant="outline">Add Column</Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Add Column</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Adding Column</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div>
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  placeholder="Pedro Duarte"
+                  className="col-span-3"
+                />
+              </div>
+              <div>
+                <Label htmlFor="username" className="text-right">
+                  Data
+                </Label>
+                <Input id="username" className="col-span-3" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant={"outline"}>Cancel</Button>
+              <Button type="submit">Save</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Sl No</TableHead>
-            <TableHead className="w-[300px]">Name</TableHead>
-            <TableHead>Total Written test (90)</TableHead>
-            <TableHead>Written test (AVG) (60)</TableHead>
-            <TableHead>Results Pass/Fail</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredStudents.map((student) => (
-            <TableRow key={student.id}>
-              <TableCell>{student.id}</TableCell>
-              <TableCell className="font-medium">
-                <div className="flex items-center gap-2">
-                  <Avatar>
-                    <AvatarImage src={student.avatarSrc} alt={student.name} />
-                    <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div>{student.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {student.id}
-                    </div>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>{student.totalWrittenTest}</TableCell>
-              <TableCell>{student.writtenTestAvg}</TableCell>
-              <TableCell>{student.result}</TableCell>
-              <TableCell>
-                <Button variant="ghost" size="sm">
-                  <Edit />
-                </Button>
-              </TableCell>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>
   );
 }
+
+export default StudentTestTable;

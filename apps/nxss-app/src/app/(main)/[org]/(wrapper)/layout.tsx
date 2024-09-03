@@ -1,3 +1,4 @@
+import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { notFound } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { RocketIcon, SlashIcon } from "lucide-react";
@@ -12,14 +13,13 @@ import {
   SelectValue,
 } from "@nxss/ui/select";
 
-import AsideBarClient from "~/app/_components/asidebar-client";
-import ProfilePopover from "~/app/_components/popovers/profile-popover";
 import NavbarItems from "~/app/_components/navbar-client-item";
-import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
+import ProfilePopover from "~/app/_components/popovers/profile-popover";
+import AsideBarClient from "~/app/_components/sidebar/asidebar-client";
 
 export default async function Template(props: {
   children: React.ReactNode;
-  params: { org: string; };
+  params: { org: string };
 }) {
   const { userId } = auth();
 
@@ -73,17 +73,8 @@ export default async function Template(props: {
                 </SelectContent>
               </Select>
 
-
               <NavbarItems />
-
-
             </div>
-
-
-
-
-
-
           </div>
 
           <ProfilePopover params={props.params} />

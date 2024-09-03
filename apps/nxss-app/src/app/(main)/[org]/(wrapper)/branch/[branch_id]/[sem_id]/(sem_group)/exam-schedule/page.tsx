@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@nxss/ui/breadcrumb";
 
-import { ScheduleCards } from "~/app/_components/schudle-card-client";
+import { ScheduleCards } from "~/app/_components/card/schudle-card-client";
 import { api } from "~/trpc/server";
 
 export default async function Page({

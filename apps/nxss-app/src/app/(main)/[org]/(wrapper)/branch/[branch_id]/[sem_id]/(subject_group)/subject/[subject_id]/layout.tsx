@@ -8,6 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@nxss/ui/breadcrumb";
+import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
 

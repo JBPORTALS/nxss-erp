@@ -27,6 +27,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -114,7 +115,34 @@ export function ScheduleCards({ initialCardsData }: any) {
                 </Select>
               </VStack>
             </HStack>
-            <ScrollArea className="mt-4 h-[450px] border-t">
+            <HStack className="w-full items-center justify-between gap-10">
+              <VStack className="w-full">
+                <Label>Select Test Type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Test" />
+                  </SelectTrigger>
+                  <SelectContent className="p-2 text-base">
+                    <SelectItem value="Theory">Theory</SelectItem>
+                    <SelectItem value="Practical">Practical</SelectItem>
+                  </SelectContent>
+                </Select>
+              </VStack>
+              <VStack className="w-full">
+                <Label>Select Test Name</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Batch" />
+                  </SelectTrigger>
+                  <SelectContent className="p-2 text-base">
+                    <SelectItem value="Skill Test 1">Skill Test 1</SelectItem>
+                    <SelectItem value="Skill Test 2">Skill Test 2</SelectItem>
+                    <SelectItem value="Skill Test 3">Skill Test 3</SelectItem>
+                  </SelectContent>
+                </Select>
+              </VStack>
+            </HStack>
+            <ScrollArea className="mt-4 h-[350px] border-t">
               {cards.map((_, index) => (
                 <VStack key={index}>
                   <Card className="mt-4">
@@ -185,8 +213,9 @@ export function ScheduleCards({ initialCardsData }: any) {
             >
               <Plus /> Add
             </Button>
-
-            <Button type="submit">Add Schedule</Button>
+            <SheetFooter>
+              <Button type="submit">Add Schedule</Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </HStack>
