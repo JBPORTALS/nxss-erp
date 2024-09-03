@@ -9,7 +9,7 @@ import { Button } from "./button";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-
+  console.log("theme", theme);
   return (
     <div className="flex w-full items-center border-t px-4 pt-3">
       <Button
