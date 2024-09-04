@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { and, asc, eq, schema } from "@nxss/db";
+import { and, asc, eq, like, schema } from "@nxss/db";
 import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
 
 import { protectedProcedure, router } from "../trpc";
@@ -9,23 +9,31 @@ import { protectedProcedure, router } from "../trpc";
 const { branches, semesters, branch_to_sem } = schema;
 
 export const branchesRouter = router({
-  getBranchList: protectedProcedure.query(async ({ ctx }) => {
-    const branchList = await ctx.db.query.branches.findMany({
-      where: eq(branches.institution_id, ctx.auth.orgId ?? ""),
-      orderBy: asc(branches.name),
-    });
+  getBranchList: protectedProcedure
+    .input(z.object({ searchTerm: z.string().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const searchTerm = input?.searchTerm ?? "";
 
-    const semester_number = await ctx.db.query.semesters.findFirst({
-      where: eq(semesters.institution_id, ctx.auth.orgId ?? ""),
-    });
+      const branchList = await ctx.db.query.branches.findMany({
+        where: and(
+          eq(branches.institution_id, ctx.auth.orgId ?? ""),
+          searchTerm ? like(branches.name, `%${searchTerm}%`) : undefined,
+        ),
+        orderBy: asc(branches.name),
+      });
 
-    const mapped_response = branchList.map((value) => ({
-      semesters: semester_number?.number,
-      ...value,
-    }));
+      const semester_number = await ctx.db.query.semesters.findFirst({
+        where: eq(semesters.institution_id, ctx.auth.orgId ?? ""),
+      });
 
-    return mapped_response;
-  }),
+      const mapped_response = branchList.map((value) => ({
+        semesters: semester_number?.number,
+        ...value,
+      }));
+
+      return mapped_response;
+    }),
+
   getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Branch ID is required!") }))
     .query(async ({ ctx, input }) => {
@@ -38,6 +46,7 @@ export const branchesRouter = router({
 
       return branch_details.at(0);
     }),
+
   updateDetails: protectedProcedure
     .input(UpdateBranchScheme)
     .mutation(({ ctx, input }) => {
@@ -54,6 +63,7 @@ export const branchesRouter = router({
           ),
         );
     }),
+
   delete: protectedProcedure
     .input(z.object({ id: z.string().min(1, "BranchId is required") }))
     .mutation(async ({ ctx, input }) => {
@@ -75,6 +85,7 @@ export const branchesRouter = router({
 
       return response;
     }),
+
   create: protectedProcedure
     .input(CreateBranchScheme)
     .mutation(async ({ ctx, input }) => {
@@ -98,7 +109,8 @@ export const branchesRouter = router({
           message: "Can't able to create the branch, Retry",
           code: "BAD_REQUEST",
         });
-      //make the  1st semester as current semester when new branch created successfully
+
+      // Make the 1st semester the current semester when a new branch is created successfully
       await ctx.db.insert(branch_to_sem).values({
         branch_id: response.at(0)?.id,
         semester_id: 1,

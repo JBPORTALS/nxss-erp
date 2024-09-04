@@ -1,3 +1,4 @@
+import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { notFound } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { RocketIcon, SlashIcon } from "lucide-react";
@@ -12,14 +13,14 @@ import {
   SelectValue,
 } from "@nxss/ui/select";
 
-import AsideBarClient from "~/app/_components/asidebar-client";
-import ProfilePopover from "~/app/_components/popovers/profile-popover";
+import { BreadcrumbNavbar } from "~/app/_components/breadcrumb";
 import NavbarItems from "~/app/_components/navbar-client-item";
-import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
+import ProfilePopover from "~/app/_components/popovers/profile-popover";
+import AsideBarClient from "~/app/_components/sidebar/asidebar-client";
 
-export default async function Template(props: {
+export default async function Templates(props: {
   children: React.ReactNode;
-  params: { org: string; };
+  params: { org: string };
 }) {
   const { userId } = auth();
 
@@ -73,25 +74,20 @@ export default async function Template(props: {
                 </SelectContent>
               </Select>
 
-
               <NavbarItems />
-
-
             </div>
-
-
-
-
-
-
           </div>
 
           <ProfilePopover params={props.params} />
         </header>
       </div>
-      <section className="flex flex-1">
-        <AsideBarClient params={props.params} />
-        <main className="w-full px-10 py-8">{props.children}</main>
+      <section className="w-full">
+        <BreadcrumbNavbar />
+
+        <div className="flex flex-1">
+          <AsideBarClient params={props.params} />
+          <main className="w-full px-8 py-6">{props.children}</main>
+        </div>
       </section>
     </div>
   );

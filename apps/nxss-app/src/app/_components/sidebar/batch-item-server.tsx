@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { NavigationMenuItem } from "@nxss/ui/navigation-menu";
 
-import { NavigationMenuItemClient } from "./navigation-menu-client";
+import { NavigationMenuItemClient } from "../navigation-menu-client";
 
 export default function BatchItemServer({
   section_id,

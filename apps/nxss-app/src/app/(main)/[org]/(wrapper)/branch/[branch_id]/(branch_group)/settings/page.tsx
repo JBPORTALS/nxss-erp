@@ -95,7 +95,7 @@ export default function Page({
 
   return (
     <div className="flex w-full flex-col gap-8">
-      <div>
+      <VStack className="gap-2">
         <Breadcrumb>
           <BreadcrumbList className="text-accent-foreground/80">
             <BreadcrumbItem>
@@ -119,7 +119,7 @@ export default function Page({
             Facilities and Tools for Computer Science Engineering.
           </p>
         </div>
-      </div>
+      </VStack>
       <div>
         <VStack className="w-full gap-8">
           <Form {...form}>

@@ -27,11 +27,11 @@ NavigationMenu.displayName = "NavigationMenu";
 
 // NavigationMenuButton
 const navigationMenuButtonVariants = cva(
-  "my-1 flex w-full flex-1 items-center justify-start gap-2 rounded rounded-e-none border-r border-transparent px-4 py-2.5 text-sm font-normal text-accent-foreground transition-all [&[data-state=open]>.chevron]:rotate-180",
+  "my-1 flex w-full flex-1 items-center justify-start gap-2 rounded px-4 py-2.5 text-sm font-normal text-accent-foreground transition-all [&[data-state=open]>.chevron]:rotate-180",
   {
     variants: {
       open: {
-        true: "justify-start rounded rounded-e-none border-purple-600 bg-accent",
+        true: "justify-start rounded bg-accent",
         false:
           "text-accent-foreground/60 hover:border-accent-foreground/50 hover:bg-accent hover:text-foreground",
       },
