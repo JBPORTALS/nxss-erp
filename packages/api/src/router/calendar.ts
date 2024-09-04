@@ -128,7 +128,7 @@ export const calendarRouter = router({
     .input(z.object({ event_id: z.number().min(1, "Event ID is required") }))
     .query(async ({ ctx, input }) => {
       const branches = await ctx.db.query.calendarBranches.findMany({
-        where: eq(calendarBranches.calendar_event_id, input.event_id),
+        where: eq(calendarBranches.calendar_id, input.event_id),
         with: {
           branch: true,
           semester: true,
@@ -162,7 +162,7 @@ export const calendarRouter = router({
           ctx.db
             .insert(calendarBranches)
             .values({
-              calendar_event_id: input.event_id,
+              calendar_id: input.event_id,
               branch_id: branch.branch_id,
               semester_id: branch.semester_id,
               section: branch.section,

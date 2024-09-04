@@ -12,7 +12,7 @@ import { pgTable } from "./_table";
 import { branches, semesters } from "./auth";
 import { audienceTypeEnum, eventTypeEnum } from "./enum";
 
-export const calendar = pgTable("calendar_of_ev", {
+export const calendar = pgTable("calendar", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description"),
@@ -30,7 +30,7 @@ export const calendar = pgTable("calendar_of_ev", {
 // Calendar Branches Relation Table
 export const calendarBranches = pgTable("calendar_branches", {
   id: serial("id").primaryKey(),
-  calendar_event_id: integer("calendar_event_id")
+  calendar_id: integer("calendar_id")
     .notNull()
     .references(() => calendar.id, { onDelete: "cascade" }),
   branch_id: integer("branch_id")
@@ -52,7 +52,7 @@ export const calendarBranchesRelations = relations(
   calendarBranches,
   ({ one }) => ({
     calendarEvent: one(calendar, {
-      fields: [calendarBranches.calendar_event_id],
+      fields: [calendarBranches.calendar_id],
       references: [calendar.id],
     }),
     branch: one(branches, {

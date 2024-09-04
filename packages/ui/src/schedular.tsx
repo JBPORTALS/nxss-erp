@@ -19,7 +19,7 @@ export const Scheduler = ({
   return (
     <div
       className={cn(
-        "w-full bg-background [&_*]:!border-border [&_.rbc-event.rbc-selected]:bg-transparent [&_.rbc-event.rbc-selected]:text-primary-foreground [&_.rbc-event.rbc-selected]:opacity-100 [&_.rbc-event.rbc-selected]:shadow-lg [&_.rbc-event]:border-none [&_.rbc-event]:p-0 [&_.rbc-event]:text-primary-foreground [&_.rbc-event]:opacity-90 [&_.rbc-header]:border-border [&_.rbc-header]:bg-secondary/15 [&_.rbc-now>.rbc-button-link]:text-xl [&_.rbc-now>.rbc-button-link]:font-bold [&_.rbc-now>.rbc-button-link]:text-primary",
+        "w-full bg-background [&_*]:!border-border [&_.rbc-event.rbc-selected]:bg-transparent [&_.rbc-event.rbc-selected]:text-primary-foreground [&_.rbc-event.rbc-selected]:opacity-100 [&_.rbc-event.rbc-selected]:shadow-lg [&_.rbc-event]:border-none [&_.rbc-event]:p-0 [&_.rbc-event]:text-primary-foreground [&_.rbc-event]:opacity-90 [&_.rbc-header]:flex [&_.rbc-header]:h-10 [&_.rbc-header]:items-center [&_.rbc-header]:justify-center [&_.rbc-header]:border-white [&_.rbc-header]:bg-secondary/15 [&_.rbc-now>.rbc-button-link]:text-xl [&_.rbc-now>.rbc-button-link]:font-bold [&_.rbc-now>.rbc-button-link]:text-primary [&_.rbc-off-range-bg]:bg-accent/25",
         className,
       )}
     >
@@ -28,7 +28,7 @@ export const Scheduler = ({
         components={{
           dateCellWrapper: ({ children }) => (
             <div
-              className="pointer-events-auto h-full w-full bg-background has-[.rbc-off-range-bg]:bg-accent/50"
+              className="pointer-events-auto h-full w-full border-r bg-background last:border-0 has-[.rbc-off-range-bg]:bg-accent/15"
               children={children}
             />
           ),
@@ -42,7 +42,7 @@ export const Scheduler = ({
               <span className="px-0.5 text-xs text-white">{props.title}</span>
             </div>
           ),
-          ...props.components,
+          toolbar: props.components?.toolbar,
         }}
         className="rbc-calendar"
         {...props}

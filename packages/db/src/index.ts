@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 
 import { env } from "./env";
 import * as auth from "./schema/auth";
-import * as calendar from "./schema/calendarofevents";
+import * as calendar from "./schema/calendar";
 import * as staff from "./schema/staff";
 
 export * from "./schema/enum";
