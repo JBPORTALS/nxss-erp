@@ -70,10 +70,7 @@ export const semesters = pgTable("semesters", {
   number: integer("number").notNull(),
 });
 
-<<<<<<< HEAD
-=======
 //Sections Table
->>>>>>> frontend/work
 export const sections = pgTable("sections", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -87,7 +84,6 @@ export const sections = pgTable("sections", {
   updated_at: timestamp("updated_at"),
 });
 
-<<<<<<< HEAD
 export const batches = pgTable("batches", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -104,9 +100,6 @@ export const batches = pgTable("batches", {
   updated_at: timestamp("updated_at"),
 });
 
-
-=======
->>>>>>> frontend/work
 // Connection table
 export const branch_to_sem = pgTable("branch_to_sem", {
   id: serial("id").primaryKey(),
@@ -139,9 +132,6 @@ export const branchesRelations = relations(branches, ({ one, many }) => ({
   branch_to_sem: many(branch_to_sem),
 }));
 
-
-
-
 export const connectionsRelations = relations(branch_to_sem, ({ one }) => ({
   branch: one(branches, {
     fields: [branch_to_sem.branch_id],
@@ -153,7 +143,6 @@ export const connectionsRelations = relations(branch_to_sem, ({ one }) => ({
   }),
 }));
 
-<<<<<<< HEAD
 // Updated Semester Relations
 export const semestersRelations = relations(semesters, ({ one, many }) => ({
   institution: one(institutions, {
@@ -165,15 +154,12 @@ export const semestersRelations = relations(semesters, ({ one, many }) => ({
     references: [branches.id],
   }),
   sections: many(sections), // One-to-many: a semester can have many sections
-  batches: many(batches),   // One-to-many: a semester can have many batches
+  batches: many(batches), // One-to-many: a semester can have many batches
   branch_to_sem: many(branch_to_sem),
 }));
 
 // Updated Section Relations
 export const sectionsRelations = relations(sections, ({ one, many }) => ({
-=======
-export const sectionsRelations = relations(sections, ({ one }) => ({
->>>>>>> frontend/work
   branch: one(branches, {
     fields: [sections.branch_id],
     references: [branches.id],
@@ -182,10 +168,5 @@ export const sectionsRelations = relations(sections, ({ one }) => ({
     fields: [sections.semester_id],
     references: [semesters.id],
   }),
-<<<<<<< HEAD
-  batches: many(batches),   // One-to-many: a section can have many batches
+  batches: many(batches), // One-to-many: a section can have many batches
 }));
-
-=======
-}));
->>>>>>> frontend/work

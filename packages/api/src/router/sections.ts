@@ -1,13 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
 import { and, asc, eq, schema } from "@nxss/db";
 import { CreateSectionScheme, UpdateSectionScheme } from "@nxss/validators";
-import { protectedProcedure, router } from "../trpc";
-<<<<<<< HEAD
-// helo
-=======
 
->>>>>>> frontend/work
+import { protectedProcedure, router } from "../trpc";
+
 const { sections, branches, semesters } = schema;
 
 export const sectionsRouter = router({
@@ -112,13 +110,13 @@ export const sectionsRouter = router({
       z.object({
         branch_id: z.number().min(1),
         semester_id: z.number().min(1),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const sectionList = await ctx.db.query.sections.findMany({
         where: and(
           eq(sections.branch_id, input.branch_id),
-          eq(sections.semester_id, input.semester_id)
+          eq(sections.semester_id, input.semester_id),
         ),
         orderBy: asc(sections.name),
       });

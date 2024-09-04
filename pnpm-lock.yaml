@@ -582,6 +582,9 @@ importers:
       react-big-calendar:
         specifier: ^1.13.4
         version: 1.13.4(react-dom@18.2.0)(react@18.2.0)
+      react-day-picker:
+        specifier: ^9.0.8
+        version: 9.0.8(react@18.2.0)
       react-hook-form:
         specifier: ^7.52.1
         version: 7.52.1(react@18.2.0)
@@ -20426,6 +20429,15 @@ packages:
       react: 18.2.0
       tween-functions: 1.2.0
     dev: true
+
+  /react-day-picker@9.0.8(react@18.2.0):
+    resolution: {integrity: sha512-dZM94abRNnc2jC/wkWn56358GHJcfAHfyC2Th9asyIUQhFIC5D2Ef5qUG9n1b5t8PeCJst7eCWJ6b+XZaAjxhA==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      date-fns: 3.6.0
+      react: 18.2.0
+    dev: false
 
   /react-devtools-core@5.3.1:
     resolution: {integrity: sha512-7FSb9meX0btdBQLwdFOwt6bGqvRPabmVMMslv8fgoSPqXyuGpgQe36kx8gR86XPw7aV1yVouTp6fyZ0EH+NfUw==}
