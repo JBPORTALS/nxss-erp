@@ -1,7 +1,7 @@
 import React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 
-import { Event, EventProps, Scheduler } from "@nxss/ui/schedular";
+import { Event, Scheduler } from "@nxss/ui/schedular";
 
 const meta: Meta<typeof Scheduler> = {
   title: "UI/Scheduler",

@@ -14,6 +14,7 @@ const localizer = momentLocalizer(moment);
 
 export const Scheduler = ({
   className,
+  components,
   ...props
 }: Omit<React.ComponentProps<typeof ScheduleCalendar>, "localizer">) => {
   return (
@@ -42,7 +43,7 @@ export const Scheduler = ({
               <span className="px-0.5 text-xs text-white">{props.title}</span>
             </div>
           ),
-          toolbar: props.components?.toolbar,
+          toolbar: components?.toolbar,
         }}
         className="rbc-calendar"
         {...props}
