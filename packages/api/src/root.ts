@@ -1,8 +1,10 @@
-import { sections } from "../../db/src/schema/auth";
 import { authRouter } from "./router/auth";
+import { batchesRouter } from "./router/batches";
 import { branchesRouter } from "./router/branch";
+import { calendarRouter } from "./router/calendarofevents";
 import { organizationRouter } from "./router/organization";
 import { postRouter } from "./router/post";
+import { sectionsRouter } from "./router/sections";
 import { semestersRouter } from "./router/semester";
 import { router } from "./trpc";
 
@@ -11,7 +13,7 @@ export const appRouter = router({
   post: postRouter,
   organization: organizationRouter,
   branch: branchesRouter,
-  semester: semestersRouter
+  semester: semestersRouter,
 });
 
 // export type definition of API

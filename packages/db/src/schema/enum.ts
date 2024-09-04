@@ -8,3 +8,5 @@ export const grievanceStatusEnum = pgEnum('grievance_status', ['PENDING', 'IN_PR
 export const feeCategoryEnum = pgEnum('fee_category', ['TUITION', 'HOSTEL', 'LIBRARY', 'OTHER']);
 export const studentFeeStatusEnum = pgEnum('student_fee_status', ['UNPAID', 'PAID', 'OVERDUE']);
 export const paymentMethodEnum = pgEnum('payment_method', ['CASH', 'ONLINE', 'CHEQUE', 'OTHER']);
+export const eventTypeEnum = pgEnum("event_type", [ "event","opportunity","holiday","exam_schedule",]);
+export const audienceTypeEnum = pgEnum("audience_type", ["staff","students","all",]);

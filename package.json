@@ -22,11 +22,14 @@
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
+    "@clerk/clerk-expo": "^1.2.6",
+    "@clerk/nextjs": "^5.2.3",
+    "@clerk/themes": "^2.1.12",
     "@nxss/prettier-config": "workspace:^",
     "@turbo/gen": "^2.0.6",
     "prettier": "^3.3.2",
     "turbo": "^2.0.6",
-    "typescript": " ~5.3.3"
+    "typescript": "~5.3.3"
   },
   "prettier": "@nxss/prettier-config",
   "pnpm": {
@@ -36,10 +39,5 @@
   },
   "resolutions": {
     "styled-components": "^5"
-  },
-  "dependencies": {
-    "@clerk/clerk-expo": "^1.2.6",
-    "@clerk/nextjs": "^5.2.3",
-    "@clerk/themes": "^2.1.12"
   }
 }
