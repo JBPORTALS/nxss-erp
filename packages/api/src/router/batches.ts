@@ -1,65 +1,64 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { and, asc, eq, schema } from "@nxss/db";
-import { CreateSectionScheme, UpdateSectionScheme } from "@nxss/validators";
+import { CreateBatchScheme, UpdateBatchScheme } from "@nxss/validators";
 import { protectedProcedure, router } from "../trpc";
-<<<<<<< HEAD
-// helo
-=======
 
->>>>>>> frontend/work
-const { sections, branches, semesters } = schema;
+const { batches, branches, semesters, sections } = schema;
 
-export const sectionsRouter = router({
-  getSectionList: protectedProcedure.query(async ({ ctx }) => {
-    const sectionList = await ctx.db.query.sections.findMany({
-      orderBy: asc(sections.name),
+export const batchesRouter = router({
+  getBatchList: protectedProcedure.query(async ({ ctx }) => {
+    const batchList = await ctx.db.query.batches.findMany({
+      orderBy: asc(batches.name),
       with: {
         branch: true,
         semester: true,
+        section: true,
       },
     });
 
-    return sectionList;
+    return batchList;
   }),
 
   getDetails: protectedProcedure
-    .input(z.object({ id: z.string().min(1, "Section ID is required!") }))
+    .input(z.object({ id: z.string().min(1, "Batch ID is required!") }))
     .query(async ({ ctx, input }) => {
-      const section_details = await ctx.db.query.sections.findFirst({
-        where: eq(sections.id, parseInt(input.id)),
+      const batchDetails = await ctx.db.query.batches.findFirst({
+        where: eq(batches.id, parseInt(input.id)),
         with: {
           branch: true,
           semester: true,
+          section: true,
         },
       });
 
-      if (!section_details) {
+      if (!batchDetails) {
         throw new TRPCError({
-          message: "Section not found",
+          message: "Batch not found",
           code: "NOT_FOUND",
         });
       }
 
-      return section_details;
+      return batchDetails;
     }),
 
   updateDetails: protectedProcedure
-    .input(UpdateSectionScheme)
+    .input(UpdateBatchScheme)
     .mutation(async ({ ctx, input }) => {
       const response = await ctx.db
-        .update(sections)
+        .update(batches)
         .set({
           name: input.name,
           branch_id: input.branch_id,
           semester_id: input.semester_id,
+          section_id: input.section_id,
         })
-        .where(eq(sections.id, input.id))
+        .where(eq(batches.id, input.id))
         .returning();
 
       if (!response.at(0)?.id) {
         throw new TRPCError({
-          message: "Unable to update the section, please retry",
+          message: "Unable to update the batch, please retry",
           code: "BAD_REQUEST",
         });
       }
@@ -68,16 +67,16 @@ export const sectionsRouter = router({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.string().min(1, "SectionId is required") }))
+    .input(z.object({ id: z.string().min(1, "Batch ID is required") }))
     .mutation(async ({ ctx, input }) => {
       const response = await ctx.db
-        .delete(sections)
-        .where(eq(sections.id, parseInt(input.id)))
+        .delete(batches)
+        .where(eq(batches.id, parseInt(input.id)))
         .returning();
 
       if (!response.at(0)?.id) {
         throw new TRPCError({
-          message: "Unable to delete the section, please retry",
+          message: "Unable to delete the batch, please retry",
           code: "BAD_REQUEST",
         });
       }
@@ -86,20 +85,21 @@ export const sectionsRouter = router({
     }),
 
   create: protectedProcedure
-    .input(CreateSectionScheme)
+    .input(CreateBatchScheme)
     .mutation(async ({ ctx, input }) => {
       const response = await ctx.db
-        .insert(sections)
+        .insert(batches)
         .values({
           name: input.name,
           branch_id: input.branch_id,
           semester_id: input.semester_id,
+          section_id: input.section_id,
         })
         .returning();
 
       if (!response.at(0)?.id) {
         throw new TRPCError({
-          message: "Unable to create the section, please retry",
+          message: "Unable to create the batch, please retry",
           code: "BAD_REQUEST",
         });
       }
@@ -107,7 +107,7 @@ export const sectionsRouter = router({
       return response.at(0);
     }),
 
-  getSectionsByBranchAndSemester: protectedProcedure
+  getBatchesByBranchAndSemester: protectedProcedure
     .input(
       z.object({
         branch_id: z.number().min(1),
@@ -115,14 +115,14 @@ export const sectionsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const sectionList = await ctx.db.query.sections.findMany({
+      const batchList = await ctx.db.query.batches.findMany({
         where: and(
-          eq(sections.branch_id, input.branch_id),
-          eq(sections.semester_id, input.semester_id)
+          eq(batches.branch_id, input.branch_id),
+          eq(batches.semester_id, input.semester_id)
         ),
-        orderBy: asc(sections.name),
+        orderBy: asc(batches.name),
       });
 
-      return sectionList;
+      return batchList;
     }),
 });
