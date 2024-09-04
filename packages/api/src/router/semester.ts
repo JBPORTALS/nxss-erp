@@ -8,6 +8,7 @@ const { semesters, branch_to_sem } = schema;
 
 export const semestersRouter = router({
   getSemesterList: protectedProcedure.query(async ({ ctx }) => {
+<<<<<<< HEAD
     try {
       const semesterList = await ctx.db.query.semesters.findMany({
         where: eq(semesters.institution_id, ctx.auth.orgId ?? ""),
@@ -21,11 +22,20 @@ export const semestersRouter = router({
         code: "INTERNAL_SERVER_ERROR",
       });
     }
+=======
+    const semesterList = await ctx.db.query.semesters.findMany({
+      where: eq(semesters.institution_id, ctx.auth.orgId ?? ""),
+      orderBy: asc(semesters.number),
+    });
+
+    return semesterList;
+>>>>>>> frontend/work
   }),
 
   getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Semester ID is required!") }))
     .query(async ({ ctx, input }) => {
+<<<<<<< HEAD
       try {
         const semester_details = await ctx.db.query.semesters.findMany({
           where: and(
@@ -41,10 +51,21 @@ export const semestersRouter = router({
           code: "INTERNAL_SERVER_ERROR",
         });
       }
+=======
+      const semester_details = await ctx.db.query.semesters.findMany({
+        where: and(
+          eq(semesters.id, parseInt(input.id)),
+          eq(semesters.institution_id, ctx.auth.orgId ?? "")
+        ),
+      });
+
+      return semester_details.at(0);
+>>>>>>> frontend/work
     }),
 
   updateDetails: protectedProcedure
     .input(UpdateSemesterScheme)
+<<<<<<< HEAD
     .mutation(async ({ ctx, input }) => {
       try {
         const response = await ctx.db
@@ -75,11 +96,26 @@ export const semestersRouter = router({
           code: "INTERNAL_SERVER_ERROR",
         });
       }
+=======
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .update(semesters)
+        .set({
+          number: input.number,
+        })
+        .where(
+          and(
+            eq(semesters.id, input.id),
+            eq(semesters.institution_id, ctx.auth.orgId ?? "")
+          )
+        );
+>>>>>>> frontend/work
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.string().min(1, "SemesterId is required") }))
     .mutation(async ({ ctx, input }) => {
+<<<<<<< HEAD
       try {
         const response = await ctx.db
           .delete(semesters)
@@ -105,11 +141,31 @@ export const semestersRouter = router({
           code: "INTERNAL_SERVER_ERROR",
         });
       }
+=======
+      const response = await ctx.db
+        .delete(semesters)
+        .where(
+          and(
+            eq(semesters.id, parseInt(input.id)),
+            eq(semesters.institution_id, ctx.auth.orgId ?? "")
+          )
+        )
+        .returning();
+
+      if (!response.at(0)?.id)
+        throw new TRPCError({
+          message: "Unable to delete the semester, please retry",
+          code: "BAD_REQUEST",
+        });
+
+      return response;
+>>>>>>> frontend/work
     }),
 
   create: protectedProcedure
     .input(CreateSemesterScheme)
     .mutation(async ({ ctx, input }) => {
+<<<<<<< HEAD
       try {
         if (!ctx.auth.orgId) {
           throw new TRPCError({
@@ -141,6 +197,29 @@ export const semestersRouter = router({
           code: "INTERNAL_SERVER_ERROR",
         });
       }
+=======
+      if (!ctx.auth.orgId)
+        throw new TRPCError({
+          message: "No selected organization",
+          code: "BAD_REQUEST",
+        });
+
+      const response = await ctx.db
+        .insert(semesters)
+        .values({
+          number: input.number,
+          institution_id: ctx.auth.orgId,
+        })
+        .returning();
+
+      if (!response.at(0)?.id)
+        throw new TRPCError({
+          message: "Unable to create the semester, please retry",
+          code: "BAD_REQUEST",
+        });
+
+      return response;
+>>>>>>> frontend/work
     }),
 
   getStatus: protectedProcedure
@@ -151,6 +230,7 @@ export const semestersRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+<<<<<<< HEAD
       try {
         const status = await ctx.db.query.branch_to_sem.findFirst({
           where: and(
@@ -176,5 +256,16 @@ export const semestersRouter = router({
           code: "INTERNAL_SERVER_ERROR",
         });
       }
+=======
+      return ctx.db.query.branch_to_sem.findFirst({
+        where: and(
+          eq(branch_to_sem.branch_id, input.branch_id),
+          eq(branch_to_sem.semester_id, input.semester_id)
+        ),
+        columns: {
+          status: true,
+        },
+      });
+>>>>>>> frontend/work
     }),
 });

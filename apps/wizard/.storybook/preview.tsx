@@ -1,7 +1,6 @@
 import type { Preview } from "@storybook/react";
 
 import "../src/app/globals.css";
-import "@nxss/ui/schedular-styles";
 
 import React from "react";
 import { Open_Sans } from "next/font/google";

@@ -3,6 +3,8 @@ import { Protect } from "@clerk/nextjs";
 import {
   ArrowLeft,
   BookMarked,
+  Box,
+  Calendar,
   Files,
   HomeIcon,
   Layers,
@@ -32,11 +34,12 @@ import { Label } from "@nxss/ui/label";
 import { VStack } from "@nxss/ui/stack";
 
 import { api } from "~/trpc/server";
-import BackButton from "./back-button-client";
-import SectionListClient from "./branch-list-client";
+import BackButton from "../button/back-button-client";
+import SidebarSwitcher from "../switcher/sidebar-switcher";
+import TestTypeClient from "../test-type-client";
+import { SectionListClient } from "./branch-list-client";
 import { BranchSidebarItem } from "./branch-sidebar-item";
 import { SidebarItemClient } from "./sidebar-item";
-import SidebarSwitcher from "./sidebar-switcher";
 import { SubjectSidebarItem } from "./subject-sidebar-item";
 
 export default async function AsideBarClient({
@@ -120,9 +123,13 @@ export default async function AsideBarClient({
           <BranchSidebarItem path={`/1`} startsWith={false}>
             <LayoutDashboard className="size-4" /> Overview
           </BranchSidebarItem>
+
           <BranchSidebarItem path={`/1/subjects`}>
             <UsersRound className="size-4" />
             Subjects
+          </BranchSidebarItem>
+          <BranchSidebarItem path={`/1/exam-schedule`}>
+            <LayoutDashboard className="size-4" /> Exam Schedule
           </BranchSidebarItem>
           <BranchSidebarItem path={`/1/settings`}>
             <Settings className="size-4" />
@@ -192,13 +199,14 @@ export default async function AsideBarClient({
 
         <SidebarLabel>Subject Menu</SidebarLabel>
         <SidebarBody>
-          <SubjectSidebarItem path={`/${params.org}/dashboard`}>
+          <SubjectSidebarItem path={``} startsWith={false}>
             <LayoutDashboard className="size-4" /> Overview
           </SubjectSidebarItem>
           <SubjectSidebarItem path="/allocations">
             <UsersRound className="size-4" />
             Allocations
           </SubjectSidebarItem>
+          <TestTypeClient params={params} />
           <SubjectSidebarItem path={`/settings`}>
             <Settings className="size-4" />
             Settings
@@ -207,10 +215,12 @@ export default async function AsideBarClient({
       </SidebarSwitcher>
 
       <SidebarSwitcher type="main">
-        <SidebarLabel>MAIN MENU</SidebarLabel>
         <SidebarBody>
           <SidebarItemClient path={`/${params.org}/dashboard`}>
             <HomeIcon className="size-4" /> Dashboard
+          </SidebarItemClient>
+          <SidebarItemClient path={`/${params.org}/calendar`}>
+            <Calendar className="size-4" /> Calendar
           </SidebarItemClient>
 
           <Protect role="org:admin">
@@ -219,7 +229,7 @@ export default async function AsideBarClient({
             </SidebarItemClient>
           </Protect>
           <SidebarItemClient path={`/${params.org}/branch`}>
-            <HomeIcon className="size-4" /> Branch
+            <Box className="size-4" /> Branches
           </SidebarItemClient>
         </SidebarBody>
       </SidebarSwitcher>

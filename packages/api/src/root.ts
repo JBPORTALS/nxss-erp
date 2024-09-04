@@ -1,4 +1,3 @@
-import { batches, sections } from "../../db/src/schema/auth";
 import { authRouter } from "./router/auth";
 import { batchesRouter } from "./router/batches";
 import { branchesRouter } from "./router/branch";
@@ -15,9 +14,6 @@ export const appRouter = router({
   organization: organizationRouter,
   branch: branchesRouter,
   semester: semestersRouter,
-  sections:sectionsRouter,
-  batches:batchesRouter,
-  calendarOfEvents :calendarRouter
 });
 
 // export type definition of API

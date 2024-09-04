@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
 import { HStack, VStack } from "@nxss/ui/stack";
 import { ThemeToggle } from "@nxss/ui/theme";
 
-import SignOut from "../sign-out-button-client";
+import SignOut from "../button/sign-out-button-client";
 
 export default async function ProfilePopover({
   params,

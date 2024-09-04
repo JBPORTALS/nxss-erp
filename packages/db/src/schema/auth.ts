@@ -70,6 +70,10 @@ export const semesters = pgTable("semesters", {
   number: integer("number").notNull(),
 });
 
+<<<<<<< HEAD
+=======
+//Sections Table
+>>>>>>> frontend/work
 export const sections = pgTable("sections", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -83,6 +87,7 @@ export const sections = pgTable("sections", {
   updated_at: timestamp("updated_at"),
 });
 
+<<<<<<< HEAD
 export const batches = pgTable("batches", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -100,6 +105,8 @@ export const batches = pgTable("batches", {
 });
 
 
+=======
+>>>>>>> frontend/work
 // Connection table
 export const branch_to_sem = pgTable("branch_to_sem", {
   id: serial("id").primaryKey(),
@@ -146,6 +153,7 @@ export const connectionsRelations = relations(branch_to_sem, ({ one }) => ({
   }),
 }));
 
+<<<<<<< HEAD
 // Updated Semester Relations
 export const semestersRelations = relations(semesters, ({ one, many }) => ({
   institution: one(institutions, {
@@ -163,6 +171,9 @@ export const semestersRelations = relations(semesters, ({ one, many }) => ({
 
 // Updated Section Relations
 export const sectionsRelations = relations(sections, ({ one, many }) => ({
+=======
+export const sectionsRelations = relations(sections, ({ one }) => ({
+>>>>>>> frontend/work
   branch: one(branches, {
     fields: [sections.branch_id],
     references: [branches.id],
@@ -171,6 +182,10 @@ export const sectionsRelations = relations(sections, ({ one, many }) => ({
     fields: [sections.semester_id],
     references: [semesters.id],
   }),
+<<<<<<< HEAD
   batches: many(batches),   // One-to-many: a section can have many batches
 }));
 
+=======
+}));
+>>>>>>> frontend/work

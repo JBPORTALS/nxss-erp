@@ -3,7 +3,11 @@ import { z } from "zod";
 import { and, asc, eq, schema } from "@nxss/db";
 import { CreateSectionScheme, UpdateSectionScheme } from "@nxss/validators";
 import { protectedProcedure, router } from "../trpc";
+<<<<<<< HEAD
 // helo
+=======
+
+>>>>>>> frontend/work
 const { sections, branches, semesters } = schema;
 
 export const sectionsRouter = router({

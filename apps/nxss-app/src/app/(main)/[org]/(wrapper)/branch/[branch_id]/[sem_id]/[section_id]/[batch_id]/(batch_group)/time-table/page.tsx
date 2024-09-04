@@ -4,6 +4,26 @@ import React, { useState } from "react";
 
 import { Button } from "@nxss/ui/button";
 import { ColorDot } from "@nxss/ui/color-dot";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@nxss/ui/dialog";
+import { Input } from "@nxss/ui/input";
+import { Label } from "@nxss/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@nxss/ui/select";
 import { VStack } from "@nxss/ui/stack";
 
 interface Subject {
@@ -116,17 +136,17 @@ const Schedule: React.FC = () => {
 
   return (
     <VStack className="w-full">
-      <div className="flex w-fit gap-4 rounded-lg border p-2">
+      <div className="flex w-fit">
         <Button
-          variant={activeTab === "Timetable" ? "primary" : "ghost"}
-          className="px-4 py-2 text-sm font-medium"
+          variant={activeTab === "Timetable" ? "primary" : "switch"}
+          className="min-h-full rounded-e-none text-sm font-medium"
           onClick={() => setActiveTab("Timetable")}
         >
           Timetable
         </Button>
         <Button
-          variant={activeTab === "History" ? "primary" : "ghost"}
-          className="px-4 py-2 text-sm font-medium"
+          variant={activeTab === "History" ? "primary" : "switch"}
+          className="min-h-full rounded-s-none text-sm font-medium"
           onClick={() => setActiveTab("History")}
         >
           History
@@ -169,22 +189,83 @@ const Schedule: React.FC = () => {
             ))}
           </div>
           <div className="flex w-full justify-end">
-            <Button>Add Subject</Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>Add Schedule</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Add Schedule</DialogTitle>
+                  <DialogDescription>
+                    Adding the new Schedule in timetable.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <VStack className="">
+                    <Label htmlFor="name" className="text-right">
+                      Subject Name
+                    </Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a Subject" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="JAVA">JAVA</SelectItem>
+                          <SelectItem value="Python">Python</SelectItem>
+                          <SelectItem value="C">C</SelectItem>
+                          <SelectItem value="Maths">Maths</SelectItem>
+                          <SelectItem value="FOC">FOC</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </VStack>
+                  <div className="flex w-full items-center justify-between gap-10">
+                    <VStack className="w-full">
+                      <Label htmlFor="username" className="text-right">
+                        Start time
+                      </Label>
+                      <Input type="time" className="w-full" />
+                    </VStack>
+                    <VStack className="w-full">
+                      <Label htmlFor="username" className="text-right">
+                        End Time
+                      </Label>
+                      <Input type="time" className="w-full" />
+                    </VStack>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit">Save changes</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
-          <div className="grid w-full grid-cols-1 content-center items-center justify-center gap-4 rounded-lg border p-8 md:grid-cols-2 lg:grid-cols-6">
-            {filteredSubjects.map((subject) => (
-              <div
-                key={subject.id}
-                className={
-                  "flex w-full flex-col items-center rounded-lg border p-4 shadow-md"
-                }
-              >
-                <ColorDot colorcode={getColorCode(subject.id)} />
-                <h3 className="mb-1 text-lg font-bold">{subject.name}</h3>
-                <p className="mb-1 text-sm text-gray-600">{subject.time}</p>
-                <p className="text-sm text-gray-600">{subject.instructor}</p>
+
+          <div className="flex h-full w-full items-center justify-center text-center">
+            {filteredSubjects.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-4 rounded-lg border p-8 md:grid-cols-2 lg:grid-cols-6">
+                {filteredSubjects.map((subject) => (
+                  <div
+                    key={subject.id}
+                    className={
+                      "flex w-full flex-col items-center rounded-lg border p-4 shadow-md"
+                    }
+                  >
+                    <ColorDot colorcode={getColorCode(subject.id)} />
+                    <h3 className="mb-1 text-lg font-bold">{subject.name}</h3>
+                    <p className="mb-1 text-sm text-gray-600">{subject.time}</p>
+                    <p className="text-sm text-gray-600">
+                      {subject.instructor}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="flex h-20 items-center">
+                <span>No Schedule have been set yet.</span>
+              </div>
+            )}
           </div>
         </div>
       )}

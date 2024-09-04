@@ -1,5 +1,14 @@
 import React from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@nxss/ui/breadcrumb";
 import { Button } from "@nxss/ui/button";
 import { HStack, VStack } from "@nxss/ui/stack";
 
@@ -19,6 +28,41 @@ export default async function Settings({
   const branch_details = await api.branch.getDetails({ id: params.branch_id });
   return (
     <VStack className="w-full gap-8">
+      <div className="flex flex-col gap-2">
+        <Breadcrumb>
+          <BreadcrumbList className="text-accent-foreground/80">
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={`/${params.org}/branch/${params.branch_id}`}>
+                  {branch_details?.name}
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ArrowRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link
+                  href={`/${params.org}/branch/${params.branch_id}/${params.sem_id}`}
+                >
+                  Semester {params.sem_id}
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ArrowRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem className="text-foreground">
+              Settings
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <h1 className="text-2xl font-bold">Settings</h1>
+        <p className="text-sm text-muted-foreground">
+          Facilities and Tools for Computer Science Engineering
+        </p>
+      </div>
       <VStack>
         <span className="text-lg font-semibold">Complete Semester</span>
         <p className="w-2/3 text-muted-foreground">

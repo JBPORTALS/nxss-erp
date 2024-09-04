@@ -28,7 +28,7 @@ export const Multiple: Story = {
             className="absolute left-0 top-0 -z-10"
           />
           <div className="flex h-full items-center justify-center">
-            <img src="/rocket.png" className="h-20 w-20" />
+            <img src="/rocket.png" className="h-20 w-20 " />
           </div>
           <img
             src="/Diamond-down-hat.png"

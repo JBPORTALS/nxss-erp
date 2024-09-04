@@ -52,16 +52,15 @@ import { BoxIcon } from "lucide-react";
 import { RouterOutputs } from "@nxss/api";
 import { NavigationMenuText } from "@nxss/ui/navigation-menu";
 
-import BatchItemServer from "./batch-item-server";
 import {
   NavigationMenuButtonClient,
   NavigationMenuClient,
   NavigationMenuContentClient,
-} from "./navigation-menu-client";
+} from "../navigation-menu-client";
+import BatchItemServer from "./batch-item-server";
 
-export default function SectionListClient({
+export function SectionListClient({
   params,
-  branchList,
 }: {
   params: { org: string };
   branchList: RouterOutputs["branch"]["getBranchList"];

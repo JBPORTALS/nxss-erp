@@ -1,4 +1,4 @@
-import { DataTable } from "~/app/_components/data-tabel";
+import { DataTable } from "~/app/_components/data-table/data-tabel";
 import { FacultyColumns } from "~/app/_components/faculty-columns";
 import { api } from "~/trpc/server";
 

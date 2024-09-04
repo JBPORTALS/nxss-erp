@@ -16,7 +16,7 @@ import { ourFileRouter } from "./api/uploadthing/core";
 import { Providers } from "./providers";
 
 const OpenSans = Roboto({
-  variable: "--font-open-sans",
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["100", "400", "300", "500", "700", "900"],
 });
