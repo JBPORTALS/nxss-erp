@@ -3,12 +3,12 @@ import { drizzle } from "drizzle-orm/neon-http";
 
 import { env } from "./env";
 import * as auth from "./schema/auth";
-import * as staff from "./schema/staff";
 import * as calendar from "./schema/calendarofevents";
+import * as staff from "./schema/staff";
 
 export * from "./schema/enum";
 
-export const schema = { ...auth, ...staff,...calendar };
+export const schema = { ...auth, ...staff, ...calendar };
 
 export { pgTable as tableCreator } from "./schema/_table";
 

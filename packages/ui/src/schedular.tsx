@@ -6,7 +6,6 @@ import {
 } from "react-big-calendar";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./styles.css";
 
 import { cn } from ".";
 
@@ -20,7 +19,7 @@ export const Scheduler = ({
   return (
     <div
       className={cn(
-        "dark w-full bg-background [&_*]:!border-border [&_.rbc-event.rbc-selected]:scale-105 [&_.rbc-event.rbc-selected]:bg-transparent [&_.rbc-event.rbc-selected]:text-primary-foreground [&_.rbc-event.rbc-selected]:opacity-100 [&_.rbc-event.rbc-selected]:shadow-lg [&_.rbc-event]:border-none [&_.rbc-event]:p-0 [&_.rbc-event]:text-primary-foreground [&_.rbc-event]:opacity-90 [&_.rbc-header]:border-border [&_.rbc-header]:bg-secondary/15 [&_.rbc-now>.rbc-button-link]:text-xl [&_.rbc-now>.rbc-button-link]:font-bold [&_.rbc-now>.rbc-button-link]:text-primary",
+        "w-full bg-background [&_*]:!border-border [&_.rbc-event.rbc-selected]:bg-transparent [&_.rbc-event.rbc-selected]:text-primary-foreground [&_.rbc-event.rbc-selected]:opacity-100 [&_.rbc-event.rbc-selected]:shadow-lg [&_.rbc-event]:border-none [&_.rbc-event]:p-0 [&_.rbc-event]:text-primary-foreground [&_.rbc-event]:opacity-90 [&_.rbc-header]:border-border [&_.rbc-header]:bg-secondary/15 [&_.rbc-now>.rbc-button-link]:text-xl [&_.rbc-now>.rbc-button-link]:font-bold [&_.rbc-now>.rbc-button-link]:text-primary",
         className,
       )}
     >
@@ -38,6 +37,11 @@ export const Scheduler = ({
               {props.label}
             </div>
           ),
+          event: (props) => (
+            <div {...props} className="rounded-md bg-indigo-700 p-0.5">
+              <span className="px-0.5 text-xs text-white">{props.title}</span>
+            </div>
+          ),
           ...props.components,
         }}
         className="rbc-calendar"
@@ -46,3 +50,5 @@ export const Scheduler = ({
     </div>
   );
 };
+
+export type * from "react-big-calendar";
