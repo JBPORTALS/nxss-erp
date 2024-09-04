@@ -18,21 +18,19 @@ export function BreadcrumbNavbar() {
   const pathSegments = pathname.split("/").filter(Boolean);
 
   // Limit to the first two segments (org and one more)
-  const limitedSegments =
-    pathSegments.length > 2 ? pathSegments.slice(0, 2) : pathSegments;
 
   return (
     <div className="flex h-9 w-full items-center border border-border bg-accent/50 pl-4">
       <Breadcrumb>
         <BreadcrumbList>
-          {limitedSegments.map((segment, index) => {
+          {pathSegments.map((segment, index) => {
             const isFirstSegment = index === 0;
-            const isLastSegment = index === limitedSegments.length - 1;
+            const isLastSegment = index === pathSegments.length - 1;
 
             // Define the href, handling the first segment to link to "/org/dashboard"
             const href = isFirstSegment
               ? `/${org}/dashboard`
-              : `/${limitedSegments.slice(0, index + 1).join("/")}`;
+              : `/${pathSegments.slice(0, index + 1).join("/")}`;
 
             return (
               <React.Fragment key={href}>

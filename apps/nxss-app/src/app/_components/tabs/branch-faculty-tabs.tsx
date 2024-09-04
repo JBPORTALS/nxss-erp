@@ -10,30 +10,20 @@ export default function BranchFacultyTabsClient() {
   const { org, branch_id } = useParams();
   const pathname = usePathname();
   return (
-    <Tabs>
+    <Tabs className="w-80">
       <TabsList>
         <TabsTrigger
           isActive={pathname === `/${org}/branch/${branch_id}/faculty`}
           value={`/${org}/branch/${branch_id}/faculty`}
         >
-          <Link href={`/${org}/branch/${branch_id}/faculty`}>Members</Link>
+          <Link href={`/${org}/branch/${branch_id}/faculty`}>Active</Link>
         </TabsTrigger>
         <TabsTrigger
-          isActive={pathname === `/${org}/branch/${branch_id}/faculty/approve`}
-          value={`/${org}/branch/${branch_id}/faculty/approve`}
+          isActive={pathname === `/${org}/branch/${branch_id}/faculty/inactive`}
+          value={`/${org}/branch/${branch_id}/faculty/inactive`}
         >
-          <Link href={`/${org}/branch/${branch_id}/faculty/approve`}>
-            Approve
-          </Link>
-        </TabsTrigger>
-        <TabsTrigger
-          isActive={
-            pathname === `/${org}/branch/${branch_id}/faculty/invitations`
-          }
-          value={`/${org}/branch/${branch_id}/faculty/invitations`}
-        >
-          <Link href={`/${org}/branch/${branch_id}/faculty/invitations`}>
-            Invitations
+          <Link href={`/${org}/branch/${branch_id}/faculty/inactive`}>
+            In Active
           </Link>
         </TabsTrigger>
       </TabsList>

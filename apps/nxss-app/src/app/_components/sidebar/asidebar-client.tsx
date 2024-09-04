@@ -90,21 +90,9 @@ export default async function AsideBarClient({
       </SidebarSwitcher>
 
       <SidebarSwitcher type="branch">
-        <div className="pr-5">
-          <Link href={`/${params.org}/branch`}>
-            <Button
-              variant={"ghost"}
-              className="w-full justify-start text-sm text-accent-foreground/60 hover:border-accent-foreground/50"
-            >
-              <ArrowLeft className="size-5" />
-              Back
-            </Button>
-          </Link>
-        </div>
-        <SidebarLabel>Branch</SidebarLabel>
         <SidebarBody>
           <BranchSidebarItem startsWith={false} path={``}>
-            <LayoutDashboard className="size-4" /> Overview
+            <HomeIcon className="size-4" /> Home
           </BranchSidebarItem>
           <BranchSidebarItem path={`/faculty`}>
             <UsersRound className="size-4" /> Faculty

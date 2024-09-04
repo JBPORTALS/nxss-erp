@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@nxss/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 
 export default function FacultyTabsClient() {
   const { org } = useParams();

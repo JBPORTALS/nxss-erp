@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@nxss/ui/select";
 
-import { BreadcrumbNavbar } from "~/app/_components/breadcrumb";
+import { BreadcrumbNavbar } from "~/app/_components/breadcrumb-navbar";
 import NavbarItems from "~/app/_components/navbar-client-item";
 import ProfilePopover from "~/app/_components/popovers/profile-popover";
 import AsideBarClient from "~/app/_components/sidebar/asidebar-client";
