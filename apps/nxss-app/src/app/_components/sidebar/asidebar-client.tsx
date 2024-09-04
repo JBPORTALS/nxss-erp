@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   BookMarked,
   Box,
+  Calendar,
   Files,
   HomeIcon,
   Layers,
@@ -214,10 +215,12 @@ export default async function AsideBarClient({
       </SidebarSwitcher>
 
       <SidebarSwitcher type="main">
-        <SidebarLabel>MAIN MENU</SidebarLabel>
         <SidebarBody>
           <SidebarItemClient path={`/${params.org}/dashboard`}>
             <HomeIcon className="size-4" /> Dashboard
+          </SidebarItemClient>
+          <SidebarItemClient path={`/${params.org}/calendar`}>
+            <Calendar className="size-4" /> Calendar
           </SidebarItemClient>
 
           <Protect role="org:admin">
@@ -226,7 +229,7 @@ export default async function AsideBarClient({
             </SidebarItemClient>
           </Protect>
           <SidebarItemClient path={`/${params.org}/branch`}>
-            <Box className="size-4" /> Branch
+            <Box className="size-4" /> Branches
           </SidebarItemClient>
         </SidebarBody>
       </SidebarSwitcher>

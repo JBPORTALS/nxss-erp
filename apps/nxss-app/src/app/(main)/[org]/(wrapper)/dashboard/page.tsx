@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@nxss/ui/card";
 import { Progress } from "@nxss/ui/progress";
+import { VStack } from "@nxss/ui/stack";
 
 import StaffOnboarding from "~/app/_components/staff-onboaring";
 import { api } from "~/trpc/server";
@@ -79,8 +80,8 @@ export default async function Page() {
         )}
       </Protect>
       <Protect role="org:admin">
-        <div className="w-full space-y-3">
-          <div>
+        <div className="w-full space-y-4">
+          <VStack className="gap-2">
             <h1 className="text-xl font-semibold">
               Good Afternoon, {firstName} {lastName}
             </h1>
@@ -91,46 +92,47 @@ export default async function Page() {
               </span>{" "}
               institution's admin dashboard.
             </span>
-          </div>
+          </VStack>
 
-          <div className="xl:grid-cols-4w-full grid gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
+          <div className="grid w-full gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
             <Card x-chunk="dashboard-05-chunk-2">
-              <CardHeader className="pb-2">
-                <CardDescription>Attendance</CardDescription>
-                <CardTitle className="text-4xl">68%</CardTitle>
+              <CardHeader>
+                <CardTitle className="text-base font-normal">
+                  Total Staff’s
+                </CardTitle>
+                <CardDescription>Active Staff Members</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="text-xs text-muted-foreground">
-                  Overall academic year attendance.
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Progress value={68} />
-              </CardFooter>
+              <CardContent className="text-xl font-semibold">50</CardContent>
             </Card>
+
             <Card x-chunk="dashboard-05-chunk-2">
-              <CardHeader className="pb-2">
-                <CardDescription>Total Staff</CardDescription>
-                <CardTitle className="text-4xl">35</CardTitle>
+              <CardHeader>
+                <CardTitle className="text-base font-normal">
+                  Total Student’s
+                </CardTitle>
+                <CardDescription>Total Active Students</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="text-xs text-muted-foreground">
-                  active staff members.
-                </div>
-              </CardContent>
-              <CardFooter></CardFooter>
+              <CardContent className="text-xl font-semibold">15000</CardContent>
             </Card>
+
             <Card x-chunk="dashboard-05-chunk-2">
-              <CardHeader className="pb-2">
-                <CardDescription>Total Students</CardDescription>
-                <CardTitle className="text-4xl">9,837</CardTitle>
+              <CardHeader>
+                <CardTitle className="text-base font-normal">
+                  Total Branches
+                </CardTitle>
+                <CardDescription>Branches in Operation</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="text-xs text-muted-foreground">
-                  total active students.
-                </div>
-              </CardContent>
-              <CardFooter></CardFooter>
+              <CardContent className="text-xl font-semibold">06</CardContent>
+            </Card>
+
+            <Card x-chunk="dashboard-05-chunk-2">
+              <CardHeader>
+                <CardTitle className="text-base font-normal">
+                  Total Subjects
+                </CardTitle>
+                <CardDescription>Subjects in Current Catalog</CardDescription>
+              </CardHeader>
+              <CardContent className="text-xl font-semibold">50</CardContent>
             </Card>
           </div>
         </div>

@@ -4,36 +4,39 @@ import React from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
-import { TabItem, Tabs } from "@nxss/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 
 export default function BranchFacultyTabsClient() {
   const { org, branch_id } = useParams();
   const pathname = usePathname();
   return (
     <Tabs>
-      <Link href={`/${org}/branch/${branch_id}/faculty`}>
-        <TabItem isActive={pathname === `/${org}/branch/${branch_id}/faculty`}>
-          Members
-        </TabItem>
-      </Link>
-
-      <TabItem>Inactive</TabItem>
-      <Link href={`/${org}/branch/${branch_id}/faculty/approve`}>
-        <TabItem
-          isActive={pathname === `/${org}/branch/${branch_id}/faculty/approve`}
+      <TabsList>
+        <TabsTrigger
+          isActive={pathname === `/${org}/branch/${branch_id}/faculty`}
+          value={`/${org}/branch/${branch_id}/faculty`}
         >
-          Approve
-        </TabItem>
-      </Link>
-      <Link href={`/${org}/branch/${branch_id}/faculty/invitations`}>
-        <TabItem
+          <Link href={`/${org}/branch/${branch_id}/faculty`}>Members</Link>
+        </TabsTrigger>
+        <TabsTrigger
+          isActive={pathname === `/${org}/branch/${branch_id}/faculty/approve`}
+          value={`/${org}/branch/${branch_id}/faculty/approve`}
+        >
+          <Link href={`/${org}/branch/${branch_id}/faculty/approve`}>
+            Approve
+          </Link>
+        </TabsTrigger>
+        <TabsTrigger
           isActive={
             pathname === `/${org}/branch/${branch_id}/faculty/invitations`
           }
+          value={`/${org}/branch/${branch_id}/faculty/invitations`}
         >
-          Invitations
-        </TabItem>
-      </Link>
+          <Link href={`/${org}/branch/${branch_id}/faculty/invitations`}>
+            Invitations
+          </Link>
+        </TabsTrigger>
+      </TabsList>
     </Tabs>
   );
 }
