@@ -431,50 +431,6 @@ function SchedulerWithContext() {
 }
 
 export default function page() {
-  //event data format should be like this
-  // const [events] = React.useState<Event[]>([
-  //   {
-  //     title: "Ethnic day",
-  //     start: new Date(2024, 5, 4, 9, 0),
-  //     end: new Date(2024, 5, 4, 12, 30),
-  //     allDay: true,
-  //   },
-  //   {
-  //     title: "Picknic day",
-  //     start: new Date(2024, 5, 4),
-  //     end: new Date(2024, 5, 4),
-  //   },
-  //   {
-  //     title: "Panic day",
-  //     start: new Date(2024, 5, 4),
-  //     end: new Date(2024, 5, 4),
-  //   },
-  //   {
-  //     title: "Rose day",
-  //     start: new Date(2024, 5, 4),
-  //     end: new Date(2024, 5, 4),
-  //   },
-  //   {
-  //     title: "Flower day",
-  //     start: new Date(2024, 5, 4),
-  //     end: new Date(2024, 5, 4),
-  //   },
-  //   {
-  //     title: "Bakrid",
-  //     start: new Date(2024, 5, 11),
-  //     end: new Date(2024, 5, 11),
-  //   },
-  //   {
-  //     title: "Seminars",
-  //     start: new Date(2024, 5, 18),
-  //     end: new Date(2024, 5, 18),
-  //   },
-  //   {
-  //     title: "UGC Exam",
-  //     start: new Date(2024, 5, 25, 9, 0),
-  //     end: new Date(2024, 5, 25, 12, 0),
-  //   },
-  // ]);
   return (
     <ScheduleContextProvider>
       <div className="h-full w-full space-y-4">
