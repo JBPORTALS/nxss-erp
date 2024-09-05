@@ -1,7 +1,16 @@
 import { TRPCError } from "@trpc/server";
+import { endOfMonth, startOfMonth } from "date-fns";
 import { z } from "zod";
 
-import { asc, eq, eventTypeEnum, schema } from "@nxss/db";
+import {
+  and,
+  asc,
+  between,
+  eq,
+  eventTypeEnum,
+  inArray,
+  schema,
+} from "@nxss/db";
 import {
   CreateCalendarEventScheme,
   UpdateCalendarEventScheme,
@@ -13,16 +22,33 @@ const { calendar, calendarBranches } = schema;
 // Calendar Event Router
 export const calendarRouter = router({
   // Get the list of calendar events
-  getEventList: protectedProcedure.query(async ({ ctx }) => {
-    const events = await ctx.db.query.calendar.findMany({
-      orderBy: asc(calendar.start_date),
-      with: {
-        calendarBranches: true,
-      },
-    });
+  getEventList: protectedProcedure
+    .input(
+      z.object({
+        date: z.date({ required_error: "Date is missing" }),
+        typeFilter: z.array(z.enum(["event", "holiday", "opportunity"])),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { date, typeFilter } = input;
+      const fromDate = startOfMonth(date);
+      const toDate = endOfMonth(date);
 
-    return events;
-  }),
+      const events = await ctx.db.query.calendar.findMany({
+        where: and(
+          between(calendar.start_date, fromDate, toDate),
+          typeFilter.length !== 0
+            ? inArray(calendar.event_type, typeFilter)
+            : undefined,
+        ),
+        orderBy: asc(calendar.start_date),
+        with: {
+          calendarBranches: true,
+        },
+      });
+
+      return events;
+    }),
   getEventByType: protectedProcedure
     .input(
       z.object({

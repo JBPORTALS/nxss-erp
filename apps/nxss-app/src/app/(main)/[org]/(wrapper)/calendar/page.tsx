@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { format } from "date-fns";
+import React, { useCallback, useMemo, useState } from "react";
+import { format, startOfMonth } from "date-fns";
 import {
   CalendarIcon,
   CirclePlusIcon,
@@ -70,35 +70,43 @@ const addEventSchema = z.object({
   location: z.string().optional(),
 });
 
+type FilterType = "event" | "holiday" | "opportunity";
+
 const ScheduleContext = React.createContext<{
   date: Date;
   view: View;
   onView: (view: View) => void;
   onDate: (newDate: Date) => void;
+  typeFilter: FilterType[];
+  setTypeFilter: React.Dispatch<React.SetStateAction<FilterType[]>>;
 }>({
   date: new Date(),
   view: "month",
-  onView(view) {},
-  onDate(newDate) {},
+  typeFilter: [],
+  onView: () => {},
+  onDate: () => {},
+  setTypeFilter: () => {},
 });
 
 function ScheduleContextProvider({ children }: { children: React.ReactNode }) {
   const [view, setView] = useState<View>("month");
   const [date, setDate] = useState<Date>(new Date());
+  const [typeFilter, setTypeFilter] = useState<FilterType[]>([]);
+
+  const contextValue = useMemo(
+    () => ({
+      typeFilter,
+      view,
+      date,
+      onView: setView,
+      onDate: setDate,
+      setTypeFilter,
+    }),
+    [typeFilter, view, date],
+  );
 
   return (
-    <ScheduleContext.Provider
-      value={{
-        view,
-        date,
-        onView(view) {
-          setView(view);
-        },
-        onDate(newDate) {
-          setDate(newDate);
-        },
-      }}
-    >
+    <ScheduleContext.Provider value={contextValue}>
       {children}
     </ScheduleContext.Provider>
   );
@@ -242,32 +250,32 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
 }
 
 function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
-  const [typefilter, setTypeFilter] = useState({
-    event: false,
-    holiday: false,
-    opportunity: false,
-  });
-  const [eventCounts, setEventCounts] = useState({
-    event: 0,
-    opportunity: 0,
-    holiday: 0,
-  });
-  const eventQuery = api.calendar.getEventByType.useQuery({
-    eventType: "event",
-  });
-  const opportunityQuery = api.calendar.getEventByType.useQuery({
-    eventType: "opportunity",
-  });
-  const holidayQuery = api.calendar.getEventByType.useQuery({
-    eventType: "holiday",
-  });
+  const { onDate, onView, date, view, typeFilter, setTypeFilter } =
+    React.useContext(ScheduleContext);
 
-  const totalIFilterApplied = Object.values(typefilter).filter(
-    (value) => value === true,
-  ).length;
+  const localTypeFilter = useMemo(
+    () => ({
+      event: typeFilter.includes("event"),
+      holiday: typeFilter.includes("holiday"),
+      opportunity: typeFilter.includes("opportunity"),
+    }),
+    [typeFilter],
+  );
 
-  //Scheduler Context Props
-  const { onDate, onView, date, view } = React.useContext(ScheduleContext);
+  const totalFilterApplied = typeFilter.length;
+
+  const handleTypeFilterChange = useCallback(
+    (type: FilterType) => {
+      setTypeFilter((prev) =>
+        prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
+      );
+    },
+    [setTypeFilter],
+  );
+
+  const clearFilters = useCallback(() => {
+    setTypeFilter([]);
+  }, [setTypeFilter]);
 
   return (
     <div className="flex gap-2 pb-4">
@@ -314,7 +322,6 @@ function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
         </TabsList>
       </Tabs>
 
-      {/**Type Filter */}
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -324,15 +331,14 @@ function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
           >
             <CirclePlusIcon className="size-4" />
             Type
-            {totalIFilterApplied > 0 && (
+            {totalFilterApplied > 0 && (
               <div className="flex gap-1">
                 <Separator orientation="vertical" />
-
                 <Badge
                   variant={"secondary"}
                   className="rounded-md font-light capitalize"
                 >
-                  {totalIFilterApplied} Applied
+                  {totalFilterApplied} Applied
                 </Badge>
               </div>
             )}
@@ -348,24 +354,14 @@ function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
                   <CommandItem
                     value={type.label}
                     key={type.value}
-                    onSelect={() => {
-                      setTypeFilter((prev) => ({
-                        ...prev,
-                        [type.value as "event" | "opportunity" | "holiday"]:
-                          !typefilter[
-                            type.value as "event" | "opportunity" | "holiday"
-                          ],
-                      }));
-                    }}
+                    onSelect={() =>
+                      handleTypeFilterChange(type.value as FilterType)
+                    }
                     className="h-8 gap-1 text-sm"
                   >
                     <Checkbox
                       className="size-4 rounded-md"
-                      checked={
-                        typefilter[
-                          type.value as "event" | "opportunity" | "holiday"
-                        ]
-                      }
+                      checked={localTypeFilter[type.value as FilterType]}
                     />
                     <DotIcon color={type.color} className="size-8" />
                     {type.label}
@@ -375,18 +371,12 @@ function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
                   </CommandItem>
                 ))}
               </CommandGroup>
-              {Object.values(typefilter).includes(true) && (
+              {totalFilterApplied > 0 && (
                 <>
                   <CommandSeparator />
                   <CommandGroup>
                     <Button
-                      onClick={() =>
-                        setTypeFilter({
-                          event: false,
-                          holiday: false,
-                          opportunity: false,
-                        })
-                      }
+                      onClick={clearFilters}
                       className="w-full"
                       size={"sm"}
                       variant={"ghost"}
@@ -405,22 +395,38 @@ function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
 }
 
 function SchedulerWithContext() {
-  const eventsData = api.calendar.getEventList.useQuery();
-  const events = eventsData.data?.map((event) => ({
-    id: event.id,
-    title: event.title,
-    description: event.description,
-    start: event.start_date,
-    end: event.end_date ?? event.start_date,
-    allDay: event.is_all_day,
-  }));
+  const { date, view, typeFilter } = React.useContext(ScheduleContext);
 
-  const { date, view } = React.useContext(ScheduleContext);
+  console.log(typeFilter);
+
+  const { data, isLoading } = api.calendar.getEventList.useQuery(
+    {
+      date,
+      typeFilter,
+    },
+    {
+      queryHash: `${startOfMonth(date).getMonth()}-${startOfMonth(date).getFullYear()}-${typeFilter.join("-")}`,
+    },
+  );
+
+  const events = useMemo(
+    () =>
+      data?.map((event) => ({
+        id: event.id,
+        title: event.title,
+        description: event.description,
+        start: event.start_date,
+        end: event.end_date ?? event.start_date,
+        allDay: event.is_all_day,
+      })),
+    [data],
+  );
 
   return (
     <Scheduler
-      events={events}
-      {...{ date, view }}
+      events={events ?? []}
+      date={date}
+      view={view}
       components={{
         toolbar: (props) => <CalendarToolBar {...props} />,
       }}
