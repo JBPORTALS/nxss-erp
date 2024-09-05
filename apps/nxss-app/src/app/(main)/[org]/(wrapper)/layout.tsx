@@ -48,13 +48,13 @@ export default async function Templates(props: {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <div className="sticky inset-0 z-40 flex flex-col">
-        <header className="relative flex items-center justify-between border-b bg-background/80 px-5 py-3.5 backdrop-blur-sm">
+        <header className="relative flex h-[64px] items-center justify-between border-b bg-background/80 px-5 py-2.5 backdrop-blur-md">
           <div className="flex items-center gap-4">
             <Button
               size={"icon"}
-              className="size-10 overflow-hidden rounded-full border border-border shadow-none"
+              className="size-9 overflow-hidden rounded-full border border-border shadow-none"
             >
-              <RocketIcon className="size-6" />
+              <RocketIcon className="size-5" />
             </Button>
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold">{organization.name}</span>
