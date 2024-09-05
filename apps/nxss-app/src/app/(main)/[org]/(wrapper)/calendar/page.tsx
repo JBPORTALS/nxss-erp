@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import {
   CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
   CirclePlusIcon,
   DotIcon,
   PlusCircle,
@@ -47,13 +45,7 @@ import {
 } from "@nxss/ui/form";
 import { Input } from "@nxss/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
-import {
-  Event,
-  HeaderProps,
-  Scheduler,
-  ToolbarProps,
-  View,
-} from "@nxss/ui/schedular";
+import { Event, Scheduler, ToolbarProps, View } from "@nxss/ui/schedular";
 import { Separator } from "@nxss/ui/seperator";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Textarea } from "@nxss/ui/textarea";
