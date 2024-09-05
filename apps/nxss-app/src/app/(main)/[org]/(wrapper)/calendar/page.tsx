@@ -71,8 +71,6 @@ const addEventSchema = z.object({
       required_error: "A date of birth is required.",
     }),
     to: z.date({}).optional(),
-    fromTime: z.string().min(1),
-    toTime: z.string().min(1, "required"),
   }),
   location: z.string().optional(),
 });
@@ -85,8 +83,6 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
       datetime: {
         from: new Date(),
         to: new Date(),
-        toTime: new Date().getTime().toString(),
-        fromTime: new Date().getTime().toString(),
       },
     },
   });
@@ -153,7 +149,10 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <div className="flex justify-between gap-4 p-2">
-                        <Input type="time" />
+                        <Input
+                          type="time"
+                          onChange={(e) => console.log(e.target.value)}
+                        />
                         <Input type="time" />
                       </div>
                       <Calendar
