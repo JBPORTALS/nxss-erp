@@ -4,6 +4,7 @@ import {
   ContentAreaContent,
   ContentAreaDescription,
   ContentAreaHeader,
+  ContentAreaLeft,
   ContentAreaRight,
   ContentAreaSubheader,
   ContentAreaTitle,
@@ -16,12 +17,12 @@ export default function Template(props: { children: React.ReactNode }) {
   return (
     <ContentArea className="h-full w-full">
       <ContentAreaHeader>
-        <div>
+        <ContentAreaLeft>
           <ContentAreaTitle>Faculty</ContentAreaTitle>
           <ContentAreaDescription>
             All staff members with access to <b>RJS</b> institution.
           </ContentAreaDescription>
-        </div>
+        </ContentAreaLeft>
         <ContentAreaRight>
           <InviteDialog>
             <Button>Invite Member</Button>

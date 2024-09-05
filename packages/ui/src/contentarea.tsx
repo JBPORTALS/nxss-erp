@@ -43,6 +43,14 @@ const ContentAreaDescription = React.forwardRef<
 ));
 ContentAreaDescription.displayName = "ContentAreaDescription";
 
+const ContentAreaLeft = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("flex flex-col gap-2", className)} {...props} />
+));
+ContentAreaLeft.displayName = "ContentAreaLeft";
+
 const ContentAreaRight = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -72,6 +80,7 @@ export {
   ContentAreaHeader,
   ContentAreaTitle,
   ContentAreaDescription,
+  ContentAreaLeft,
   ContentAreaRight,
   ContentAreaSubheader,
   ContentAreaContent,
