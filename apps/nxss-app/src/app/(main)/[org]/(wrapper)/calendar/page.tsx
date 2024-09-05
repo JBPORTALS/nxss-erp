@@ -53,9 +53,9 @@ import { Textarea } from "@nxss/ui/textarea";
 import { api } from "~/trpc/react";
 
 const types = [
-  { label: "Event", value: "event", color: "blue" },
-  { label: "Holiday", value: "holiday", color: "darkgreen" },
-  { label: "Opportunity", value: "opportunity", color: "purple" },
+  { label: "Event", value: "event" },
+  { label: "Holiday", value: "holiday" },
+  { label: "Opportunity", value: "opportunity" },
 ];
 
 const addEventSchema = z.object({
@@ -363,7 +363,14 @@ function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
                       className="size-4 rounded-md"
                       checked={localTypeFilter[type.value as FilterType]}
                     />
-                    <DotIcon color={type.color} className="size-8" />
+                    <DotIcon
+                      className={cn(
+                        "size-8",
+                        type.value === "event" && "text-indigo-600",
+                        type.value === "opportunity" && "text-purple-600",
+                        type.value === "holiday" && "text-green-700",
+                      )}
+                    />
                     {type.label}
                     <span className="ml-auto font-mono text-muted-foreground">
                       10
@@ -418,6 +425,7 @@ function SchedulerWithContext() {
         start: event.start_date,
         end: event.end_date ?? event.start_date,
         allDay: event.is_all_day,
+        type: event.event_type,
       })),
     [data],
   );
