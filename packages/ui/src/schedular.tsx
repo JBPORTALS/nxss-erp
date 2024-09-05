@@ -25,6 +25,7 @@ export const Scheduler = ({
       )}
     >
       <ScheduleCalendar
+        {...props}
         {...{ localizer }}
         components={{
           dateCellWrapper: ({ children }) => (
@@ -43,10 +44,9 @@ export const Scheduler = ({
               <span className="px-0.5 text-xs text-white">{props.title}</span>
             </div>
           ),
-          toolbar: components?.toolbar,
+          ...components,
         }}
         className="rbc-calendar"
-        {...props}
       />
     </div>
   );

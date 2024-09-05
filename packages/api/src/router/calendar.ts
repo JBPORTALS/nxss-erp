@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { asc, eq, schema } from "@nxss/db";
+import { asc, eq, eventTypeEnum, schema } from "@nxss/db";
 import {
   CreateCalendarEventScheme,
   UpdateCalendarEventScheme,
@@ -23,7 +23,29 @@ export const calendarRouter = router({
 
     return events;
   }),
+  getEventByType: protectedProcedure
+    .input(
+      z.object({
+        eventType: z.enum(eventTypeEnum.enumValues),
+      }),
+    )
 
+    .query(async ({ ctx, input }) => {
+      const events = await ctx.db.query.calendar.findMany({
+        where: eq(calendar.event_type, input.eventType),
+        orderBy: asc(calendar.start_date),
+        with: {
+          calendarBranches: true,
+        },
+      });
+      if (!events) {
+        throw new TRPCError({
+          message: "Event not found",
+          code: "NOT_FOUND",
+        });
+      }
+      return events;
+    }),
   // Get details of a specific calendar event
   getEventDetails: protectedProcedure
     .input(z.object({ id: z.number().min(1, "Event ID is required") }))
