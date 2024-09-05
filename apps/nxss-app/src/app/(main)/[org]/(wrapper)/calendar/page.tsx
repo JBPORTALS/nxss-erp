@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { format } from "date-fns";
+import React, { useCallback, useMemo, useState } from "react";
+import { format, startOfMonth } from "date-fns";
 import {
   CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
   CirclePlusIcon,
   DotIcon,
   PlusCircle,
@@ -47,15 +45,12 @@ import {
 } from "@nxss/ui/form";
 import { Input } from "@nxss/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
-import {
-  Event,
-  HeaderProps,
-  Scheduler,
-  ToolbarProps,
-} from "@nxss/ui/schedular";
+import { Event, Scheduler, ToolbarProps, View } from "@nxss/ui/schedular";
 import { Separator } from "@nxss/ui/seperator";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Textarea } from "@nxss/ui/textarea";
+
+import { api } from "~/trpc/react";
 
 const types = [
   { label: "Event", value: "event", color: "blue" },
@@ -71,11 +66,51 @@ const addEventSchema = z.object({
       required_error: "A date of birth is required.",
     }),
     to: z.date({}).optional(),
-    fromTime: z.string().min(1),
-    toTime: z.string().min(1, "required"),
   }),
   location: z.string().optional(),
 });
+
+type FilterType = "event" | "holiday" | "opportunity";
+
+const ScheduleContext = React.createContext<{
+  date: Date;
+  view: View;
+  onView: (view: View) => void;
+  onDate: (newDate: Date) => void;
+  typeFilter: FilterType[];
+  setTypeFilter: React.Dispatch<React.SetStateAction<FilterType[]>>;
+}>({
+  date: new Date(),
+  view: "month",
+  typeFilter: [],
+  onView: () => {},
+  onDate: () => {},
+  setTypeFilter: () => {},
+});
+
+function ScheduleContextProvider({ children }: { children: React.ReactNode }) {
+  const [view, setView] = useState<View>("month");
+  const [date, setDate] = useState<Date>(new Date());
+  const [typeFilter, setTypeFilter] = useState<FilterType[]>([]);
+
+  const contextValue = useMemo(
+    () => ({
+      typeFilter,
+      view,
+      date,
+      onView: setView,
+      onDate: setDate,
+      setTypeFilter,
+    }),
+    [typeFilter, view, date],
+  );
+
+  return (
+    <ScheduleContext.Provider value={contextValue}>
+      {children}
+    </ScheduleContext.Provider>
+  );
+}
 
 function AddEventDialog({ children }: { children: React.ReactNode }) {
   const form = useForm({
@@ -85,11 +120,10 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
       datetime: {
         from: new Date(),
         to: new Date(),
-        toTime: new Date().getTime().toString(),
-        fromTime: new Date().getTime().toString(),
       },
     },
   });
+
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -153,7 +187,10 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <div className="flex justify-between gap-4 p-2">
-                        <Input type="time" />
+                        <Input
+                          type="time"
+                          onChange={(e) => console.log(e.target.value)}
+                        />
                         <Input type="time" />
                       </div>
                       <Calendar
@@ -212,21 +249,37 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
   );
 }
 
-function CalendarToolBar(props: ToolbarProps) {
-  const [date, setDate] = useState<Date>(new Date(Date.now()));
-  const [typefilter, setTypeFilter] = useState({
-    event: false,
-    holiday: false,
-    opportunity: false,
-  });
-  const totalIFilterApplied = Object.values(typefilter).filter(
-    (value) => value === true,
-  ).length;
+function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
+  const { onDate, onView, date, view, typeFilter, setTypeFilter } =
+    React.useContext(ScheduleContext);
 
-  //call procedures over here
+  const localTypeFilter = useMemo(
+    () => ({
+      event: typeFilter.includes("event"),
+      holiday: typeFilter.includes("holiday"),
+      opportunity: typeFilter.includes("opportunity"),
+    }),
+    [typeFilter],
+  );
+
+  const totalFilterApplied = typeFilter.length;
+
+  const handleTypeFilterChange = useCallback(
+    (type: FilterType) => {
+      setTypeFilter((prev) =>
+        prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
+      );
+    },
+    [setTypeFilter],
+  );
+
+  const clearFilters = useCallback(() => {
+    setTypeFilter([]);
+  }, [setTypeFilter]);
 
   return (
     <div className="flex gap-2 pb-4">
+      {/**Select Date Range */}
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -244,36 +297,31 @@ function CalendarToolBar(props: ToolbarProps) {
           <Calendar
             mode="single"
             selected={date}
-            onSelect={(date) => setDate(date ?? new Date())}
-            initialFocus
+            defaultMonth={date}
+            onSelect={(newDate) => onDate(newDate ?? new Date())}
           />
         </PopoverContent>
       </Popover>
+
+      {/**Select View */}
       <Tabs className="w-3/12">
         <TabsList>
-          <TabsTrigger
-            isActive={props.view === "day"}
-            onClick={() => props.onView("day")}
-            value="day"
-          >
-            Day
-          </TabsTrigger>
-          <TabsTrigger
-            isActive={props.view === "week"}
-            onClick={() => props.onView("week")}
-            value="week"
-          >
-            Week
-          </TabsTrigger>
-          <TabsTrigger
-            isActive={props.view === "month"}
-            onClick={() => props.onView("month")}
-            value="month"
-          >
-            Month
-          </TabsTrigger>
+          {(props.views as View[]).map((viewItem) => (
+            <TabsTrigger
+              isActive={view === viewItem}
+              onClick={() => {
+                onView(viewItem);
+              }}
+              key={viewItem}
+              value={viewItem}
+              className="capitalize"
+            >
+              {viewItem}
+            </TabsTrigger>
+          ))}
         </TabsList>
       </Tabs>
+
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -283,15 +331,14 @@ function CalendarToolBar(props: ToolbarProps) {
           >
             <CirclePlusIcon className="size-4" />
             Type
-            {totalIFilterApplied > 0 && (
+            {totalFilterApplied > 0 && (
               <div className="flex gap-1">
                 <Separator orientation="vertical" />
-
                 <Badge
                   variant={"secondary"}
                   className="rounded-md font-light capitalize"
                 >
-                  {totalIFilterApplied} Applied
+                  {totalFilterApplied} Applied
                 </Badge>
               </div>
             )}
@@ -307,24 +354,14 @@ function CalendarToolBar(props: ToolbarProps) {
                   <CommandItem
                     value={type.label}
                     key={type.value}
-                    onSelect={() => {
-                      setTypeFilter((prev) => ({
-                        ...prev,
-                        [type.value as "event" | "opportunity" | "holiday"]:
-                          !typefilter[
-                            type.value as "event" | "opportunity" | "holiday"
-                          ],
-                      }));
-                    }}
+                    onSelect={() =>
+                      handleTypeFilterChange(type.value as FilterType)
+                    }
                     className="h-8 gap-1 text-sm"
                   >
                     <Checkbox
                       className="size-4 rounded-md"
-                      checked={
-                        typefilter[
-                          type.value as "event" | "opportunity" | "holiday"
-                        ]
-                      }
+                      checked={localTypeFilter[type.value as FilterType]}
                     />
                     <DotIcon color={type.color} className="size-8" />
                     {type.label}
@@ -334,18 +371,12 @@ function CalendarToolBar(props: ToolbarProps) {
                   </CommandItem>
                 ))}
               </CommandGroup>
-              {Object.values(typefilter).includes(true) && (
+              {totalFilterApplied > 0 && (
                 <>
                   <CommandSeparator />
                   <CommandGroup>
                     <Button
-                      onClick={() =>
-                        setTypeFilter({
-                          event: false,
-                          holiday: false,
-                          opportunity: false,
-                        })
-                      }
+                      onClick={clearFilters}
                       className="w-full"
                       size={"sm"}
                       variant={"ghost"}
@@ -363,101 +394,89 @@ function CalendarToolBar(props: ToolbarProps) {
   );
 }
 
-export default function page() {
-  const [events] = React.useState<Event[]>([
+function SchedulerWithContext() {
+  const { date, view, typeFilter } = React.useContext(ScheduleContext);
+
+  console.log(typeFilter);
+
+  const { data, isLoading } = api.calendar.getEventList.useQuery(
     {
-      title: "Ethnic day",
-      start: new Date(2024, 5, 4, 9, 0),
-      end: new Date(2024, 5, 4, 12, 30),
-      allDay: true,
+      date,
+      typeFilter,
     },
     {
-      title: "Picknic day",
-      start: new Date(2024, 5, 4),
-      end: new Date(2024, 5, 4),
+      queryHash: `${startOfMonth(date).getMonth()}-${startOfMonth(date).getFullYear()}-${typeFilter.join("-")}`,
     },
-    {
-      title: "Panic day",
-      start: new Date(2024, 5, 4),
-      end: new Date(2024, 5, 4),
-    },
-    {
-      title: "Rose day",
-      start: new Date(2024, 5, 4),
-      end: new Date(2024, 5, 4),
-    },
-    {
-      title: "Flower day",
-      start: new Date(2024, 5, 4),
-      end: new Date(2024, 5, 4),
-    },
-    {
-      title: "Bakrid",
-      start: new Date(2024, 5, 11),
-      end: new Date(2024, 5, 11),
-    },
-    {
-      title: "Seminars",
-      start: new Date(2024, 5, 18),
-      end: new Date(2024, 5, 18),
-    },
-    {
-      title: "UGC Exam",
-      start: new Date(2024, 5, 25, 9, 0),
-      end: new Date(2024, 5, 25, 12, 0),
-    },
-  ]);
+  );
+
+  const events = useMemo(
+    () =>
+      data?.map((event) => ({
+        id: event.id,
+        title: event.title,
+        description: event.description,
+        start: event.start_date,
+        end: event.end_date ?? event.start_date,
+        allDay: event.is_all_day,
+      })),
+    [data],
+  );
+
   return (
-    <div className="h-full w-full space-y-4">
-      <div className="flex justify-between">
-        <div className="space-y-2">
-          <h4 className="text-2xl font-semibold leading-8 tracking-[-0.2.5%]">
-            Calendar
-          </h4>
-          <p className="text-sm leading-5 text-muted-foreground">
-            Manage and Schedule Events, Holidays, and Opportunities Across All
-            Academic Levels
-          </p>
-        </div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button>
-              Create <PlusCircle className="size-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-1" align="end">
-            <AddEventDialog>
-              <Button className="w-full justify-start" variant={"ghost"}>
-                <Square className="size-2 rounded-sm bg-indigo-600 text-indigo-600" />{" "}
-                Event
+    <Scheduler
+      events={events ?? []}
+      date={date}
+      view={view}
+      components={{
+        toolbar: (props) => <CalendarToolBar {...props} />,
+      }}
+      className="h-[900px]"
+      views={["week", "month"]}
+    />
+  );
+}
+
+export default function page() {
+  return (
+    <ScheduleContextProvider>
+      <div className="h-full w-full space-y-4">
+        <div className="flex justify-between">
+          <div className="space-y-2">
+            <h4 className="text-2xl font-semibold leading-8 tracking-[-0.2.5%]">
+              Calendar
+            </h4>
+            <p className="text-sm leading-5 text-muted-foreground">
+              Manage and Schedule Events, Holidays, and Opportunities Across All
+              Academic Levels
+            </p>
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button>
+                Create <PlusCircle className="size-4" />
               </Button>
-            </AddEventDialog>
-            <Button className="w-full justify-start" variant={"ghost"}>
-              <Square className="size-2 rounded-sm bg-green-800 text-green-800" />
-              Holiday
-            </Button>
-            <Button className="w-full justify-start" variant={"ghost"}>
-              <Square className="size-2 rounded-sm bg-purple-600 text-purple-600" />
-              Opportunity
-            </Button>
-          </PopoverContent>
-        </Popover>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-1" align="end">
+              <AddEventDialog>
+                <Button className="w-full justify-start" variant={"ghost"}>
+                  <Square className="size-2 rounded-sm bg-indigo-600 text-indigo-600" />{" "}
+                  Event
+                </Button>
+              </AddEventDialog>
+              <Button className="w-full justify-start" variant={"ghost"}>
+                <Square className="size-2 rounded-sm bg-green-800 text-green-800" />
+                Holiday
+              </Button>
+              <Button className="w-full justify-start" variant={"ghost"}>
+                <Square className="size-2 rounded-sm bg-purple-600 text-purple-600" />
+                Opportunity
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Separator />
+        <SchedulerWithContext />
       </div>
-      <Separator />
-      <Scheduler
-        events={events}
-        defaultView={"month"}
-        toolbar
-        popup
-        components={{
-          toolbar: CalendarToolBar,
-          event: (props) => {
-            return <div>{props.title}</div>;
-          },
-        }}
-        defaultDate={new Date(2024, 5, 6)}
-        className="h-[950px]"
-      />
-    </div>
+    </ScheduleContextProvider>
   );
 }

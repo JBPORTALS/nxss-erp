@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { createSelectSchema } from "drizzle-zod";
 
 import { pgTable } from "./_table";
 import { branches, semesters } from "./auth";
@@ -26,6 +27,8 @@ export const calendar = pgTable("calendar", {
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at"),
 });
+
+export const selectCalendarSchema = createSelectSchema(calendar);
 
 // Calendar Branches Relation Table
 export const calendarBranches = pgTable("calendar_branches", {
