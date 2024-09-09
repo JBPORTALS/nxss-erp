@@ -1,8 +1,16 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { format, startOfMonth, subDays } from "date-fns";
 import {
+  addHours,
+  addMinutes,
+  format,
+  set,
+  startOfMonth,
+  subDays,
+} from "date-fns";
+import {
+  ArrowRight,
   CalendarIcon,
   CirclePlusIcon,
   DotIcon,
@@ -13,7 +21,7 @@ import { z } from "zod";
 
 import { cn } from "@nxss/ui";
 import { Badge } from "@nxss/ui/badge";
-import { Button } from "@nxss/ui/button";
+import { Button, buttonVariants } from "@nxss/ui/button";
 import { Calendar } from "@nxss/ui/calendar";
 import { Checkbox } from "@nxss/ui/checkbox";
 import {
@@ -47,6 +55,7 @@ import { Input } from "@nxss/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
 import { Event, Scheduler, ToolbarProps, View } from "@nxss/ui/schedular";
 import { Separator } from "@nxss/ui/seperator";
+import { Switch } from "@nxss/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Textarea } from "@nxss/ui/textarea";
 
@@ -66,9 +75,10 @@ const addEventSchema = z.object({
       required_error: "A date of birth is required.",
       invalid_type_error: "Invalid Date",
     }),
-    to: z.date({}).optional(),
+    to: z.date(),
   }),
   location: z.string().optional(),
+  includeTime: z.boolean(),
 });
 
 type FilterType = "event" | "holiday" | "opportunity";
@@ -114,17 +124,38 @@ function ScheduleContextProvider({ children }: { children: React.ReactNode }) {
 }
 
 function AddEventDialog({ children }: { children: React.ReactNode }) {
+  const utils = api.useUtils();
+  const { mutateAsync } = api.calendar.createEvent.useMutation({
+    onSettled() {
+      utils.calendar.invalidate();
+    },
+  });
   const form = useForm({
     schema: addEventSchema,
-    mode: "onChange",
+    mode: "all",
+    reValidateMode: "onChange",
+
     defaultValues: {
       datetime: {
-        from: new Date(),
-        to: new Date(),
+        from: new Date(Date.now()),
+        to: new Date(Date.now()),
       },
+      includeTime: false,
     },
   });
 
+  async function onSubmit(values: z.infer<typeof addEventSchema>) {
+    await mutateAsync({
+      start_date: values.datetime.from,
+      end_date: values.datetime.to,
+      is_all_day: !values.includeTime,
+      title: values.title,
+      description: values.description,
+      audience_type: "all",
+      event_type: "event",
+      location: values.location,
+    });
+  }
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -139,7 +170,7 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="title"
@@ -173,8 +204,19 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
                           {field.value?.from ? (
                             field.value?.to ? (
                               <>
-                                {format(field.value?.from, "LLL dd, y")} -{" "}
-                                {format(field.value?.to, "LLL dd, y")}
+                                {format(
+                                  field.value?.from,
+                                  form.getValues().includeTime
+                                    ? "LLL dd, y hh:mm a"
+                                    : "LLL dd, y",
+                                )}{" "}
+                                <ArrowRight className="size-3 text-muted-foreground" />{" "}
+                                {format(
+                                  field.value?.to,
+                                  form.getValues().includeTime
+                                    ? "LLL dd, y hh:mm a"
+                                    : "LLL dd, y",
+                                )}
                               </>
                             ) : (
                               format(field.value?.from, "LLL dd, y")
@@ -186,13 +228,119 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <div className="flex justify-between gap-4 p-2">
-                        <Input
-                          type="time"
-                          onChange={(e) => console.log(e.target.value)}
-                        />
-                        <Input type="time" />
+                    <PopoverContent
+                      sideOffset={-130}
+                      className="w-[250px] items-center justify-center p-0"
+                      align="center"
+                    >
+                      <div className="flex w-full flex-col gap-2 p-2">
+                        <div
+                          className={
+                            "flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input p-2"
+                          }
+                        >
+                          <input
+                            value={
+                              field.value?.from
+                                ? format(field.value?.from, "LLL dd, y")
+                                : "Empty"
+                            }
+                            readOnly
+                            disabled
+                            className="w-full flex-1 bg-transparent text-sm outline-none"
+                          />
+                          {form.getValues().includeTime && (
+                            <FormField
+                              control={form.control}
+                              name="datetime.from"
+                              render={({ field: fromTimeField }) => (
+                                <>
+                                  <Separator orientation="vertical" />
+                                  <FormControl>
+                                    <input
+                                      {...fromTimeField}
+                                      value={
+                                        fromTimeField.value
+                                          ? format(fromTimeField.value, "HH:mm")
+                                          : "00:00"
+                                      }
+                                      onChange={(e) => {
+                                        const [hours, minutes] = e.target.value
+                                          .split(":")
+                                          .map(Number);
+
+                                        if (field.value.to)
+                                          form.setValue(
+                                            "datetime.from",
+                                            set(field.value.from, {
+                                              hours,
+                                              minutes,
+                                            }),
+                                          );
+                                      }}
+                                      type="time"
+                                      className="border-none bg-transparent text-sm outline-none"
+                                    />
+                                  </FormControl>
+                                </>
+                              )}
+                            />
+                          )}
+                        </div>
+
+                        <div
+                          className={
+                            "flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input p-2"
+                          }
+                        >
+                          <input
+                            value={
+                              field.value?.to
+                                ? format(field.value?.to, "LLL dd, y")
+                                : "Empty"
+                            }
+                            readOnly
+                            disabled
+                            className="w-full flex-1 bg-transparent text-sm outline-none"
+                          />
+                          {form.getValues().includeTime && (
+                            <FormField
+                              control={form.control}
+                              name="datetime.to"
+                              render={({ field: toTimeField }) => (
+                                <>
+                                  <Separator orientation="vertical" />
+                                  <FormControl>
+                                    <input
+                                      {...toTimeField}
+                                      value={
+                                        toTimeField.value
+                                          ? format(toTimeField.value, "HH:mm")
+                                          : "00:00"
+                                      }
+                                      onChange={(e) => {
+                                        const [hours, minutes] = e.target.value
+                                          .split(":")
+                                          .map(Number);
+
+                                        if (field.value.to)
+                                          form.setValue(
+                                            "datetime.to",
+                                            set(field.value.to, {
+                                              hours,
+                                              minutes,
+                                            }),
+                                          );
+                                      }}
+                                      type="time"
+                                      className="border-none bg-transparent text-sm outline-none"
+                                    />
+                                  </FormControl>
+                                </>
+                              )}
+                            />
+                          )}
+                        </div>
                       </div>
                       <Calendar
                         mode="range"
@@ -203,20 +351,45 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
                         onSelect={field.onChange}
                         disabled={(date) => date < subDays(new Date(), 1)}
                         initialFocus
+                        className="w-full"
                       />
                       <Separator />
-                      <Button variant={"ghost"} size={"sm"}>
-                        End Date{" "}
-                      </Button>
-                      <Button variant={"ghost"} size={"sm"}>
-                        Include Time{" "}
-                      </Button>
+                      <div className="w-full gap-1 p-2">
+                        {/* <Button
+                          variant={"ghost"}
+                          className="w-full justify-between"
+                        >
+                          End Date <Switch />
+                        </Button> */}
+                        <FormField
+                          name="includeTime"
+                          control={form.control}
+                          render={({ field }) => (
+                            <div
+                              className={cn(
+                                buttonVariants({ variant: "ghost" }),
+                                "w-full justify-between",
+                              )}
+                            >
+                              Include Time{" "}
+                              <FormControl>
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                            </div>
+                          )}
+                        />
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* <pre>{JSON.stringify(form.watch().datetime, undefined, 2)}</pre> */}
 
             <FormField
               control={form.control}
@@ -247,7 +420,13 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
             />
 
             <DialogFooter className="justify-end">
-              <Button size={"lg"}>Save</Button>
+              <Button
+                isLoading={form.formState.isSubmitting}
+                type="submit"
+                size={"lg"}
+              >
+                Save
+              </Button>
             </DialogFooter>
           </form>
         </Form>

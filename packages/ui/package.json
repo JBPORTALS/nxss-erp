@@ -49,7 +49,8 @@
     "./calendar": "./src/calendar.tsx",
     "./date-range-picker": "./src/date-range-picker.tsx",
     "./schedular": "./src/schedular.tsx",
-    "./sheet": "./src/sheet.tsx"
+    "./sheet": "./src/sheet.tsx",
+    "./switch": "./src/switch.tsx"
   },
   "license": "MIT",
   "scripts": {
