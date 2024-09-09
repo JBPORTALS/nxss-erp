@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { format, startOfMonth } from "date-fns";
+import { format, startOfMonth, subDays } from "date-fns";
 import {
   CalendarIcon,
   CirclePlusIcon,
@@ -64,6 +64,7 @@ const addEventSchema = z.object({
   datetime: z.object({
     from: z.date({
       required_error: "A date of birth is required.",
+      invalid_type_error: "Invalid Date",
     }),
     to: z.date({}).optional(),
   }),
@@ -195,15 +196,21 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
                       </div>
                       <Calendar
                         mode="range"
-                        defaultMonth={field.value?.from}
-                        numberOfMonths={2}
+                        defaultMonth={field.value?.to ?? field.value.from}
+                        numberOfMonths={1}
+                        showOutsideDays
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={(date) => date < subDays(new Date(), 1)}
                         initialFocus
                       />
+                      <Separator />
+                      <Button variant={"ghost"} size={"sm"}>
+                        End Date{" "}
+                      </Button>
+                      <Button variant={"ghost"} size={"sm"}>
+                        Include Time{" "}
+                      </Button>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -438,8 +445,12 @@ function SchedulerWithContext() {
       components={{
         toolbar: (props) => <CalendarToolBar {...props} />,
       }}
+      timeslots={5}
       className="h-[900px]"
       views={["week", "month"]}
+      onSelectSlot={(slotinfo) => console.log("slot", slotinfo)}
+      onSelectEvent={(e) => console.log("select ", e)}
+      popup
     />
   );
 }

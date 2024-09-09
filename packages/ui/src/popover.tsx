@@ -6,6 +6,8 @@ import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cn } from ".";
 
 const Popover = PopoverPrimitive.Root;
+const PopoverClose = PopoverPrimitive.Close;
+const PopoverAnchor = PopoverPrimitive.Anchor;
 
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
@@ -28,7 +30,7 @@ const PopoverContent = React.forwardRef<
 ));
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
-export { Popover, PopoverTrigger, PopoverContent };
+export { Popover, PopoverTrigger, PopoverContent, PopoverClose, PopoverAnchor };
 
 //   "use client";
 
