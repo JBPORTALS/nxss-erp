@@ -27,7 +27,7 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const eventVariants = cva(
+export const eventVariants = cva(
   "rounded-lg [&_.rbc-event-label]:p-1 [&_.rbc-event-label]:!text-white",
   {
     variants: {
@@ -40,13 +40,29 @@ const eventVariants = cva(
   },
 );
 
-type CustomEvent = Event & VariantProps<typeof eventVariants>;
+export type CustomEvent = Event & VariantProps<typeof eventVariants>;
+type CustomEventProps = EventWrapperProps & {
+  continuesPrior: boolean;
+  continuesAfter: boolean;
+  children: React.ReactNode;
+};
 
-export const Scheduler = ({
+type SchedulerProps = Omit<
+  React.ComponentProps<typeof ScheduleCalendar>,
+  "localizer"
+> & {
+  PopoverComponent: React.ComponentType<{
+    event: CustomEvent;
+    children: React.ReactNode;
+  }>;
+};
+
+export const Scheduler: React.FC<SchedulerProps> = ({
   className,
   components,
+  PopoverComponent,
   ...props
-}: Omit<React.ComponentProps<typeof ScheduleCalendar>, "localizer">) => {
+}) => {
   return (
     <div
       className={cn(
@@ -78,13 +94,7 @@ export const Scheduler = ({
             );
           },
           eventWrapper: (props) => {
-            console.log("event props", props);
-
-            const customProps = props as EventWrapperProps & {
-              continuesPrior: boolean;
-              continuesAfter: boolean;
-            };
-
+            const customProps = props as CustomEventProps;
             const event = customProps.event as CustomEvent;
 
             return (
@@ -99,7 +109,15 @@ export const Scheduler = ({
                     className: props.className,
                   }),
                 )}
-              />
+              >
+                {PopoverComponent ? (
+                  <PopoverComponent event={event}>
+                    {customProps.children}
+                  </PopoverComponent>
+                ) : (
+                  customProps.children
+                )}
+              </div>
             );
           },
           timeGutterHeader: () => (

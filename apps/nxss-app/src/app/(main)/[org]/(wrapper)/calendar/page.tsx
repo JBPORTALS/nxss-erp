@@ -1,24 +1,23 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  addHours,
-  addMinutes,
-  format,
-  set,
-  startOfMonth,
-  subDays,
-} from "date-fns";
+import { format, set, startOfMonth, subDays } from "date-fns";
 import {
   ArrowRight,
+  CalendarDays,
   CalendarIcon,
   CirclePlusIcon,
   DotIcon,
+  Edit,
+  PinIcon,
   PlusCircle,
   Square,
+  Text,
+  TrashIcon,
 } from "lucide-react";
 import { z } from "zod";
 
+import { RouterInputs } from "@nxss/api";
 import { cn } from "@nxss/ui";
 import { Badge } from "@nxss/ui/badge";
 import { Button, buttonVariants } from "@nxss/ui/button";
@@ -53,7 +52,13 @@ import {
 } from "@nxss/ui/form";
 import { Input } from "@nxss/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
-import { Event, Scheduler, ToolbarProps, View } from "@nxss/ui/schedular";
+import {
+  CustomEvent,
+  Event,
+  Scheduler,
+  ToolbarProps,
+  View,
+} from "@nxss/ui/schedular";
 import { Separator } from "@nxss/ui/seperator";
 import { Switch } from "@nxss/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
@@ -124,14 +129,22 @@ function ScheduleContextProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-function AddEventDialog({ children }: { children: React.ReactNode }) {
+function AddEventDialog({
+  children,
+  eventType,
+}: {
+  children: React.ReactNode;
+  eventType: RouterInputs["calendar"]["createEvent"]["event_type"];
+}) {
   const utils = api.useUtils();
   const [open, setOpen] = useState(false);
 
   const { mutateAsync } = api.calendar.createEvent.useMutation({
     onSuccess() {
       utils.calendar.invalidate();
-      toast.success(`Event created successfully`);
+      toast.success(
+        `${eventType.charAt(0).toUpperCase() + eventType.slice(1).toLowerCase()} created successfully`,
+      );
       setOpen(false);
     },
   });
@@ -157,21 +170,29 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
       title: values.title,
       description: values.description,
       audience_type: "all",
-      event_type: "event",
+      event_type: eventType,
       location: values.location,
     });
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="w-[450px]">
+      <DialogContent onClick={(e) => e.stopPropagation()} className="w-[450px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Square className="size-4 rounded-sm bg-indigo-600 text-indigo-600" />
-            Create New Event
+            <Square
+              className={cn(
+                "size-4 rounded-sm",
+                eventType === "event" && "bg-indigo-600 text-indigo-600",
+                eventType === "holiday" && "bg-green-600 text-green-600",
+                eventType === "opportunity" && "bg-purple-600 text-purple-600",
+              )}
+            />
+            Create New <span className="capitalize">{eventType}</span>
           </DialogTitle>
           <DialogDescription>
-            Enter the details for the event to be scheduled
+            Enter the details for the{" "}
+            <span className="capitalize">{eventType}</span> to be scheduled
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -410,19 +431,21 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{"Location (optional)"}</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {eventType !== "holiday" && (
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{"Location (optional)"}</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <DialogFooter className="justify-end">
               <Button
@@ -617,9 +640,92 @@ function SchedulerWithContext() {
         end: event.end_date ?? event.start_date,
         allDay: event.is_all_day,
         type: event.event_type,
+        location: event.location,
       })),
     [data],
   );
+
+  type Event = Exclude<typeof events, undefined>[number];
+
+  const EventWrapper: React.ComponentType<{
+    event: CustomEvent & Event;
+    children: React.ReactNode;
+  }> = ({ event, children }) => {
+    const utils = api.useUtils();
+    const { mutateAsync: deleteEventMutate, isPending: isDeleting } =
+      api.calendar.deleteEvent.useMutation({
+        onSuccess: () => {
+          utils.calendar.invalidate();
+          toast.info(`Event deleted successfully`);
+        },
+      });
+
+    return (
+      <Popover>
+        <PopoverTrigger asChild>{children}</PopoverTrigger>
+        <PopoverContent className="w-96" align="start">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Square
+                className={cn(
+                  "size-5 rounded-sm",
+                  event.type === "event" && "bg-indigo-600 text-indigo-600",
+                  event.type === "holiday" && "bg-green-600 text-green-600",
+                  event.type === "opportunity" &&
+                    "bg-purple-600 text-purple-600",
+                )}
+              />
+              <div className="flex items-center justify-end gap-1">
+                <Button
+                  size={"icon"}
+                  variant={"ghost"}
+                  className="size-11 rounded-full"
+                >
+                  <Edit className="size-5" />
+                </Button>
+                <Button
+                  isLoading={isDeleting}
+                  onClick={() => deleteEventMutate({ id: event.id })}
+                  size={"icon"}
+                  variant={"ghost"}
+                  className="size-11 rounded-full text-destructive hover:text-destructive"
+                >
+                  {!isDeleting && <TrashIcon className="size-4" />}
+                </Button>
+              </div>
+            </div>
+            <h3 className="text-xl font-medium">{event?.title}</h3>
+            <div className="flex w-full items-center gap-2">
+              <CalendarDays className="size-5 text-muted-foreground" />
+              <span className="flex items-center gap-1 text-xs">
+                {format(
+                  event.start,
+                  !event.allDay ? "LLL dd, y hh:mm a" : "LLL dd, y",
+                )}{" "}
+                <ArrowRight className="size-3 text-muted-foreground" />{" "}
+                {format(
+                  event.end,
+                  !event.allDay ? "LLL dd, y hh:mm a" : "LLL dd, y",
+                )}
+              </span>
+            </div>
+            <div className="flex w-full gap-2">
+              <Text className="size-5 text-muted-foreground" />
+              <p className="w-3/4 text-xs">
+                {event.description ?? "No description..."}
+              </p>
+            </div>
+            <div className="flex w-full gap-2">
+              <PinIcon className="size-5 text-muted-foreground" />
+              <p className="w-3/4 text-xs">
+                {event.location ?? "No location details..."}
+              </p>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
+  };
 
   return (
     <Scheduler
@@ -629,6 +735,8 @@ function SchedulerWithContext() {
       components={{
         toolbar: (props) => <CalendarToolBar {...props} />,
       }}
+      //@ts-ignore
+      PopoverComponent={EventWrapper}
       timeslots={5}
       className="h-[900px]"
       views={["week", "month"]}
@@ -659,21 +767,29 @@ export default function page() {
                 Create <PlusCircle className="size-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-1" align="end">
-              <AddEventDialog>
+            <PopoverContent
+              onClick={(e) => e.preventDefault()}
+              className="w-[200px] p-1"
+              align="end"
+            >
+              <AddEventDialog eventType="event">
                 <Button className="w-full justify-start" variant={"ghost"}>
                   <Square className="size-2 rounded-sm bg-indigo-600 text-indigo-600" />{" "}
                   Event
                 </Button>
               </AddEventDialog>
-              <Button className="w-full justify-start" variant={"ghost"}>
-                <Square className="size-2 rounded-sm bg-green-800 text-green-800" />
-                Holiday
-              </Button>
-              <Button className="w-full justify-start" variant={"ghost"}>
-                <Square className="size-2 rounded-sm bg-purple-600 text-purple-600" />
-                Opportunity
-              </Button>
+              <AddEventDialog eventType="holiday">
+                <Button className="w-full justify-start" variant={"ghost"}>
+                  <Square className="size-2 rounded-sm bg-green-800 text-green-800" />
+                  Holiday
+                </Button>
+              </AddEventDialog>
+              <AddEventDialog eventType="opportunity">
+                <Button className="w-full justify-start" variant={"ghost"}>
+                  <Square className="size-2 rounded-sm bg-purple-600 text-purple-600" />
+                  Opportunity
+                </Button>
+              </AddEventDialog>
             </PopoverContent>
           </Popover>
         </div>
