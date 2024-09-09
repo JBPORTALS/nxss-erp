@@ -58,6 +58,7 @@ import { Separator } from "@nxss/ui/seperator";
 import { Switch } from "@nxss/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Textarea } from "@nxss/ui/textarea";
+import { toast } from "@nxss/ui/toast";
 
 import { api } from "~/trpc/react";
 
@@ -125,9 +126,13 @@ function ScheduleContextProvider({ children }: { children: React.ReactNode }) {
 
 function AddEventDialog({ children }: { children: React.ReactNode }) {
   const utils = api.useUtils();
+  const [open, setOpen] = useState(false);
+
   const { mutateAsync } = api.calendar.createEvent.useMutation({
-    onSettled() {
+    onSuccess() {
       utils.calendar.invalidate();
+      toast.success(`Event created successfully`);
+      setOpen(false);
     },
   });
   const form = useForm({
@@ -157,7 +162,7 @@ function AddEventDialog({ children }: { children: React.ReactNode }) {
     });
   }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="w-[450px]">
         <DialogHeader>
