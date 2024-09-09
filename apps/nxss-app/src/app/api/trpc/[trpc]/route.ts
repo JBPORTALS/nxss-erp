@@ -24,7 +24,7 @@ export function OPTIONS() {
   return response;
 }
 
-const createContext = async (opts: CreateNextContextOptions) => {
+const createContext = async (opts: Omit<CreateNextContextOptions, "info">) => {
   return createTRPCContext({
     ...opts,
   });
@@ -35,8 +35,7 @@ const handler = (req: NextApiRequest & NextRequest, res: NextApiResponse) =>
     endpoint: "/api/trpc",
     req,
     router: appRouter,
-    createContext: () =>
-      createContext({ req, res, info: { isBatchCall: true, calls: [] } }),
+    createContext: () => createContext({ req, res }),
     onError:
       process.env.NODE_ENV === "development"
         ? ({ path, error }) => {

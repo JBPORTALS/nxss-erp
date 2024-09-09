@@ -29,7 +29,7 @@ export function BranchSearch({
     }
 
     // Push the new URL with the updated query parameter
-    router.push(`?${queryParams.toString()}`, undefined, { shallow: true });
+    router.push(`?${queryParams.toString()}`, undefined);
   };
 
   return (
