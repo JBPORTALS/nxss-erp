@@ -20,6 +20,7 @@
     "@nxss/eslint-config": "workspace:^",
     "@nxss/prettier-config": "workspace:^",
     "@nxss/tsconfig": "workspace:^",
+    "@nxss/ui": "workspace:^",
     "eslint": "^8.56.0",
     "prettier": "^3.3.2",
     "typescript": " ~5.3.3"

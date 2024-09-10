@@ -74,8 +74,8 @@ export function EventDetialsForm({
     await updateEventMutate({
       id: parseInt(event_id),
       title: values.title,
-      start_date: values.datetime.from,
-      end_date: values.datetime.to,
+      start_date: values?.datetime?.from,
+      end_date: values?.datetime?.to,
       description: values.description,
       location: values.location,
       is_all_day: !values.includeTime,
@@ -194,7 +194,7 @@ export function EventDetialsForm({
                                               .split(":")
                                               .map(Number);
 
-                                          if (field.value.to)
+                                          if (field?.value?.from)
                                             form.setValue(
                                               "datetime.from",
                                               set(field.value.from, {
@@ -249,10 +249,10 @@ export function EventDetialsForm({
                                               .split(":")
                                               .map(Number);
 
-                                          if (field.value.to)
+                                          if (field?.value?.to)
                                             form.setValue(
                                               "datetime.to",
-                                              set(field.value.to, {
+                                              set(field?.value?.to, {
                                                 hours,
                                                 minutes,
                                               }),
@@ -270,7 +270,7 @@ export function EventDetialsForm({
                         </div>
                         <Calendar
                           mode="range"
-                          defaultMonth={field.value?.to ?? field.value.from}
+                          defaultMonth={field.value?.to ?? field?.value?.from}
                           numberOfMonths={1}
                           showOutsideDays
                           selected={field.value}

@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { format, set, startOfMonth, subDays } from "date-fns";
+import { addDays, format, set, startOfMonth, subDays } from "date-fns";
 import {
   ArrowRight,
   CalendarDays,
@@ -140,11 +140,10 @@ function AddEventDialog({
     schema: eventSchema,
     mode: "all",
     reValidateMode: "onChange",
-
     defaultValues: {
       datetime: {
         from: new Date(Date.now()),
-        to: new Date(Date.now()),
+        to: addDays(new Date(Date.now()), 1),
       },
       includeTime: false,
     },
@@ -152,8 +151,8 @@ function AddEventDialog({
 
   async function onSubmit(values: z.infer<typeof eventSchema>) {
     await mutateAsync({
-      start_date: values.datetime.from,
-      end_date: values.datetime.to,
+      start_date: values?.datetime?.from ?? new Date(),
+      end_date: values?.datetime?.to,
       is_all_day: !values.includeTime,
       title: values.title,
       description: values.description,
@@ -283,7 +282,7 @@ function AddEventDialog({
                                           .split(":")
                                           .map(Number);
 
-                                        if (field.value.to)
+                                        if (field?.value?.from)
                                           form.setValue(
                                             "datetime.from",
                                             set(field.value.from, {
@@ -337,7 +336,7 @@ function AddEventDialog({
                                           .split(":")
                                           .map(Number);
 
-                                        if (field.value.to)
+                                        if (field?.value?.to)
                                           form.setValue(
                                             "datetime.to",
                                             set(field.value.to, {
@@ -358,44 +357,52 @@ function AddEventDialog({
                       </div>
                       <Calendar
                         mode="range"
-                        defaultMonth={field.value?.to ?? field.value.from}
+                        defaultMonth={field.value?.to}
                         numberOfMonths={1}
-                        showOutsideDays
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(range, selectedDay, active) => {
+                          form.setValue("datetime", {
+                            from: range?.from,
+                            to: range?.to,
+                          });
+                        }}
                         disabled={(date) => date < subDays(new Date(), 1)}
                         initialFocus
                         className="w-full"
-                      />
-                      <Separator />
-                      <div className="w-full gap-1 p-2">
-                        {/* <Button
+                        footer={
+                          <>
+                            <Separator />
+                            <div className="mt-2 w-full gap-1">
+                              {/* <Button
                           variant={"ghost"}
                           className="w-full justify-between"
-                        >
+                          >
                           End Date <Switch />
                         </Button> */}
-                        <FormField
-                          name="includeTime"
-                          control={form.control}
-                          render={({ field }) => (
-                            <div
-                              className={cn(
-                                buttonVariants({ variant: "ghost" }),
-                                "w-full justify-between",
-                              )}
-                            >
-                              Include Time{" "}
-                              <FormControl>
-                                <Switch
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                />
-                              </FormControl>
+                              <FormField
+                                name="includeTime"
+                                control={form.control}
+                                render={({ field }) => (
+                                  <div
+                                    className={cn(
+                                      buttonVariants({ variant: "ghost" }),
+                                      "w-full justify-between",
+                                    )}
+                                  >
+                                    Include Time{" "}
+                                    <FormControl>
+                                      <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                      />
+                                    </FormControl>
+                                  </div>
+                                )}
+                              />
                             </div>
-                          )}
-                        />
-                      </div>
+                          </>
+                        }
+                      />
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -625,7 +632,7 @@ function SchedulerWithContext() {
         title: event.title,
         description: event.description,
         start: event.start_date,
-        end: event.end_date ?? event.start_date,
+        end: event.end_date ? event.end_date : event.start_date,
         allDay: event.is_all_day,
         type: event.event_type,
         location: event.location,
@@ -722,6 +729,7 @@ function SchedulerWithContext() {
       events={events ?? []}
       date={date}
       view={view}
+      showMultiDayTimes
       components={{
         toolbar: (props) => <CalendarToolBar {...props} />,
       }}

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { DateRange } from "@nxss/ui/calendar";
+
 export const CreatePostSchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
@@ -111,16 +113,15 @@ export const UpdateCalendarEventScheme = z.object({
   attachment_url: z.string().optional(),
 });
 
+const datetime: z.ZodSchema<DateRange | undefined> = z.object({
+  from: z.date({ required_error: "From date is required" }),
+  to: z.date().optional(),
+});
+
 export const eventSchema = z.object({
   title: z.string().min(1, "Required"),
   description: z.string().optional(),
-  datetime: z.object({
-    from: z.date({
-      required_error: "A date of birth is required.",
-      invalid_type_error: "Invalid Date",
-    }),
-    to: z.date(),
-  }),
+  datetime,
   location: z.string().optional(),
   includeTime: z.boolean(),
 });

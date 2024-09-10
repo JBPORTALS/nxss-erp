@@ -656,6 +656,9 @@ importers:
       '@nxss/tsconfig':
         specifier: workspace:^
         version: link:../../tooling/typescript
+      '@nxss/ui':
+        specifier: workspace:^
+        version: link:../ui
       eslint:
         specifier: ^8.56.0
         version: 8.57.0

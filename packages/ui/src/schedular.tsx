@@ -86,7 +86,6 @@ export const Scheduler: React.FC<SchedulerProps> = ({
             </div>
           ),
           event: ({ ...props }: EventProps) => {
-            const event = props.event as CustomEvent;
             return (
               <div className={cn(`rounded-md px-1 py-[1px]`)}>
                 <span className="rbc-event-label !text-xs">{props.title}</span>

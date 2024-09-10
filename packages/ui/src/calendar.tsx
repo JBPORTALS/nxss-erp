@@ -70,3 +70,4 @@ function Calendar({
 Calendar.displayName = "Calendar";
 
 export { Calendar };
+export type * from "react-day-picker";
