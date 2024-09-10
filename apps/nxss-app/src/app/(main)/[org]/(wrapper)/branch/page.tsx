@@ -10,11 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@nxss/ui/card";
-import { Input } from "@nxss/ui/input";
-import { HStack, VStack } from "@nxss/ui/stack";
+import { VStack } from "@nxss/ui/stack";
 
-import CreateBranchDailog from "~/app/_components/dailog/create-branch-dailog";
-import { api } from "~/trpc/server";
+import { BranchSearch } from "~/app/_components/branchsearch-client";
+import { api } from "~/trpc/server"; // Import the Client Component
 
 export default async function Page({
   params,
@@ -31,19 +30,14 @@ export default async function Page({
         <div className="flex flex-col gap-2 pb-8">
           <h1 className="text-2xl font-bold">Branch</h1>
           <p className="text-sm text-muted-foreground">
-            Branches of Innovation , Strategies for Success
+            Branches of Innovation, Strategies for Success
           </p>
         </div>
       </div>
-      <HStack className="mb-5 w-full justify-between">
-        <Input
-          className="w-1/2"
-          placeholder="Search by subject name or Id ..."
-        />
-        <CreateBranchDailog />
-      </HStack>
+      {/* Render the Client Component */}
+      <BranchSearch initialSearchTerm={searchTerm} />
       <div className="grid w-full grid-cols-3 gap-10">
-        { branchList.length > 0 ? (
+        {branchList && branchList.length > 0 ? (
           branchList.map((branch) => (
             <Link key={branch.id} href={`/${params.org}/branch/${branch.id}`}>
               <Card className="relative flex h-full w-full flex-col">
@@ -76,7 +70,7 @@ export default async function Page({
             </Link>
           ))
         ) : (
-          <p>No branches available.</p> // Handle the case where branchList is empty or undefined
+          <p>No branches available.</p>
         )}
       </div>
     </VStack>
