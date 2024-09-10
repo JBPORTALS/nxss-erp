@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { format, set, startOfMonth, subDays } from "date-fns";
 import {
   ArrowRight,
@@ -64,6 +65,7 @@ import { Switch } from "@nxss/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Textarea } from "@nxss/ui/textarea";
 import { toast } from "@nxss/ui/toast";
+import { eventSchema } from "@nxss/validators";
 
 import { api } from "~/trpc/react";
 
@@ -72,20 +74,6 @@ const types = [
   { label: "Holiday", value: "holiday" },
   { label: "Opportunity", value: "opportunity" },
 ];
-
-const addEventSchema = z.object({
-  title: z.string().min(1, "Required"),
-  description: z.string().optional(),
-  datetime: z.object({
-    from: z.date({
-      required_error: "A date of birth is required.",
-      invalid_type_error: "Invalid Date",
-    }),
-    to: z.date(),
-  }),
-  location: z.string().optional(),
-  includeTime: z.boolean(),
-});
 
 type FilterType = "event" | "holiday" | "opportunity";
 
@@ -149,7 +137,7 @@ function AddEventDialog({
     },
   });
   const form = useForm({
-    schema: addEventSchema,
+    schema: eventSchema,
     mode: "all",
     reValidateMode: "onChange",
 
@@ -162,7 +150,7 @@ function AddEventDialog({
     },
   });
 
-  async function onSubmit(values: z.infer<typeof addEventSchema>) {
+  async function onSubmit(values: z.infer<typeof eventSchema>) {
     await mutateAsync({
       start_date: values.datetime.from,
       end_date: values.datetime.to,
@@ -659,7 +647,8 @@ function SchedulerWithContext() {
           toast.info(`Event deleted successfully`);
         },
       });
-
+    const pathname = usePathname();
+    const router = useRouter();
     return (
       <Popover>
         <PopoverTrigger asChild>{children}</PopoverTrigger>
@@ -677,6 +666,7 @@ function SchedulerWithContext() {
               />
               <div className="flex items-center justify-end gap-1">
                 <Button
+                  onClick={() => router.push(`${pathname}/v/${event.id}`)}
                   size={"icon"}
                   variant={"ghost"}
                   className="size-11 rounded-full"
