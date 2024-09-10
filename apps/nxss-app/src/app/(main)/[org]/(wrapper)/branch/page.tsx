@@ -11,10 +11,19 @@ import {
   CardTitle,
 } from "@nxss/ui/card";
 import { HStack, VStack } from "@nxss/ui/stack";
-
-import { BranchSearch } from "~/app/_components/branchsearch-client";
+import {
+  ContentArea,
+  ContentAreaContent,
+  ContentAreaDescription,
+  ContentAreaHeader,
+  ContentAreaLeft,
+  ContentAreaRight,
+  ContentAreaSubheader,
+  ContentAreaTitle,
+} from "@nxss/ui/contentarea";
 import { api } from "~/trpc/server"; // Import the Client Component
 import { Input } from "@nxss/ui/input";
+import BranchListComponent from "~/app/_components/data-table/branch-datatable";
 
 export default async function Page({
   params
@@ -24,19 +33,22 @@ export default async function Page({
   };
 }) {
   const branchList = await api.branch.getBranchList();
-  console.log(branchList)
+  
   return (
-    <VStack>
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-2 pb-8">
-          <h1 className="text-2xl font-bold">Branch</h1>
-          <p className="text-sm text-muted-foreground">
-            Branches of Innovation, Strategies for Success
-          </p>
-        </div>
-      </div>
+      <ContentArea className="h-full w-full">
+      <ContentAreaHeader>
+        <ContentAreaLeft>
+          <ContentAreaTitle>Branches</ContentAreaTitle>
+          <ContentAreaDescription>
+          Comprehensive List of Branches
+                    </ContentAreaDescription>
+        </ContentAreaLeft>
+        
+      </ContentAreaHeader>
+      <ContentAreaContent>
+
       {/* Render the Client Component */}
-      <HStack className="mb-5 w-full justify-between">
+      {/* <HStack className="mb-5 w-full justify-between">
         <Input
           className="w-1/2"
           placeholder="Search by branch name..."
@@ -79,7 +91,9 @@ export default async function Page({
         ) : (
           <p>No branches available.</p>
         )}
-      </div>
-    </VStack>
+      </div> */}
+      <BranchListComponent/>
+      </ContentAreaContent>
+      </ContentArea>
   );
 }
