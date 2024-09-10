@@ -10,13 +10,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@nxss/ui/card";
-import { VStack } from "@nxss/ui/stack";
+import { HStack, VStack } from "@nxss/ui/stack";
 
 import { BranchSearch } from "~/app/_components/branchsearch-client";
 import { api } from "~/trpc/server"; // Import the Client Component
+import { Input } from "@nxss/ui/input";
 
 export default async function Page({
-  params,
+  params
 }: {
   params: {
     org: string;
@@ -35,9 +36,15 @@ export default async function Page({
         </div>
       </div>
       {/* Render the Client Component */}
-      <BranchSearch initialSearchTerm={searchTerm} />
+      <HStack className="mb-5 w-full justify-between">
+        <Input
+          className="w-1/2"
+          placeholder="Search by branch name..."
+        
+        />
+      </HStack>      
       <div className="grid w-full grid-cols-3 gap-10">
-        {branchList && branchList.length > 0 ? (
+        {branchList.length > 0 ? (
           branchList.map((branch) => (
             <Link key={branch.id} href={`/${params.org}/branch/${branch.id}`}>
               <Card className="relative flex h-full w-full flex-col">
