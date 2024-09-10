@@ -11,7 +11,7 @@ const { branches, semesters, branch_to_sem } = schema;
 export const branchesRouter = router({
   getBranchList: protectedProcedure
     .input(z.object({ searchTerm: z.string().optional() }).optional())
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {  
       const searchTerm = input?.searchTerm ?? "";
 
       const branchList = await ctx.db.query.branches.findMany({

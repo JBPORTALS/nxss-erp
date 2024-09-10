@@ -6,44 +6,44 @@ import { AvatarList } from "@nxss/ui/avatar-list";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@nxss/ui/card";
-import { VStack } from "@nxss/ui/stack";
+import { Input } from "@nxss/ui/input";
+import { HStack, VStack } from "@nxss/ui/stack";
 
-import { BranchSearch } from "~/app/_components/branchsearch-client";
-import { api } from "~/trpc/server"; // Import the Client Component
+import CreateBranchDailog from "~/app/_components/dailog/create-branch-dailog";
+import { api } from "~/trpc/server";
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: {
     org: string;
   };
-  searchParams: {
-    searchTerm?: string;
-  };
 }) {
-  const { searchTerm = "" } = searchParams;
-  const branchList = await api.branch.getBranchList({ searchTerm });
-
+  const branchList = await api.branch.getBranchList();
+  console.log(branchList)
   return (
     <VStack>
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2 pb-8">
           <h1 className="text-2xl font-bold">Branch</h1>
           <p className="text-sm text-muted-foreground">
-            Branches of Innovation, Strategies for Success
+            Branches of Innovation , Strategies for Success
           </p>
         </div>
       </div>
-      {/* Render the Client Component */}
-      <BranchSearch initialSearchTerm={searchTerm} />
+      <HStack className="mb-5 w-full justify-between">
+        <Input
+          className="w-1/2"
+          placeholder="Search by subject name or Id ..."
+        />
+        <CreateBranchDailog />
+      </HStack>
       <div className="grid w-full grid-cols-3 gap-10">
-        {branchList && branchList.length > 0 ? (
+        { branchList.length > 0 ? (
           branchList.map((branch) => (
             <Link key={branch.id} href={`/${params.org}/branch/${branch.id}`}>
               <Card className="relative flex h-full w-full flex-col">
@@ -76,7 +76,7 @@ export default async function Page({
             </Link>
           ))
         ) : (
-          <p>No branches available.</p>
+          <p>No branches available.</p> // Handle the case where branchList is empty or undefined
         )}
       </div>
     </VStack>

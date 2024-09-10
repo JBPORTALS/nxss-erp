@@ -11,9 +11,6 @@ import {
 import { pgTable } from "./_table";
 import { patternEnum, statusEnum } from "./enum";
 
-// Rest of your schema definitions...
-//const userTypeEnum = pgEnum('user_type', ['student', 'admin']);
-
 // Institution table
 export const institutions = pgTable("institutions", {
   id: text("id").notNull().primaryKey(), // reference the clerk_org_id
@@ -39,7 +36,7 @@ export const academicYears = pgTable("academic_years", {
     .notNull()
     .references(() => institutions.id, {
       onDelete: "cascade",
-      onUpdate: "restrict",
+      onUpdate: "cascade",
     }),
   year: text("year").notNull(),
   pattern: patternEnum("pattern").notNull(),
@@ -55,7 +52,7 @@ export const branches = pgTable("branches", {
   description: text("description"),
   institution_id: text("institution_id")
     .notNull()
-    .references(() => institutions.id),
+    .references(() => institutions.id, { onDelete: "cascade", onUpdate: "cascade" }),
 });
 
 // Semester table
@@ -63,10 +60,10 @@ export const semesters = pgTable("semesters", {
   id: serial("id").primaryKey(),
   institution_id: text("institution_id")
     .notNull()
-    .references(() => institutions.id, { onDelete: "cascade" }),
+    .references(() => institutions.id, { onDelete: "cascade", onUpdate: "cascade" }),
   branch_id: integer("branch_id")
     .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }), // Added branch_id field
+    .references(() => branches.id, { onDelete: "cascade", onUpdate: "cascade" }),
   number: integer("number").notNull(),
 });
 
@@ -76,10 +73,10 @@ export const sections = pgTable("sections", {
   name: text("name").notNull(),
   branch_id: integer("branch_id")
     .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
+    .references(() => branches.id, { onDelete: "cascade", onUpdate: "cascade" }),
   semester_id: integer("semester_id")
     .notNull()
-    .references(() => semesters.id, { onDelete: "cascade" }),
+    .references(() => semesters.id, { onDelete: "cascade", onUpdate: "cascade" }),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at"),
 });
@@ -89,13 +86,13 @@ export const batches = pgTable("batches", {
   name: text("name").notNull(),
   branch_id: integer("branch_id")
     .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
+    .references(() => branches.id, { onDelete: "cascade", onUpdate: "cascade" }),
   semester_id: integer("semester_id")
     .notNull()
-    .references(() => semesters.id, { onDelete: "cascade" }),
+    .references(() => semesters.id, { onDelete: "cascade", onUpdate: "cascade" }),
   section_id: integer("section_id")
     .notNull()
-    .references(() => sections.id, { onDelete: "cascade" }),
+    .references(() => sections.id, { onDelete: "cascade", onUpdate: "cascade" }),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at"),
 });
@@ -105,12 +102,14 @@ export const branch_to_sem = pgTable("branch_to_sem", {
   id: serial("id").primaryKey(),
   branch_id: serial("branch_id")
     .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
-  semester_id: integer("semester_id").notNull(),
+    .references(() => branches.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  semester_id: integer("semester_id")
+    .notNull()
+    .references(() => semesters.id, { onDelete: "cascade", onUpdate: "cascade" }),
   status: statusEnum("status").notNull(),
 });
 
-// Relations
+// Relations remain the same as they don't involve the cascade behavior
 export const institutionsRelations = relations(institutions, ({ many }) => ({
   academicYears: many(academicYears),
   branches: many(branches),
@@ -143,7 +142,6 @@ export const connectionsRelations = relations(branch_to_sem, ({ one }) => ({
   }),
 }));
 
-// Updated Semester Relations
 export const semestersRelations = relations(semesters, ({ one, many }) => ({
   institution: one(institutions, {
     fields: [semesters.institution_id],
@@ -153,12 +151,11 @@ export const semestersRelations = relations(semesters, ({ one, many }) => ({
     fields: [semesters.branch_id],
     references: [branches.id],
   }),
-  sections: many(sections), // One-to-many: a semester can have many sections
-  batches: many(batches), // One-to-many: a semester can have many batches
+  sections: many(sections),
+  batches: many(batches),
   branch_to_sem: many(branch_to_sem),
 }));
 
-// Updated Section Relations
 export const sectionsRelations = relations(sections, ({ one, many }) => ({
   branch: one(branches, {
     fields: [sections.branch_id],
@@ -168,5 +165,5 @@ export const sectionsRelations = relations(sections, ({ one, many }) => ({
     fields: [sections.semester_id],
     references: [semesters.id],
   }),
-  batches: many(batches), // One-to-many: a section can have many batches
+  batches: many(batches),
 }));
