@@ -110,3 +110,17 @@ export const UpdateCalendarEventScheme = z.object({
   location: z.string().optional(),
   attachment_url: z.string().optional(),
 });
+
+export const eventSchema = z.object({
+  title: z.string().min(1, "Required"),
+  description: z.string().optional(),
+  datetime: z.object({
+    from: z.date({
+      required_error: "A date of birth is required.",
+      invalid_type_error: "Invalid Date",
+    }),
+    to: z.date(),
+  }),
+  location: z.string().optional(),
+  includeTime: z.boolean(),
+});
