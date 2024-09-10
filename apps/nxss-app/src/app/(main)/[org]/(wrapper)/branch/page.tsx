@@ -43,7 +43,7 @@ export default async function Page({
       {/* Render the Client Component */}
       <BranchSearch initialSearchTerm={searchTerm} />
       <div className="grid w-full grid-cols-3 gap-10">
-        {branchList && branchList.length > 0 ? (
+        {branchList.length > 0 ? (
           branchList.map((branch) => (
             <Link key={branch.id} href={`/${params.org}/branch/${branch.id}`}>
               <Card className="relative flex h-full w-full flex-col">

@@ -14,6 +14,8 @@ export const branchesRouter = router({
     .query(async ({ ctx, input }) => {
       const searchTerm = input?.searchTerm ?? "";
 
+      console.log(ctx.auth.orgId);
+
       const branchList = await ctx.db.query.branches.findMany({
         where: and(
           eq(branches.institution_id, ctx.auth.orgId ?? ""),
