@@ -130,13 +130,19 @@ export const calendarRouter = router({
         .update(calendar)
         .set({
           title: input.title,
-          description: input.description,
+          description:
+            input.description && input.description?.length > 0
+              ? input.description
+              : null,
           event_type: input.event_type,
           audience_type: input.audience_type,
           is_all_day: input.is_all_day,
           start_date: input.start_date,
           end_date: input.end_date,
-          location: input.location,
+          location:
+            input.location && input.location?.length > 0
+              ? input.location
+              : null,
           attachment_url: input.attachment_url,
         })
         .where(eq(calendar.id, input.id))

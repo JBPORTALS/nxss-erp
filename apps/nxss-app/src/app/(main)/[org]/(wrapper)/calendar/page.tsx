@@ -360,11 +360,8 @@ function AddEventDialog({
                         defaultMonth={field.value?.to}
                         numberOfMonths={1}
                         selected={field.value}
-                        onSelect={(range, selectedDay, active) => {
-                          form.setValue("datetime", {
-                            from: range?.from,
-                            to: range?.to,
-                          });
+                        onSelect={(range) => {
+                          form.setValue("datetime", range);
                         }}
                         disabled={(date) => date < subDays(new Date(), 1)}
                         initialFocus
@@ -736,7 +733,7 @@ function SchedulerWithContext() {
       //@ts-ignore
       PopoverComponent={EventWrapper}
       timeslots={5}
-      className="h-[900px]"
+      className={cn("h-[900px]", isLoading && "animate-pulse")}
       views={["week", "month"]}
       onSelectSlot={(slotinfo) => console.log("slot", slotinfo)}
       onSelectEvent={(e) => console.log("select ", e)}
