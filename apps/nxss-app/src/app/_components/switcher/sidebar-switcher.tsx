@@ -36,14 +36,14 @@ function useShouldRender(
       return (
         !params.subject_id &&
         !pathname.startsWith(`/${params.org}/settings`) &&
-        !pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
+        !pathname.startsWith(`/${params.org}/branches/${params.branch_id}`)
       );
     case "setting":
       return path ? pathname.startsWith(path) : false;
     case "branch":
       return (
         !params.subject_id &&
-        pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
+        pathname.startsWith(`/${params.org}/branches/${params.branch_id}`)
       );
     default:
       return false;
