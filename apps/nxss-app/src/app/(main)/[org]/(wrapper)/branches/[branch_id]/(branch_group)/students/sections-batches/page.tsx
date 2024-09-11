@@ -118,7 +118,11 @@ const SectionsAndBatchesTable = () => {
                 {section.expanded &&
                   section.batches.map((batch) => (
                     <TableRow key={batch.id}>
-                      <TableCell className="pl-10">{batch.name}</TableCell>
+                      <TableCell className="pl-10">
+                        <Button variant={"link"} className="p-0">
+                          {batch.name}
+                        </Button>
+                      </TableCell>
                       <TableCell>{batch.students.join(", ")}</TableCell>
                       <TableCell className="text-center">
                         {batch.students.length}
