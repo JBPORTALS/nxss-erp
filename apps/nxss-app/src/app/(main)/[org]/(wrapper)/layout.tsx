@@ -80,12 +80,12 @@ export default async function Templates(props: {
           <ProfilePopover params={props.params} />
         </header>
       </div>
-      <section className="w-full">
+      <section className="h-full w-full">
         <BreadcrumbNavbar />
 
         <div className="flex flex-1">
           <AsideBarClient params={props.params} />
-          <main className="w-full">{props.children}</main>
+          <main className="h-full w-full">{props.children}</main>
         </div>
       </section>
     </div>
