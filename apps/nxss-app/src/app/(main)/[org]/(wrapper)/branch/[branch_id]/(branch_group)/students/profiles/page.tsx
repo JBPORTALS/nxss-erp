@@ -26,8 +26,9 @@ const SectionsAndBatchesTable = () => {
     {
       id: 1,
       name: "Section A",
-      description: "Description for Section A",
+      description: "-",
       expanded: true,
+      totalStudents: 6,
       batches: [
         {
           id: 1,
@@ -44,8 +45,9 @@ const SectionsAndBatchesTable = () => {
     {
       id: 2,
       name: "Section B",
-      description: "Description for Section B",
+      description: "-",
       expanded: false,
+      totalStudents: 3,
       batches: [
         {
           id: 3,
@@ -69,9 +71,7 @@ const SectionsAndBatchesTable = () => {
   return (
     <ContentArea>
       <ContentAreaHeader>
-        <ContentAreaTitle className="mb-4 text-2xl font-bold">
-          Sections & Batches
-        </ContentAreaTitle>
+        <ContentAreaTitle>Sections & Batches</ContentAreaTitle>
         <ContentAreaDescription>
           Student Allocation Across Sections and Batches
         </ContentAreaDescription>
@@ -81,18 +81,19 @@ const SectionsAndBatchesTable = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[300px]">Section / Batch</TableHead>
-              <TableHead>Students</TableHead>
+              <TableHead></TableHead>
+              <TableHead className="text-center">Total Students</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {sections.map((section) => (
               <React.Fragment key={section.id}>
-                <TableRow className="bg-secondary/50">
-                  <TableCell className="font-medium">
+                <TableRow className="bg-accent/50">
+                  <TableCell className="flex items-center gap-2 font-medium">
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="icon"
                       onClick={() => toggleSection(section.id)}
                     >
                       {section.expanded ? (
@@ -104,6 +105,9 @@ const SectionsAndBatchesTable = () => {
                     {section.name}
                   </TableCell>
                   <TableCell>{section.description}</TableCell>
+                  <TableCell className="text-center">
+                    {section.totalStudents}
+                  </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="icon">
                       <MoreVertical size={16} />
@@ -115,6 +119,9 @@ const SectionsAndBatchesTable = () => {
                     <TableRow key={batch.id}>
                       <TableCell className="pl-10">{batch.name}</TableCell>
                       <TableCell>{batch.students.join(", ")}</TableCell>
+                      <TableCell className="text-center">
+                        {batch.students.length}
+                      </TableCell>
                       <TableCell>
                         <Button variant="ghost" size="icon">
                           <MoreVertical size={16} />

@@ -1,11 +1,20 @@
 import React from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "./card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./card";
 
 export const ContentArea: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof Card>>
 > = ({ children, ...props }) => (
-  <Card className="w-full" {...props}>
+  <Card
+    className="w-full rounded-none border-none bg-background shadow-none"
+    {...props}
+  >
     {children}
   </Card>
 );
@@ -13,7 +22,7 @@ export const ContentArea: React.FC<
 export const ContentAreaHeader: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardHeader>>
 > = ({ children, ...props }) => (
-  <CardHeader className="px-8 py-6" {...props}>
+  <CardHeader className="flex px-8" {...props}>
     {children}
   </CardHeader>
 );
@@ -27,11 +36,9 @@ export const ContentAreaTitle: React.FC<
 );
 
 export const ContentAreaDescription: React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLParagraphElement>>
+  React.PropsWithChildren<React.ComponentProps<typeof CardDescription>>
 > = ({ children, ...props }) => (
-  <p className="mt-1 text-sm text-gray-500" {...props}>
-    {children}
-  </p>
+  <CardDescription {...props}>{children}</CardDescription>
 );
 
 export const ContentSubHeader: React.FC<
