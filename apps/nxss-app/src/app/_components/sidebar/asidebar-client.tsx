@@ -39,7 +39,7 @@ export default async function AsideBarClient({
   };
 }) {
   return (
-    <Sidebar>
+    <Sidebar className="static h-full">
       <SidebarSwitcher type="setting" path={`/${params.org}/settings`}>
         <div className="pr-5">
           <BackButton />

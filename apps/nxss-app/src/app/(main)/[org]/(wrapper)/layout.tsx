@@ -45,7 +45,7 @@ export default async function Templates(props: {
   });
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="h-screen w-full">
       <div className="sticky inset-0 z-40 flex flex-col">
         <header className="relative flex h-[64px] items-center justify-between border-b bg-background/80 px-5 py-2.5 backdrop-blur-md">
           <div className="flex items-center gap-4">
@@ -79,14 +79,12 @@ export default async function Templates(props: {
 
           <ProfilePopover params={props.params} />
         </header>
-      </div>
-      <section className="h-full w-full">
         <BreadcrumbNavbar />
+      </div>
 
-        <div className="flex flex-1">
-          <AsideBarClient params={props.params} />
-          <main className="h-full w-full">{props.children}</main>
-        </div>
+      <section className="flex h-full flex-1">
+        <AsideBarClient params={props.params} />
+        <main className="min-h-full w-full">{props.children}</main>
       </section>
     </div>
   );

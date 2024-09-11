@@ -41,7 +41,7 @@ export default async function Page({
   const branchList = await api.branch.getBranchList({ searchTerm });
 
   return (
-    <ContentArea>
+    <ContentArea className="h-full">
       <ContentAreaHeader className="flex-row justify-between">
         <div className="space-y-2">
           <ContentAreaTitle>Branches</ContentAreaTitle>
@@ -56,8 +56,8 @@ export default async function Page({
         </CreateBranchDailog>
       </ContentAreaHeader>
       <Separator />
-      <ContentAreaContainer className="w-full">
-        <div className="flex h-2/3 w-full flex-col items-center justify-center gap-4">
+      <ContentAreaContainer className="h-full w-full">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-4">
           <SquareDashedBottomIcon className="size-12 text-muted-foreground" />
           <div className="text-center">
             <h4 className="text-xl">No branches</h4>

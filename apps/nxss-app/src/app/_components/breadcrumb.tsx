@@ -22,7 +22,7 @@ export function BreadcrumbNavbar() {
     pathSegments.length > 2 ? pathSegments.slice(0, 2) : pathSegments;
 
   return (
-    <div className="flex h-9 w-full items-center border border-border bg-accent/50 pl-4">
+    <div className="flex h-9 w-full items-center border border-border bg-accent/50 pl-4 backdrop-blur-md">
       <Breadcrumb>
         <BreadcrumbList>
           {limitedSegments.map((segment, index) => {
