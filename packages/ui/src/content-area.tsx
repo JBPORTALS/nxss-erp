@@ -11,9 +11,12 @@ import {
 
 export const ContentArea: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof Card>>
-> = ({ children, ...props }) => (
+> = ({ children, className, ...props }) => (
   <Card
-    className="w-full rounded-none border-none bg-background shadow-none"
+    className={cn(
+      "w-full space-y-4 rounded-none border-none bg-background px-8 py-6 shadow-none",
+      className,
+    )}
     {...props}
   >
     {children}
@@ -23,7 +26,7 @@ export const ContentArea: React.FC<
 export const ContentAreaHeader: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardHeader>>
 > = ({ children, className, ...props }) => (
-  <CardHeader className={cn("flex px-8", className)} {...props}>
+  <CardHeader className={cn("flex w-full flex-row p-0", className)} {...props}>
     {children}
   </CardHeader>
 );
@@ -42,18 +45,10 @@ export const ContentAreaDescription: React.FC<
   <CardDescription {...props}>{children}</CardDescription>
 );
 
-export const ContentSubHeader: React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
-> = ({ children, ...props }) => (
-  <div className="border-b px-8 py-4" {...props}>
-    {children}
-  </div>
-);
-
 export const ContentAreaContainer: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardContent>>
-> = ({ children, ...props }) => (
-  <CardContent className="space-y-4 px-8 py-6" {...props}>
+> = ({ children, className, ...props }) => (
+  <CardContent className={cn("space-y-4 p-0", className)} {...props}>
     {children}
   </CardContent>
 );
