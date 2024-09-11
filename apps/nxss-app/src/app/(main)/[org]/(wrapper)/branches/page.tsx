@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Ellipsis, PlusCircle, SquareDashedBottomIcon } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
@@ -23,7 +24,6 @@ import { api } from "~/trpc/server";
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: {
     org: string;
@@ -32,8 +32,7 @@ export default async function Page({
     searchTerm?: string;
   };
 }) {
-  const { searchTerm = "" } = searchParams;
-  const branchList = await api.branch.getBranchList({ searchTerm });
+  const branchList = await api.branch.getBranchList();
 
   return (
     <ContentArea className="h-full">
@@ -67,15 +66,31 @@ export default async function Page({
             <TableHeader>
               <TableRow>
                 <TableHead>Branch</TableHead>
-                <TableHead>Working Staff</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-center">Working Staff</TableHead>
                 <TableHead className="w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {branchList.map((branch) => (
-                <TableRow key={branch.id}>
-                  <TableCell>{branch.name}</TableCell>
-                  <TableCell>{branch.semesters}</TableCell>
+                <TableRow>
+                  <TableCell>
+                    <Link
+                      key={branch.id}
+                      className="contents"
+                      href={`/${params.org}/branches/${branch.id}`}
+                    >
+                      <Button variant={"link"} className="p-0">
+                        {branch.name}
+                      </Button>
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {branch.description ?? "-"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {branch.semesters}
+                  </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="icon">
                       <Ellipsis className="h-4 w-4" />
