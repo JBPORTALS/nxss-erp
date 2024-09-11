@@ -97,7 +97,7 @@ export default async function Page() {
           </ContentAreaDescription>
         </ContentAreaHeader>
 
-        <ContentAreaContainer className="grid w-full gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
+        <ContentAreaContainer className="grid h-fit w-full gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
           <Card x-chunk="dashboard-05-chunk-2">
             <CardHeader>
               <CardTitle className="text-base font-normal">

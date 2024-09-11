@@ -48,10 +48,7 @@ export const ContentAreaDescription: React.FC<
 export const ContentAreaContainer: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardContent>>
 > = ({ children, className, ...props }) => (
-  <CardContent
-    className={cn("h-full space-y-4 p-0 px-8", className)}
-    {...props}
-  >
+  <CardContent className={cn("h-full p-0 px-8", className)} {...props}>
     {children}
   </CardContent>
 );
