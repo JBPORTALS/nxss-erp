@@ -8,6 +8,7 @@ import {
   ContentAreaHeader,
   ContentAreaTitle,
 } from "@nxss/ui/content-area";
+import { Separator } from "@nxss/ui/seperator";
 
 import { InviteDialog } from "~/app/_components/dailog/invite-dialog";
 import FacultyTabsClient from "~/app/_components/tabs/faculty-tabs";
@@ -15,7 +16,7 @@ import FacultyTabsClient from "~/app/_components/tabs/faculty-tabs";
 export default function Template(props: { children: React.ReactNode }) {
   return (
     <ContentArea>
-      <ContentAreaHeader className="flex justify-between">
+      <ContentAreaHeader className="flex flex-row justify-between">
         <div className="flex flex-col gap-2">
           <ContentAreaTitle>Faculty</ContentAreaTitle>
           <ContentAreaDescription>
@@ -31,6 +32,7 @@ export default function Template(props: { children: React.ReactNode }) {
       <ContentAreaHeader>
         <FacultyTabsClient />
       </ContentAreaHeader>
+      <Separator />
       <ContentAreaContainer className="w-full">
         {props.children}
       </ContentAreaContainer>
