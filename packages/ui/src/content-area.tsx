@@ -14,7 +14,7 @@ export const ContentArea: React.FC<
 > = ({ children, className, ...props }) => (
   <Card
     className={cn(
-      "w-full space-y-4 rounded-none border-none bg-background py-6 shadow-none",
+      "h-full w-full space-y-4 rounded-none border-none bg-background py-6 shadow-none",
       className,
     )}
     {...props}
@@ -48,7 +48,10 @@ export const ContentAreaDescription: React.FC<
 export const ContentAreaContainer: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardContent>>
 > = ({ children, className, ...props }) => (
-  <CardContent className={cn("space-y-4 p-0 px-8", className)} {...props}>
+  <CardContent
+    className={cn("h-full space-y-4 p-0 px-8", className)}
+    {...props}
+  >
     {children}
   </CardContent>
 );

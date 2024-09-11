@@ -31,7 +31,11 @@ import { CreateBranchScheme } from "@nxss/validators";
 
 import { createBranch } from "~/trpc/actions";
 
-export default function CreateBranchDailog() {
+export default function CreateBranchDailog({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const form = useForm({
     schema: CreateBranchScheme,
     mode: "onChange",
@@ -55,13 +59,13 @@ export default function CreateBranchDailog() {
   return (
     <Dialog {...{ open, onOpenChange }}>
       <DialogTrigger asChild className="w-fit">
-        <Button>Add Branch</Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Branch</DialogTitle>
+          <DialogTitle>Create Branch</DialogTitle>
           <DialogDescription className="text-xs">
-            Essential Steps for Successful Branch Expansion.
+            A space for academic data course wise
           </DialogDescription>
         </DialogHeader>
 
@@ -73,9 +77,9 @@ export default function CreateBranchDailog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <Label>Branch Name</Label>
+                  <Label>Name of the branch</Label>
                   <FormControl>
-                    <Input {...field} placeholder="Branch name" />
+                    <Input {...field} placeholder="Acme" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,7 +94,7 @@ export default function CreateBranchDailog() {
                 <FormItem>
                   <Label>Description</Label>
                   <FormControl>
-                    <Textarea {...field} placeholder="Description" />
+                    <Textarea {...field} placeholder="No description..." />
                   </FormControl>
                   <FormDescription>This is field is optional</FormDescription>
                   <FormMessage />
