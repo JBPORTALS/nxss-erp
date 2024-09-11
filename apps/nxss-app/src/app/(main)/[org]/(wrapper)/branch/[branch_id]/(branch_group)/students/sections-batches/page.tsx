@@ -71,9 +71,9 @@ const SectionsAndBatchesTable = () => {
   return (
     <ContentArea>
       <ContentAreaHeader>
-        <ContentAreaTitle>Profiles</ContentAreaTitle>
+        <ContentAreaTitle>Sections & Batches</ContentAreaTitle>
         <ContentAreaDescription>
-          All Students in computer Science
+          Student Allocation Across Sections and Batches
         </ContentAreaDescription>
       </ContentAreaHeader>
       <ContentAreaContainer>

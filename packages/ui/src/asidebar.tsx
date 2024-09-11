@@ -118,7 +118,7 @@ export const SidebarItemWithSubmenu = ({
           />
         </Button>
       </CollapsibleTrigger>
-      <CollapsibleContent className="ml-6 space-y-1">
+      <CollapsibleContent className="ml-6 mt-2 flex flex-col gap-2">
         {children}
       </CollapsibleContent>
     </Collapsible>
