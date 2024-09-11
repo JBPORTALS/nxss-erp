@@ -85,7 +85,7 @@ export default async function Templates(props: {
 
         <div className="flex flex-1">
           <AsideBarClient params={props.params} />
-          <main className="w-full px-8 py-6">{props.children}</main>
+          <main className="w-full">{props.children}</main>
         </div>
       </section>
     </div>

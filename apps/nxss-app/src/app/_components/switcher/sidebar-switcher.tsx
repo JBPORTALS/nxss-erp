@@ -10,7 +10,7 @@ interface SidebarSwitcherProps {
   path?: string;
 }
 
-export default function SidebarSwitcher({
+export function SidebarSwitcher({
   children,
   type,
   path,
