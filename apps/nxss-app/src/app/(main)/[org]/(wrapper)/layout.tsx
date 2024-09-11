@@ -1,4 +1,3 @@
-import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { notFound } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { RocketIcon, SlashIcon } from "lucide-react";
@@ -20,7 +19,7 @@ import AsideBarClient from "~/app/_components/sidebar/asidebar-client";
 
 export default async function Templates(props: {
   children: React.ReactNode;
-  params: { org: string };
+  params: { org: string; branch_id: string };
 }) {
   const { userId } = auth();
 

@@ -1,44 +1,31 @@
-import Link from "next/link";
 import { Protect } from "@clerk/nextjs";
 import {
-  ArrowLeft,
-  BookMarked,
+  BookIcon,
   Box,
   Calendar,
-  Files,
+  CalendarIcon,
+  GraduationCapIcon,
   HomeIcon,
-  Layers,
-  Layers2,
   LayoutDashboard,
-  Plus,
-  PlusCircle,
   Settings,
+  SettingsIcon,
   Users2Icon,
+  UsersIcon,
   UsersRound,
 } from "lucide-react";
 
-import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
-import { Button } from "@nxss/ui/button";
-import { ComboboxDemo } from "@nxss/ui/combobox";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@nxss/ui/dialog";
-import { Input } from "@nxss/ui/input";
-import { Label } from "@nxss/ui/label";
+  Sidebar,
+  SidebarBody,
+  SidebarItemWithSubmenu,
+  SidebarLabel,
+} from "@nxss/ui/asidebar";
+import { ComboboxDemo } from "@nxss/ui/combobox";
 import { VStack } from "@nxss/ui/stack";
 
-import { api } from "~/trpc/server";
 import BackButton from "../button/back-button-client";
 import SidebarSwitcher from "../switcher/sidebar-switcher";
 import TestTypeClient from "../test-type-client";
-import { SectionListClient } from "./branch-list-client";
-import { BranchSidebarItem } from "./branch-sidebar-item";
 import { SidebarItemClient } from "./sidebar-item";
 import { SubjectSidebarItem } from "./subject-sidebar-item";
 
@@ -47,12 +34,9 @@ export default async function AsideBarClient({
 }: {
   params: {
     org: string;
+    branch_id: string;
   };
 }) {
-  const branchList = await api.branch.getBranchList();
-
-  const hasAccordion = branchList.length > 0;
-
   return (
     <Sidebar>
       <SidebarSwitcher type="setting" path={`/${params.org}/settings`}>
@@ -90,105 +74,57 @@ export default async function AsideBarClient({
       </SidebarSwitcher>
 
       <SidebarSwitcher type="branch">
-        <div className="pr-5">
-          <Link href={`/${params.org}/branch`}>
-            <Button
-              variant={"ghost"}
-              className="w-full justify-start text-sm text-accent-foreground/60 hover:border-accent-foreground/50"
+        <SidebarBody>
+          <SidebarItemClient
+            path={`/${params.org}/branch/${params.branch_id}`}
+            startsWith={false}
+          >
+            <HomeIcon className="h-4 w-4" />
+            Home
+          </SidebarItemClient>
+          <SidebarItemClient
+            path={`/${params.org}/branch/${params.branch_id}/faculty`}
+          >
+            <UsersIcon className="h-4 w-4" />
+            Faculty
+          </SidebarItemClient>
+          <SidebarItemWithSubmenu
+            icon={<GraduationCapIcon className="h-4 w-4" />}
+            label="Students"
+          >
+            <SidebarItemClient
+              path={`/${params.org}/branch/${params.branch_id}/students/profiles`}
             >
-              <ArrowLeft className="size-5" />
-              Back
-            </Button>
-          </Link>
-        </div>
-        <SidebarLabel>Branch</SidebarLabel>
-        <SidebarBody>
-          <BranchSidebarItem startsWith={false} path={``}>
-            <LayoutDashboard className="size-4" /> Overview
-          </BranchSidebarItem>
-          <BranchSidebarItem path={`/faculty`}>
-            <UsersRound className="size-4" /> Faculty
-          </BranchSidebarItem>
-          <BranchSidebarItem path="/students">
-            <UsersRound className="size-4" />
-            Students
-          </BranchSidebarItem>
-          <BranchSidebarItem path={`/settings`}>
-            <Settings className="size-4" />
-            Settings
-          </BranchSidebarItem>
-        </SidebarBody>
-        <SidebarLabel>Semester</SidebarLabel>
-        <SidebarBody>
-          <BranchSidebarItem path={`/1`} startsWith={false}>
-            <LayoutDashboard className="size-4" /> Overview
-          </BranchSidebarItem>
+              Profiles
+            </SidebarItemClient>
+            <SidebarItemClient
+              path={`/${params.org}/branch/${params.branch_id}/students/sections-batches`}
+            >
+              Sections & Batches
+            </SidebarItemClient>
+          </SidebarItemWithSubmenu>
 
-          <BranchSidebarItem path={`/1/subjects`}>
-            <UsersRound className="size-4" />
+          <SidebarLabel>Semester</SidebarLabel>
+          <SidebarItemClient
+            path={`/${params.org}/branch/${params.branch_id}/subjects`}
+          >
+            <BookIcon className="h-4 w-4" />
             Subjects
-          </BranchSidebarItem>
-          <BranchSidebarItem path={`/1/exam-schedule`}>
-            <LayoutDashboard className="size-4" /> Exam Schedule
-          </BranchSidebarItem>
-          <BranchSidebarItem path={`/1/settings`}>
-            <Settings className="size-4" />
+          </SidebarItemClient>
+          <SidebarItemClient
+            path={`/${params.org}/branch/${params.branch_id}/exam-schedule`}
+          >
+            <CalendarIcon className="h-4 w-4" />
+            Exam Schedule
+          </SidebarItemClient>
+
+          <SidebarLabel>Configuration</SidebarLabel>
+          <SidebarItemClient
+            path={`/${params.org}/branch/${params.branch_id}/settings`}
+          >
+            <SettingsIcon className="h-4 w-4" />
             Settings
-          </BranchSidebarItem>
-        </SidebarBody>
-        <SidebarBody>
-          <SidebarLabel className="flex justify-between">
-            Section
-            <Dialog>
-              <DialogTrigger asChild>
-                <Plus className="mr-4 size-4 hover:cursor-pointer" />
-              </DialogTrigger>
-              <DialogContent className="gap-6 p-6 sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Create Section</DialogTitle>
-                  <DialogDescription>
-                    Organization and Scheduling of Classes and Groups.
-                  </DialogDescription>
-                </DialogHeader>
-                <VStack className="gap-6">
-                  <VStack className="w-full gap-2">
-                    <Label htmlFor="name" className="text-right text-xs">
-                      Section Name
-                    </Label>
-                    <Input id="name" placeholder="Section Name" />
-                  </VStack>
-                  <VStack className="w-full gap-2">
-                    <Label htmlFor="number" className="text-right text-xs">
-                      No. of Batches
-                    </Label>
-                    <Input id="number" placeholder="No. of Batches" />
-                  </VStack>
-                </VStack>
-                <DialogFooter>
-                  <Button type="submit">Save changes</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </SidebarLabel>
-        </SidebarBody>
-        <SidebarBody className="flex flex-grow flex-col overflow-hidden">
-          {/*  */}
-          {hasAccordion ? (
-            <Protect role="org:admin">
-              <SectionListClient branchList={branchList} params={params} />
-            </Protect>
-          ) : (
-            <main className="pr-2">
-              <div className="space-y-2 rounded-lg border bg-secondary/10 p-5">
-                <Protect role="org:admin">
-                  <span className="text-sm font-semibold">No Section</span>
-                  <p className="text-xs text-muted-foreground">
-                    Create new Section by clicking on the Section plus icon.
-                  </p>
-                </Protect>
-              </div>
-            </main>
-          )}
+          </SidebarItemClient>
         </SidebarBody>
       </SidebarSwitcher>
 

@@ -1,9 +1,18 @@
 "use client";
 
+import React from "react";
+import { ChevronRight } from "lucide-react";
+
 import { cn } from ".";
-import { NavItem, NavItemProps } from "./nav-item";
+import { Button } from "./button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./collapsible";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+
 export function Sidebar({ children, className, ...props }: SidebarProps) {
   return (
     <aside
@@ -11,6 +20,7 @@ export function Sidebar({ children, className, ...props }: SidebarProps) {
         "sticky inset-0 flex h-screen w-60 shrink-0 flex-col gap-4 border-r p-4",
         className,
       )}
+      {...props}
     >
       {children}
     </aside>
@@ -51,6 +61,66 @@ export const SidebarBody = ({
   );
 };
 
-interface SidebarItemProps extends NavItemProps {}
+interface SidebarItemProps
+  extends React.ComponentPropsWithoutRef<typeof Button> {
+  isActive?: boolean;
+}
 
-export const SidebarItem = (props: SidebarItemProps) => <NavItem {...props} />;
+export const SidebarItem = React.forwardRef<
+  HTMLButtonElement,
+  SidebarItemProps
+>(({ children, className, isActive, ...props }, ref) => (
+  <Button
+    ref={ref}
+    variant="ghost"
+    className={cn(
+      "w-full justify-start gap-2 font-normal",
+      isActive && "bg-accent font-medium text-accent-foreground",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+  </Button>
+));
+SidebarItem.displayName = "SidebarItem";
+
+interface SidebarItemWithSubmenuProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  icon?: React.ReactNode;
+  label: string;
+}
+
+export const SidebarItemWithSubmenu = ({
+  icon,
+  label,
+  children,
+  className,
+  ...props
+}: SidebarItemWithSubmenuProps) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} {...props}>
+      <CollapsibleTrigger asChild>
+        <Button
+          variant="ghost"
+          className={cn("w-full justify-between font-normal", className)}
+        >
+          <div className="flex items-center gap-2">
+            {icon}
+            <span>{label}</span>
+          </div>
+          <ChevronRight
+            className={cn(
+              "h-4 w-4 transition-transform duration-200",
+              isOpen ? "rotate-90 transform" : "",
+            )}
+          />
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="ml-6 space-y-1">
+        {children}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};

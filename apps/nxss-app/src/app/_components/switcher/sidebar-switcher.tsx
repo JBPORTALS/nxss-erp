@@ -2,35 +2,50 @@
 
 import { useParams, usePathname } from "next/navigation";
 
+type SwitcherType = "subject" | "main" | "setting" | "branch";
+
+interface SidebarSwitcherProps {
+  children: React.ReactNode;
+  type: SwitcherType;
+  path?: string;
+}
+
 export default function SidebarSwitcher({
   children,
   type,
   path,
-}: {
-  children: React.ReactNode;
-  type: "subject" | "main" | "setting" | "branch";
-  path?: string;
-}) {
+}: SidebarSwitcherProps) {
   const params = useParams();
   const pathname = usePathname();
 
-  console.log(params);
+  const shouldRender = useShouldRender(type, path, params, pathname);
 
-  if (type == "subject" && params.subject_id) return <>{children}</>;
-  else if (
-    type == "main" &&
-    !params.subject_id &&
-    !pathname.startsWith(`/${params.org}/settings`) &&
-    !pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
-  )
-    return <>{children}</>;
-  else if (type == "setting" && path && pathname.startsWith(path))
-    return <>{children}</>;
-  else if (
-    type == "branch" &&
-    !params.subject_id &&
-    pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
-  )
-    return <>{children}</>;
-  else return null;
+  return shouldRender ? <>{children}</> : null;
+}
+
+function useShouldRender(
+  type: SwitcherType,
+  path: string | undefined,
+  params: any,
+  pathname: string,
+): boolean {
+  switch (type) {
+    case "subject":
+      return Boolean(params.subject_id);
+    case "main":
+      return (
+        !params.subject_id &&
+        !pathname.startsWith(`/${params.org}/settings`) &&
+        !pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
+      );
+    case "setting":
+      return path ? pathname.startsWith(path) : false;
+    case "branch":
+      return (
+        !params.subject_id &&
+        pathname.startsWith(`/${params.org}/branch/${params.branch_id}`)
+      );
+    default:
+      return false;
+  }
 }
