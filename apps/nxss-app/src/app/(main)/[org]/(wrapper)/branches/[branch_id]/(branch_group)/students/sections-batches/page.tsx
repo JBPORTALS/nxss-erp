@@ -10,8 +10,8 @@ import {
   ContentAreaDescription,
   ContentAreaHeader,
   ContentAreaTitle,
-  ContentSubHeader,
 } from "@nxss/ui/content-area";
+import { Separator } from "@nxss/ui/seperator";
 import {
   Table,
   TableBody,
@@ -76,6 +76,7 @@ const SectionsAndBatchesTable = () => {
           Student Allocation Across Sections and Batches
         </ContentAreaDescription>
       </ContentAreaHeader>
+      <Separator />
       <ContentAreaContainer>
         <Table>
           <TableHeader>
