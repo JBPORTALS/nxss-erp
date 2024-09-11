@@ -26,14 +26,14 @@ export default function BranchAsidebarClient() {
     <SidebarSwitcher type="branch">
       <SidebarBody>
         <SidebarItemClient
-          path={`/${params.org}/branch/${params.branch_id}`}
+          path={`/${params.org}/branches/${params.branch_id}`}
           startsWith={false}
         >
           <HomeIcon className="h-4 w-4" />
           Home
         </SidebarItemClient>
         <SidebarItemClient
-          path={`/${params.org}/branch/${params.branch_id}/faculty`}
+          path={`/${params.org}/branches/${params.branch_id}/faculty`}
         >
           <UsersIcon className="h-4 w-4" />
           Faculty
@@ -43,12 +43,12 @@ export default function BranchAsidebarClient() {
           label="Students"
         >
           <SidebarItemClient
-            path={`/${params.org}/branch/${params.branch_id}/students/profiles`}
+            path={`/${params.org}/branches/${params.branch_id}/students/profiles`}
           >
             Profiles
           </SidebarItemClient>
           <SidebarItemClient
-            path={`/${params.org}/branch/${params.branch_id}/students/sections-batches`}
+            path={`/${params.org}/branches/${params.branch_id}/students/sections-batches`}
           >
             Sections & Batches
           </SidebarItemClient>
@@ -56,13 +56,13 @@ export default function BranchAsidebarClient() {
 
         <SidebarLabel>Semester</SidebarLabel>
         <SidebarItemClient
-          path={`/${params.org}/branch/${params.branch_id}/subjects`}
+          path={`/${params.org}/branches/${params.branch_id}/subjects`}
         >
           <BookIcon className="h-4 w-4" />
           Subjects
         </SidebarItemClient>
         <SidebarItemClient
-          path={`/${params.org}/branch/${params.branch_id}/exam-schedule`}
+          path={`/${params.org}/branches/${params.branch_id}/exam-schedule`}
         >
           <CalendarIcon className="h-4 w-4" />
           Exam Schedule
@@ -70,7 +70,7 @@ export default function BranchAsidebarClient() {
 
         <SidebarLabel>Configuration</SidebarLabel>
         <SidebarItemClient
-          path={`/${params.org}/branch/${params.branch_id}/settings`}
+          path={`/${params.org}/branches/${params.branch_id}/settings`}
         >
           <SettingsIcon className="h-4 w-4" />
           Settings
