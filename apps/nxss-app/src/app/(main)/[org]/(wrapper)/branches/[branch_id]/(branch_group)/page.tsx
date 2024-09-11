@@ -1,78 +1,75 @@
-import React from "react";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@nxss/ui/breadcrumb";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@nxss/ui/card";
-import { Progress } from "@nxss/ui/progress";
+import {
+  ContentArea,
+  ContentAreaContainer,
+  ContentAreaDescription,
+  ContentAreaHeader,
+  ContentAreaTitle,
+} from "@nxss/ui/content-area";
 
 import { api } from "~/trpc/server";
 
 export default async function Page({
   params,
 }: {
-  children: React.ReactNode;
-  params: {
-    org: string;
-    branch_id: string;
-    sem_id: string;
-  };
+  params: { branch_id: string };
 }) {
-  const branch_details = await api.branch.getDetails({ id: params.branch_id });
+  const branch = await api.branch.getDetails({ id: params.branch_id });
+
   return (
-    <div className="w-full">
-      <div className="flex flex-col gap-2 pb-8">
-        <Breadcrumb>
-          <BreadcrumbList className="text-accent-foreground/80">
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href={`/${params.org}/branch/${params.branch_id}`}>
-                  {branch_details?.name}
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ArrowRight />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem className="text-foreground">
-              Overview
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <h1 className="text-2xl font-bold">Overview</h1>
-        <p className="text-sm text-muted-foreground">
-          An journey throughout space with engineering
-        </p>
-      </div>
-      <div className="w-full">
-        <Card x-chunk="dashboard-05-chunk-2 " className="w-1/4">
-          <CardHeader className="pb-2">
-            <CardDescription>Attendance</CardDescription>
-            <CardTitle className="text-4xl">68%</CardTitle>
+    <ContentArea>
+      <ContentAreaHeader>
+        <ContentAreaTitle>{branch?.name}</ContentAreaTitle>
+        <ContentAreaDescription>{branch?.description}</ContentAreaDescription>
+      </ContentAreaHeader>
+
+      <ContentAreaContainer className="grid h-fit w-full gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
+        <Card x-chunk="dashboard-05-chunk-2">
+          <CardHeader>
+            <CardTitle className="text-base font-normal">
+              Total Staff’s
+            </CardTitle>
+            <CardDescription>Active Staff Members</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="text-xs text-muted-foreground">
-              Overall academic year attendance.
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Progress value={68} />
-          </CardFooter>
+          <CardContent className="text-xl font-semibold">50</CardContent>
         </Card>
-      </div>
-    </div>
+
+        <Card x-chunk="dashboard-05-chunk-2">
+          <CardHeader>
+            <CardTitle className="text-base font-normal">
+              Total Student’s
+            </CardTitle>
+            <CardDescription>Total Active Students</CardDescription>
+          </CardHeader>
+          <CardContent className="text-xl font-semibold">15000</CardContent>
+        </Card>
+
+        <Card x-chunk="dashboard-05-chunk-2">
+          <CardHeader>
+            <CardTitle className="text-base font-normal">
+              Total Branches
+            </CardTitle>
+            <CardDescription>Branches in Operation</CardDescription>
+          </CardHeader>
+          <CardContent className="text-xl font-semibold">06</CardContent>
+        </Card>
+
+        <Card x-chunk="dashboard-05-chunk-2">
+          <CardHeader>
+            <CardTitle className="text-base font-normal">
+              Total Subjects
+            </CardTitle>
+            <CardDescription>Subjects in Current Catalog</CardDescription>
+          </CardHeader>
+          <CardContent className="text-xl font-semibold">50</CardContent>
+        </Card>
+      </ContentAreaContainer>
+    </ContentArea>
   );
 }
