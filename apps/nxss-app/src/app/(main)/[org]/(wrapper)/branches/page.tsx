@@ -1,17 +1,6 @@
-import React from "react";
-import Link from "next/link";
 import { Ellipsis, PlusCircle, SquareDashedBottomIcon } from "lucide-react";
 
-import { AvatarList } from "@nxss/ui/avatar-list";
 import { Button } from "@nxss/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@nxss/ui/card";
 import {
   ContentArea,
   ContentAreaContainer,
@@ -20,11 +9,17 @@ import {
   ContentAreaTitle,
 } from "@nxss/ui/content-area";
 import { Separator } from "@nxss/ui/seperator";
-import { VStack } from "@nxss/ui/stack";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@nxss/ui/table";
 
-import { BranchSearch } from "~/app/_components/branchsearch-client";
 import CreateBranchDailog from "~/app/_components/dailog/create-branch-dailog";
-import { api } from "~/trpc/server"; // Import the Client Component
+import { api } from "~/trpc/server";
 
 export default async function Page({
   params,
@@ -57,15 +52,40 @@ export default async function Page({
       </ContentAreaHeader>
       <Separator />
       <ContentAreaContainer className="h-full w-full">
-        <div className="flex h-full w-full flex-col items-center justify-center gap-4">
-          <SquareDashedBottomIcon className="size-12 text-muted-foreground" />
-          <div className="text-center">
-            <h4 className="text-xl">No branches</h4>
-            <p className="text-sm text-muted-foreground">
-              Create one to organize the students academic data course wise
-            </p>
+        {branchList.length === 0 ? (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+            <SquareDashedBottomIcon className="size-12 text-muted-foreground" />
+            <div className="text-center">
+              <h4 className="text-xl">No branches</h4>
+              <p className="text-sm text-muted-foreground">
+                Create one to organize the students academic data course wise
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Branch</TableHead>
+                <TableHead>Working Staff</TableHead>
+                <TableHead className="w-[100px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {branchList.map((branch) => (
+                <TableRow key={branch.id}>
+                  <TableCell>{branch.name}</TableCell>
+                  <TableCell>{branch.semesters}</TableCell>
+                  <TableCell>
+                    <Button variant="ghost" size="icon">
+                      <Ellipsis className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </ContentAreaContainer>
     </ContentArea>
   );
