@@ -6,12 +6,16 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@nxss/ui/card";
-import { Progress } from "@nxss/ui/progress";
-import { VStack } from "@nxss/ui/stack";
+import {
+  ContentArea,
+  ContentAreaContainer,
+  ContentAreaDescription,
+  ContentAreaHeader,
+  ContentAreaTitle,
+} from "@nxss/ui/content-area";
 
 import StaffOnboarding from "~/app/_components/staff-onboaring";
 import { api } from "~/trpc/server";
@@ -32,7 +36,7 @@ export default async function Page() {
   const { status } = await api.organization.getStaffProfileStatus();
 
   return (
-    <div className="h-full w-full">
+    <ContentArea>
       <Protect role="org:staff">
         {!status ? (
           <StaffOnboarding />
@@ -80,63 +84,61 @@ export default async function Page() {
         )}
       </Protect>
       <Protect role="org:admin">
-        <div className="w-full space-y-4">
-          <VStack className="gap-2">
-            <h1 className="text-xl font-semibold">
-              Good Afternoon, {firstName} {lastName}
-            </h1>
-            <span className="text-muted-foreground">
-              Access to{" "}
-              <span className="text-foreground">
-                {sessionClaims.metadata.org_name}
-              </span>{" "}
-              institution's admin dashboard.
-            </span>
-          </VStack>
+        <ContentAreaHeader>
+          <ContentAreaTitle>
+            Good Afternoon, {firstName} {lastName}
+          </ContentAreaTitle>
+          <ContentAreaDescription>
+            Access to{" "}
+            <span className="text-foreground">
+              {sessionClaims.metadata.org_name}
+            </span>{" "}
+            institution's admin dashboard.
+          </ContentAreaDescription>
+        </ContentAreaHeader>
 
-          <div className="grid w-full gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
-            <Card x-chunk="dashboard-05-chunk-2">
-              <CardHeader>
-                <CardTitle className="text-base font-normal">
-                  Total Staff’s
-                </CardTitle>
-                <CardDescription>Active Staff Members</CardDescription>
-              </CardHeader>
-              <CardContent className="text-xl font-semibold">50</CardContent>
-            </Card>
+        <ContentAreaContainer className="grid w-full gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
+          <Card x-chunk="dashboard-05-chunk-2">
+            <CardHeader>
+              <CardTitle className="text-base font-normal">
+                Total Staff’s
+              </CardTitle>
+              <CardDescription>Active Staff Members</CardDescription>
+            </CardHeader>
+            <CardContent className="text-xl font-semibold">50</CardContent>
+          </Card>
 
-            <Card x-chunk="dashboard-05-chunk-2">
-              <CardHeader>
-                <CardTitle className="text-base font-normal">
-                  Total Student’s
-                </CardTitle>
-                <CardDescription>Total Active Students</CardDescription>
-              </CardHeader>
-              <CardContent className="text-xl font-semibold">15000</CardContent>
-            </Card>
+          <Card x-chunk="dashboard-05-chunk-2">
+            <CardHeader>
+              <CardTitle className="text-base font-normal">
+                Total Student’s
+              </CardTitle>
+              <CardDescription>Total Active Students</CardDescription>
+            </CardHeader>
+            <CardContent className="text-xl font-semibold">15000</CardContent>
+          </Card>
 
-            <Card x-chunk="dashboard-05-chunk-2">
-              <CardHeader>
-                <CardTitle className="text-base font-normal">
-                  Total Branches
-                </CardTitle>
-                <CardDescription>Branches in Operation</CardDescription>
-              </CardHeader>
-              <CardContent className="text-xl font-semibold">06</CardContent>
-            </Card>
+          <Card x-chunk="dashboard-05-chunk-2">
+            <CardHeader>
+              <CardTitle className="text-base font-normal">
+                Total Branches
+              </CardTitle>
+              <CardDescription>Branches in Operation</CardDescription>
+            </CardHeader>
+            <CardContent className="text-xl font-semibold">06</CardContent>
+          </Card>
 
-            <Card x-chunk="dashboard-05-chunk-2">
-              <CardHeader>
-                <CardTitle className="text-base font-normal">
-                  Total Subjects
-                </CardTitle>
-                <CardDescription>Subjects in Current Catalog</CardDescription>
-              </CardHeader>
-              <CardContent className="text-xl font-semibold">50</CardContent>
-            </Card>
-          </div>
-        </div>
+          <Card x-chunk="dashboard-05-chunk-2">
+            <CardHeader>
+              <CardTitle className="text-base font-normal">
+                Total Subjects
+              </CardTitle>
+              <CardDescription>Subjects in Current Catalog</CardDescription>
+            </CardHeader>
+            <CardContent className="text-xl font-semibold">50</CardContent>
+          </Card>
+        </ContentAreaContainer>
       </Protect>
-    </div>
+    </ContentArea>
   );
 }

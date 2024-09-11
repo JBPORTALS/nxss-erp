@@ -34,6 +34,13 @@ import {
   CommandSeparator,
 } from "@nxss/ui/command";
 import {
+  ContentArea,
+  ContentAreaContainer,
+  ContentAreaDescription,
+  ContentAreaHeader,
+  ContentAreaTitle,
+} from "@nxss/ui/content-area";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -745,16 +752,16 @@ function SchedulerWithContext() {
 export default function page() {
   return (
     <ScheduleContextProvider>
-      <div className="h-full w-full space-y-4">
-        <div className="flex justify-between">
+      <ContentArea>
+        <ContentAreaHeader className="flex-row justify-between">
           <div className="space-y-2">
-            <h4 className="text-2xl font-semibold leading-8 tracking-[-0.2.5%]">
+            <ContentAreaTitle className="text-2xl font-semibold leading-8 tracking-[-0.2.5%]">
               Calendar
-            </h4>
-            <p className="text-sm leading-5 text-muted-foreground">
+            </ContentAreaTitle>
+            <ContentAreaDescription className="text-sm leading-5 text-muted-foreground">
               Manage and Schedule Events, Holidays, and Opportunities Across All
               Academic Levels
-            </p>
+            </ContentAreaDescription>
           </div>
           <Popover>
             <PopoverTrigger asChild>
@@ -787,10 +794,12 @@ export default function page() {
               </AddEventDialog>
             </PopoverContent>
           </Popover>
-        </div>
+        </ContentAreaHeader>
         <Separator />
-        <SchedulerWithContext />
-      </div>
+        <ContentAreaContainer>
+          <SchedulerWithContext />
+        </ContentAreaContainer>
+      </ContentArea>
     </ScheduleContextProvider>
   );
 }

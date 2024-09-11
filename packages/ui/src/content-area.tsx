@@ -1,5 +1,6 @@
 import React from "react";
 
+import { cn } from ".";
 import {
   Card,
   CardContent,
@@ -21,8 +22,8 @@ export const ContentArea: React.FC<
 
 export const ContentAreaHeader: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardHeader>>
-> = ({ children, ...props }) => (
-  <CardHeader className="flex px-8" {...props}>
+> = ({ children, className, ...props }) => (
+  <CardHeader className={cn("flex px-8", className)} {...props}>
     {children}
   </CardHeader>
 );
