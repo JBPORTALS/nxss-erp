@@ -113,7 +113,7 @@ export default async function AsideBarClient({
               <Users2Icon className="size-4" /> Faculty
             </SidebarItemClient>
           </Protect>
-          <SidebarItemClient path={`/${params.org}/branch`}>
+          <SidebarItemClient path={`/${params.org}/branches`}>
             <Box className="size-4" /> Branches
           </SidebarItemClient>
         </SidebarBody>
