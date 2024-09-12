@@ -43,6 +43,10 @@ export const usePathMap = (): BreadcrumbItem[] => {
       label: "Student / Sections & Batches",
       href: `/${params.org}/branches/${params.branch_id}/students/sections-batches`,
     },
+    {
+      label: `${decodeURI(params.section_id as string)} / Batch ${decodeURI(params.batch_id as string)}`,
+      href: `/${params.org}/branches/${params.branch_id}/students/sections-batches/${params.section_id}/${params.batch_id}`,
+    },
   ];
 
   const filteredPaths = otherPaths.filter(

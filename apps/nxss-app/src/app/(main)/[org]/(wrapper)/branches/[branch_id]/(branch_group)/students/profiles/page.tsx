@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronDown, ChevronRight, MoreVertical } from "lucide-react";
+import { useState } from "react";
+import { MoreVertical } from "lucide-react";
 
+import { Avatar, AvatarFallback } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
 import {
   ContentArea,
@@ -20,6 +21,89 @@ import {
   TableHeader,
   TableRow,
 } from "@nxss/ui/table";
+
+const students = [
+  {
+    id: 1,
+    name: "Joe Doe",
+    email: "joe@gmail.com",
+    rollNumber: "364CS1234",
+    phoneNumber: "1234567890",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("joe@gmail.com")}.png`,
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    email: "jane.smith@gmail.com",
+    rollNumber: "364CS2345",
+    phoneNumber: "2345678901",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("jane.smith@gmail.com")}.png`,
+  },
+  {
+    id: 3,
+    name: "Mike Johnson",
+    email: "mike.j@gmail.com",
+    rollNumber: "364CS3456",
+    phoneNumber: "3456789012",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("mike.j@gmail.com")}.png`,
+  },
+  {
+    id: 4,
+    name: "Emily Brown",
+    email: "emily.brown@gmail.com",
+    rollNumber: "364CS4567",
+    phoneNumber: "4567890123",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("emily.brown@gmail.com")}.png`,
+  },
+  {
+    id: 5,
+    name: "Chris Lee",
+    email: "chris.lee@gmail.com",
+    rollNumber: "364CS5678",
+    phoneNumber: "5678901234",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("chris.lee@gmail.com")}.png`,
+  },
+  {
+    id: 6,
+    name: "Sarah Wilson",
+    email: "sarah.w@gmail.com",
+    rollNumber: "364CS6789",
+    phoneNumber: "6789012345",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("sarah.w@gmail.com")}.png`,
+  },
+  {
+    id: 7,
+    name: "David Taylor",
+    email: "david.t@gmail.com",
+    rollNumber: "364CS7890",
+    phoneNumber: "7890123456",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("david.t@gmail.com")}.png`,
+  },
+  {
+    id: 8,
+    name: "Emma Davis",
+    email: "emma.d@gmail.com",
+    rollNumber: "364CS8901",
+    phoneNumber: "8901234567",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("emma.d@gmail.com")}.png`,
+  },
+  {
+    id: 9,
+    name: "Alex Martinez",
+    email: "alex.m@gmail.com",
+    rollNumber: "364CS9012",
+    phoneNumber: "9012345678",
+    avatar: `https://github.com/"alex.m@gmail.com.png`,
+  },
+  {
+    id: 10,
+    name: "Olivia Thompson",
+    email: "olivia.t@gmail.com",
+    rollNumber: "364CS0123",
+    phoneNumber: "0123456789",
+    avatar: `https://github.identicons.github.com/${encodeURIComponent("olivia.t@gmail.com")}.png`,
+  },
+];
 
 const SectionsAndBatchesTable = () => {
   const [sections, setSections] = useState([
@@ -58,14 +142,14 @@ const SectionsAndBatchesTable = () => {
     },
   ]);
 
-  const toggleSection = (sectionId: number) => {
-    setSections(
-      sections.map((section) =>
-        section.id === sectionId
-          ? { ...section, expanded: !section.expanded }
-          : section,
-      ),
-    );
+  // Function to generate a consistent color based on the name
+  const getAvatarColor = (name: string) => {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = hash % 360;
+    return `hsl(${hue}, 70%, 80%)`;
   };
 
   return (
@@ -81,56 +165,36 @@ const SectionsAndBatchesTable = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[300px]">Section / Batch</TableHead>
-              <TableHead></TableHead>
-              <TableHead className="text-center">Total Students</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Roll Number</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Phone Number</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sections.map((section) => (
-              <React.Fragment key={section.id}>
-                <TableRow className="bg-accent/50">
-                  <TableCell className="flex items-center gap-2 font-medium">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => toggleSection(section.id)}
+            {students.map((student) => (
+              <TableRow key={student.id}>
+                <TableCell className="flex h-full items-center gap-2">
+                  <Avatar className="size-8 bg-transparent">
+                    <AvatarFallback
+                      style={{ background: getAvatarColor(student.name) }}
+                      className="text-background"
                     >
-                      {section.expanded ? (
-                        <ChevronDown size={16} />
-                      ) : (
-                        <ChevronRight size={16} />
-                      )}
-                    </Button>
-                    {section.name}
-                  </TableCell>
-                  <TableCell>{section.description}</TableCell>
-                  <TableCell className="text-center">
-                    {section.totalStudents}
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="ghost" size="icon">
-                      <MoreVertical size={16} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                {section.expanded &&
-                  section.batches.map((batch) => (
-                    <TableRow key={batch.id}>
-                      <TableCell className="pl-10">{batch.name}</TableCell>
-                      <TableCell>{batch.students.join(", ")}</TableCell>
-                      <TableCell className="text-center">
-                        {batch.students.length}
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical size={16} />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </React.Fragment>
+                      {student.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  {student.name}
+                </TableCell>
+                <TableCell>{student.rollNumber}</TableCell>
+                <TableCell>{student.email}</TableCell>
+                <TableCell>{student.phoneNumber}</TableCell>
+                <TableCell>
+                  <Button variant="ghost" size="icon">
+                    <MoreVertical size={16} />
+                  </Button>
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
