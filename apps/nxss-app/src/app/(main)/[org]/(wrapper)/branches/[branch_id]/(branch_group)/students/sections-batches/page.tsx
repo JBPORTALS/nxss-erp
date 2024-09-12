@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { ChevronDown, ChevronRight, MoreVertical } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
@@ -57,6 +59,7 @@ const SectionsAndBatchesTable = () => {
       ],
     },
   ]);
+  const params = useParams();
 
   const toggleSection = (sectionId: number) => {
     setSections(
@@ -119,9 +122,13 @@ const SectionsAndBatchesTable = () => {
                   section.batches.map((batch) => (
                     <TableRow key={batch.id}>
                       <TableCell className="pl-10">
-                        <Button variant={"link"} className="p-0">
-                          {batch.name}
-                        </Button>
+                        <Link
+                          href={`/${params.org}/branches/${params.branch_id}/students/sections-batches/${section.name}/${batch.id}`}
+                        >
+                          <Button variant={"link"} className="p-0">
+                            {batch.name}
+                          </Button>
+                        </Link>
                       </TableCell>
                       <TableCell>{batch.students.join(", ")}</TableCell>
                       <TableCell className="text-center">
