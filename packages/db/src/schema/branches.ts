@@ -3,7 +3,7 @@ import { integer, serial, text } from "drizzle-orm/pg-core";
 
 import { pgTable } from "./_table";
 import { statusEnum } from "./enum";
-import { institutions } from "./institution";
+import { institutions } from "./institutions";
 import { semesters } from "./semesters";
 
 // Branch table

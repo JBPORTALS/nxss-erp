@@ -3,7 +3,7 @@ import { serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { pgTable } from "./_table";
 import { patternEnum, statusEnum } from "./enum";
-import { institutions } from "./institution";
+import { institutions } from "./institutions";
 
 // Academic Year table
 export const academicYears = pgTable("academic_years", {

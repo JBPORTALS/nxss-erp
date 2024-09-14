@@ -4,7 +4,7 @@ import { integer, serial, text } from "drizzle-orm/pg-core";
 import { pgTable } from "./_table";
 import { branch_to_sem, branches } from "./branches";
 import { batches, sections } from "./groups";
-import { institutions } from "./institution";
+import { institutions } from "./institutions";
 
 // Semester table
 export const semesters = pgTable("semesters", {
