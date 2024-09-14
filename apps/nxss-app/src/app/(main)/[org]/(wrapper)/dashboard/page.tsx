@@ -33,56 +33,8 @@ export default async function Page() {
     organizationId: orgId,
   });
 
-  const { status } = await api.organization.getStaffProfileStatus();
-
   return (
     <ContentArea>
-      <Protect role="org:staff">
-        {!status ? (
-          <StaffOnboarding />
-        ) : status === "in_review" ? (
-          <div className="flex h-full w-full flex-col items-center gap-8 pt-28">
-            <ScanEyeIcon className="size-28 animate-pulse text-orange-700" />
-            <div className="space-y-2 text-center">
-              <h1 className="text-2xl font-bold">
-                Your profile is under review
-              </h1>
-              <p className="text-muted-foreground">
-                Just wait for verification to be completed by your{" "}
-                <b>{orgName}</b> institution admin.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full space-y-3">
-            <div>
-              <h1 className="text-xl font-semibold">
-                Good Afternoon, {firstName} {lastName}
-              </h1>
-              <span className="text-muted-foreground">
-                Access to{" "}
-                <span className="text-foreground">
-                  {sessionClaims.metadata.org_name}
-                </span>{" "}
-                institution's staff dashboard.
-              </span>
-            </div>
-
-            <div className="flex h-screen flex-col items-center justify-center gap-2 rounded-md border">
-              <h2 className="text-2xl font-semibold">
-                Nothing to display at the moment
-              </h2>
-              <span className="text-muted-foreground">
-                Wait for allocation of subject by your{" "}
-                <span className="text-foreground">
-                  {sessionClaims.metadata.org_name}
-                </span>{" "}
-                institution admin.
-              </span>
-            </div>
-          </div>
-        )}
-      </Protect>
       <Protect role="org:admin">
         <ContentAreaHeader>
           <ContentAreaTitle>

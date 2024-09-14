@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { eq } from "lodash";
 import { Ellipsis, PlusCircle, SquareDashedBottomIcon } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
@@ -85,12 +86,10 @@ export default async function Page({
                       </Button>
                     </Link>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {branch.description ?? "-"}
+                  <TableCell className="max-w-xs truncate text-muted-foreground">
+                    {branch.description}
                   </TableCell>
-                  <TableCell className="text-center">
-                    {branch.semesters}
-                  </TableCell>
+                  <TableCell className="text-center">{20}</TableCell>
                   <TableCell>
                     <Button variant="ghost" size="icon">
                       <Ellipsis className="h-4 w-4" />

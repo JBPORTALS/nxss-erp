@@ -130,7 +130,7 @@ async function main() {
   const branchesData = insertedInstitutions.flatMap(
     (institution: typeof institutions.$inferSelect) =>
       Array.from<unknown, typeof branches.$inferInsert>({ length: 5 }, () => ({
-        name: faker.commerce.department(),
+        name: faker.word.noun(),
         institution_id: institution.id,
         description: faker.helpers.arrayElement([
           undefined,
