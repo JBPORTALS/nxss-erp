@@ -6,7 +6,7 @@ import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
 
 import { protectedProcedure, router } from "../trpc";
 
-const { branches, semesters, branch_to_sem } = schema;
+const { branches } = schema;
 
 export const branchesRouter = router({
   getBranchList: protectedProcedure
@@ -24,16 +24,7 @@ export const branchesRouter = router({
         orderBy: asc(branches.name),
       });
 
-      const semester_number = await ctx.db.query.semesters.findFirst({
-        where: eq(semesters.institution_id, ctx.auth.orgId ?? ""),
-      });
-
-      const mapped_response = branchList.map((value) => ({
-        semesters: semester_number?.number,
-        ...value,
-      }));
-
-      return mapped_response;
+      return branchList;
     }),
 
   getDetails: protectedProcedure
@@ -111,13 +102,6 @@ export const branchesRouter = router({
           message: "Can't able to create the branch, Retry",
           code: "BAD_REQUEST",
         });
-
-      // Make the 1st semester the current semester when a new branch is created successfully
-      await ctx.db.insert(branch_to_sem).values({
-        branch_id: response.at(0)?.id,
-        semester_id: 1,
-        status: "current",
-      });
 
       return response;
     }),

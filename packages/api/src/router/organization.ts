@@ -45,18 +45,11 @@ export const organizationRouter = router({
               email: member.publicUserData?.identifier,
               role: member.role,
               imageUrl: member.publicUserData?.imageUrl,
-              createdAt: staffData.at(0)?.createdAt ?? Date(),
+              createdAt: staffData.at(0)?.created_at ?? Date(),
               isAdmin: member.role === "admin",
-              status: staffData.at(0)?.status,
             };
           }),
         );
-
-        const approvedMembers = members.filter((member) => {
-          if (input.unApproved) return member.status === "in_review";
-          // Check if the staff status is 'approved'
-          return member.status === "approved";
-        });
 
         // console.log("staffData", approvedMembers);
         return {
@@ -196,7 +189,7 @@ export const organizationRouter = router({
         );
 
       return {
-        status: organization.at(0)?.status,
+        status: organization.at(0)?.id,
       };
     } catch (error) {
       console.error("Error fetching organization members:", error);

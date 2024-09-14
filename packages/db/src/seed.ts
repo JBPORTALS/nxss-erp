@@ -55,34 +55,35 @@ async function insertInBatches<T extends PgTable<any>>(
   return allInserted;
 }
 
-async function main() {
-  console.log("Resetting tables 🧹");
-  async function resetAllTables() {
-    console.log("Resetting tables 🧹");
-    // Reset tables in reverse order of their dependencies
-    const tableNames = [
-      "nxss_calendar_branches",
-      "nxss_calendar",
-      "nxss_batches",
-      "nxss_sections",
-      "nxss_semesters",
-      "nxss_staff",
-      "nxss_students",
-      "nxss_branches",
-      "nxss_academic_years",
-      "nxss_institutions",
-    ];
+async function resetAllTables() {
+  // Reset tables in reverse order of their dependencies
+  const tableNames = [
+    "nxss_calendar_branches",
+    "nxss_calendar",
+    "nxss_batches",
+    "nxss_sections",
+    "nxss_semesters",
+    "nxss_staff",
+    "nxss_students",
+    "nxss_branches",
+    "nxss_academic_years",
+    "nxss_institutions",
+  ];
 
-    for (const tableName of tableNames) {
-      try {
-        await reset(tableName);
-        console.log(`Reset ${tableName} successfully`);
-      } catch (error) {
-        console.error(`Error resetting ${tableName}:`, error);
-        throw error;
-      }
+  for (const tableName of tableNames) {
+    try {
+      await reset(tableName);
+      console.log(`Reset ${tableName} successfully`);
+    } catch (error) {
+      console.error(`Error resetting ${tableName}:`, error);
+      throw error;
     }
   }
+}
+
+async function main() {
+  console.log("Resetting tables 🧹");
+  await resetAllTables();
 
   console.log("Seeding institutions 🏫");
   const institutionsData = Array.from<
@@ -131,6 +132,10 @@ async function main() {
       Array.from<unknown, typeof branches.$inferInsert>({ length: 5 }, () => ({
         name: faker.commerce.department(),
         institution_id: institution.id,
+        description: faker.helpers.arrayElement([
+          undefined,
+          faker.commerce.productDescription(),
+        ]),
       })),
   );
   const insertedBranches = await insertInBatches(branches, branchesData);

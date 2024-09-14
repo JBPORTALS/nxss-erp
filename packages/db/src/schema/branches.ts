@@ -9,6 +9,7 @@ import { semesters } from "./semesters";
 export const branches = pgTable("branches", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  description: text("description").default("-"),
   institution_id: text("institution_id")
     .notNull()
     .references(() => institutions.id, {
