@@ -1,17 +1,11 @@
 import { relations } from "drizzle-orm";
-import {
-  boolean,
-  date,
-  integer,
-  serial,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { boolean, integer, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";
 
 import { pgTable } from "./_table";
-import { branches, semesters } from "./auth";
+import { branches } from "./branches";
 import { audienceTypeEnum, eventTypeEnum } from "./enum";
+import { semesters } from "./semesters";
 
 export const calendar = pgTable("calendar", {
   id: serial("id").primaryKey(),
