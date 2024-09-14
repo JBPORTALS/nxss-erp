@@ -36,11 +36,11 @@ export const usePathMap = (): BreadcrumbItem[] => {
       href: `/${params.org}/branches/${params.branch_id}/faculty`,
     },
     {
-      label: "Student / Profiles",
+      label: "Student Profiles",
       href: `/${params.org}/branches/${params.branch_id}/students/profiles`,
     },
     {
-      label: "Student / Sections & Batches",
+      label: "Sections & Batches",
       href: `/${params.org}/branches/${params.branch_id}/students/sections-batches`,
     },
     {

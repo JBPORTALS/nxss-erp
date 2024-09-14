@@ -142,8 +142,9 @@ const SectionBatchDetails = () => {
     <ContentArea>
       <ContentAreaHeader>
         <ContentAreaTitle>
-          {decodeURI(params.section_id as string)}{" "}
-          <SlashIcon className="size-5 -rotate-45 text-muted-foreground/20" />{" "}
+          {decodeURI(params.section_id as string)}
+          {"  "}
+          <SlashIcon className="size-5 -rotate-12 text-muted-foreground/40" />{" "}
           Batch {params.batch_id}
         </ContentAreaTitle>
         <ContentAreaDescription>
