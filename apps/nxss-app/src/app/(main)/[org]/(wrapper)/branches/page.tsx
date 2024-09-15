@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { eq } from "lodash";
 import { Ellipsis, PlusCircle, SquareDashedBottomIcon } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
@@ -28,9 +27,6 @@ export default async function Page({
 }: {
   params: {
     org: string;
-  };
-  searchParams: {
-    searchTerm?: string;
   };
 }) {
   const branchList = await api.branch.getBranchList();

@@ -9,23 +9,18 @@ import { protectedProcedure, router } from "../trpc";
 const { branches } = schema;
 
 export const branchesRouter = router({
-  getBranchList: protectedProcedure
-    .input(z.object({ searchTerm: z.string().optional() }).optional())
-    .query(async ({ ctx, input }) => {
-      const searchTerm = input?.searchTerm ?? "";
-
-      console.log(ctx.auth.orgId);
-
+  getBranchList: protectedProcedure.query(async ({ ctx }) => {
+    try {
       const branchList = await ctx.db.query.branches.findMany({
-        where: and(
-          eq(branches.institution_id, ctx.auth.orgId ?? ""),
-          searchTerm ? like(branches.name, `%${searchTerm}%`) : undefined,
-        ),
+        where: eq(branches.institution_id, ctx.auth.orgId ?? ""),
         orderBy: asc(branches.name),
       });
-
       return branchList;
-    }),
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }),
 
   getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Branch ID is required!") }))
