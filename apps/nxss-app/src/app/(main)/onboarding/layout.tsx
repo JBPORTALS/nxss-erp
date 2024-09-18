@@ -13,25 +13,20 @@ export default function RootLayout({
   }
 
   return (
-    <>
-      <div className="relative flex h-screen w-full">
-        <div className="h-full w-1/2 border-r">
-          <img
-            src="/Diamond-up-hat.png"
-            className="absolute left-0 top-0 -z-10 dark:opacity-5"
-          />
-          <div className="flex h-full items-center justify-center">
-            <div className="flex size-20 border-spacing-60 items-center justify-center rounded-full border-4 bg-primary outline-2 outline-offset-2 outline-primary-foreground">
-              <RocketIcon className="size-10 text-primary-foreground" />
-            </div>
-          </div>
-          <img
-            src="/Diamond-down-hat.png"
-            className="absolute bottom-0 right-1/2 -z-10 dark:opacity-5"
-          />
+    <div className="flex min-h-screen">
+      <div className="flex w-1/2 flex-col justify-between bg-black p-8 text-white">
+        <h1 className="flex items-center gap-2 text-xl font-bold">
+          <RocketIcon /> Nexuss ERP
+        </h1>
+        <div className="mt-auto">
+          <p className="italic">
+            "This library has saved me countless hours of work and helped me
+            deliver stunning designs to my clients faster than ever before."
+          </p>
+          <p className="mt-2">Sofia Davis</p>
         </div>
-        {children}
       </div>
-    </>
+      <div className="flex w-1/2 items-center justify-center">{children}</div>
+    </div>
   );
 }

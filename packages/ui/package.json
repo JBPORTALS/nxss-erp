@@ -50,7 +50,8 @@
     "./schedular": "./src/schedular.tsx",
     "./sheet": "./src/sheet.tsx",
     "./switch": "./src/switch.tsx",
-    "./content-area": "./src/content-area.tsx"
+    "./content-area": "./src/content-area.tsx",
+    "./icons": "./src/icons.tsx"
   },
   "license": "MIT",
   "scripts": {

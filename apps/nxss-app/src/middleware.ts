@@ -6,13 +6,14 @@ import {
 } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher([
-  "/sign-in",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
   "/api/clerk(.*)",
   "/invite(.*)",
 ]);
 const isHomeRoute = createRouteMatcher(["/"]);
 const isUploadthingRoute = createRouteMatcher(["/api/uploadthing(.*)"]);
-const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
+// const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
 
 export default clerkMiddleware(
   async (auth, request) => {
@@ -22,9 +23,11 @@ export default clerkMiddleware(
     headers.set("x-current-path", request.nextUrl.pathname);
 
     // For users visiting /onboarding, don't try to redirect
-    if (userId && isOnboardingRoute(request)) {
-      return NextResponse.next();
-    }
+    // if (userId && isOnboardingRoute(request)) {
+    //   return NextResponse.next();
+    // }
+
+    if (isPublicRoute(request)) return NextResponse.next();
 
     if (isUploadthingRoute(request)) return NextResponse.next({ headers });
 
@@ -44,27 +47,27 @@ export default clerkMiddleware(
       return redirectToSignIn({ returnBackUrl: request.url });
 
     //Redirect user to their current selected organization
-    if (userId && isHomeRoute(request)) {
-      const organizations =
-        await clerkClient().users.getOrganizationMembershipList({ userId });
+    // if (userId && isHomeRoute(request)) {
+    //   const organizations =
+    //     await clerkClient().users.getOrganizationMembershipList({ userId });
 
-      const org_slug = organizations.data[0]?.organization.slug;
-      const org_id = organizations.data[0]?.organization.id;
-      const org_name = organizations.data[0]?.organization.name;
-      const org_role = organizations.data[0]?.role;
+    //   const org_slug = organizations.data[0]?.organization.slug;
+    //   const org_id = organizations.data[0]?.organization.id;
+    //   const org_name = organizations.data[0]?.organization.name;
+    //   const org_role = organizations.data[0]?.role;
 
-      await clerkClient().users.updateUser(userId, {
-        publicMetadata: {
-          org_id,
-          org_slug,
-          org_name,
-          org_role,
-        },
-      });
-      return NextResponse.redirect(
-        new URL(`/${org_slug}/dashboard`, request.nextUrl.origin),
-      );
-    }
+    //   await clerkClient().users.updateUser(userId, {
+    //     publicMetadata: {
+    //       org_id,
+    //       org_slug,
+    //       org_name,
+    //       org_role,
+    //     },
+    //   });
+    //   return NextResponse.redirect(
+    //     new URL(`/${org_slug}/dashboard`, request.nextUrl.origin),
+    //   );
+    // }
 
     return NextResponse.next({ headers });
   },
