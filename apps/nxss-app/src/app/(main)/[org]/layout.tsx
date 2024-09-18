@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { OrganizationSwitcher } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { RocketIcon, SlashIcon } from "lucide-react";
 
@@ -21,29 +22,6 @@ export default async function Templates(props: {
   children: React.ReactNode;
   params: { org: string; branch_id: string };
 }) {
-  const { userId } = auth();
-
-  // Fetch user's organizations
-  if (userId) {
-    const userOrgs = await clerkClient().users.getOrganizationMembershipList({
-      userId,
-    });
-
-    // Check if the user is a member of the organization in the URL
-    const isMember = userOrgs.data.some(
-      (org) => org.organization.slug === props.params.org,
-    );
-
-    if (!isMember) {
-      // If not a member, return 404
-      return notFound();
-    }
-  }
-
-  const organization = await clerkClient().organizations.getOrganization({
-    slug: props.params.org,
-  });
-
   return (
     <div className="h-screen w-full">
       <div className="sticky inset-0 z-40 flex flex-col">
@@ -56,9 +34,21 @@ export default async function Templates(props: {
               <RocketIcon className="size-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold">{organization.name}</span>
-              <SlashIcon className="size-4 text-muted-foreground/40" />
-              <Select value="2024">
+              <OrganizationSwitcher
+                hidePersonal
+                createOrganizationUrl="/create-organization"
+                appearance={{
+                  elements: {
+                    organizationSwitcherPopoverActionButtonIconBox__manageOrganization:
+                      "hidden",
+                    organizationSwitcherPopoverActionButton__manageOrganization:
+                      "hidden",
+                    organizationSwitcherPopoverFooter: "hidden",
+                  },
+                }}
+              />
+              {/* <SlashIcon className="size-4 text-muted-foreground/40" /> */}
+              {/* <Select value="2024">
                 <SelectTrigger
                   className={cn(
                     "w-fit border-none px-2 font-semibold shadow-none outline-none hover:bg-accent",
@@ -71,7 +61,7 @@ export default async function Templates(props: {
                   <SelectItem value="2023">Year 2023</SelectItem>
                   <SelectItem value="2022">Year 2022</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
 
               <NavbarItems />
             </div>
