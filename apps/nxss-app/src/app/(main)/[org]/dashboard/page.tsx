@@ -1,6 +1,5 @@
 import { Protect } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { ScanEyeIcon } from "lucide-react";
 
 import {
   Card,
@@ -17,9 +16,6 @@ import {
   ContentAreaTitle,
 } from "@nxss/ui/content-area";
 
-import StaffOnboarding from "~/app/_components/staff-onboaring";
-import { api } from "~/trpc/server";
-
 export default async function Page() {
   const { orgId, userId, sessionClaims } = auth();
 
@@ -28,10 +24,6 @@ export default async function Page() {
   const { firstName, lastName } = await clerkClient().users.getUser(userId);
 
   if (!orgId) throw new Error("No organization selected");
-
-  const { name: orgName } = await clerkClient().organizations.getOrganization({
-    organizationId: orgId,
-  });
 
   return (
     <ContentArea>

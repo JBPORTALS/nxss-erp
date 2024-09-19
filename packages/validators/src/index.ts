@@ -125,3 +125,11 @@ export const eventSchema = z.object({
   location: z.string().optional(),
   includeTime: z.boolean(),
 });
+
+export const CreateOrganizationScheme = z.object({
+  name: z.string().min(1, "Required!"),
+});
+
+export const ChooseExamPatternScheme = z.object({
+  type: z.enum(["annual", "semester"]),
+});
