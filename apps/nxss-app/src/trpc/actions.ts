@@ -62,11 +62,3 @@ export async function getOrg(slug: string) {
   const { id } = await clerkClient().organizations.getOrganization({ slug });
   return id;
 }
-
-export async function CreateOrganization(
-  params: z.infer<typeof CreateOrganizationBackendScheme>,
-) {
-  const org = await api.institution.create(params);
-  if (!org) throw new Error("error occured");
-  return { slug: org.slug, id: org.id, imageUrl: org.imageUrl };
-}

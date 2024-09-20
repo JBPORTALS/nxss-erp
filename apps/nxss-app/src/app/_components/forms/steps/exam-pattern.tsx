@@ -18,7 +18,7 @@ import { Label } from "@nxss/ui/label";
 import { RadioGroup, RadioGroupItem } from "@nxss/ui/radio-group";
 import { ChooseExamPatternScheme } from "@nxss/validators";
 
-import { CreateOrganization } from "~/trpc/actions";
+import { api } from "~/trpc/react";
 
 export default function ExamPatternStep({
   onNext,
@@ -35,23 +35,18 @@ export default function ExamPatternStep({
     },
   });
   const { isLoaded, setActive } = useOrganizationList();
+  const { mutateAsync: createOrganization } =
+    api.institution.create.useMutation({
+      onSettled(data) {
+        if (data && isLoaded) {
+          setActive({ organization: data.id });
+          onNext({ slug: data.slug, imageUrl: data.imageUrl });
+        }
+      },
+    });
 
   const onSubmit = async (values: z.infer<typeof ChooseExamPatternScheme>) => {
-    if (isLoaded) {
-      const organization = await CreateOrganization({
-        name: initialData.name,
-        ...values,
-      });
-
-      setActive({
-        organization: organization.id,
-      });
-      onNext({
-        examPattern: values.type,
-        slug: organization.slug,
-        imageUrl: organization.imageUrl,
-      });
-    }
+    await createOrganization({ name: initialData.name, ...values });
   };
 
   return (
@@ -158,7 +153,7 @@ export default function ExamPatternStep({
                       )}
                     >
                       <Label
-                        htmlFor="annual"
+                        htmlFor="2"
                         className="flex flex-1 items-center justify-between"
                       >
                         2
@@ -174,7 +169,7 @@ export default function ExamPatternStep({
                       )}
                     >
                       <Label
-                        htmlFor="annual"
+                        htmlFor="6"
                         className="flex flex-1 items-center justify-between"
                       >
                         6
@@ -190,7 +185,7 @@ export default function ExamPatternStep({
                       )}
                     >
                       <Label
-                        htmlFor="annual"
+                        htmlFor="8"
                         className="flex flex-1 items-center justify-between"
                       >
                         8

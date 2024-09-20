@@ -10,7 +10,7 @@ import { semesters } from "./semesters";
 // Institution table
 export const institutions = pgTable("institutions", {
   id: text("id").notNull().primaryKey(), // reference the clerk_org_id
-  name: text("name").notNull().unique(),
+  name: text("name").notNull(),
   pattern: patternEnum("pattern").notNull(),
   semester_count: integer("semester_count").notNull(),
   created_by: text("created_by").notNull(), // store the Clerk user ID of the user who created the institution

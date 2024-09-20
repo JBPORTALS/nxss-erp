@@ -11,12 +11,17 @@ export async function POST(request: Request) {
     if (!user.id)
       return Response.json({ message: "user not found" }, { status: 400 });
 
-    const org = await db.insert(schema.institutions).values({
+    if (!payload.data.public_metadata)
+      throw new Error("puclic_metadata not present");
+
+    await db.insert(schema.institutions).values({
       id: payload.data.id,
       created_by: payload.data.created_by,
       name: payload.data.name,
-      pattern: "semester",
-      semester_count: 6,
+      pattern: payload.data.public_metadata
+        ?.pattern as typeof schema.institutions.$inferInsert.pattern,
+      semester_count: payload.data.public_metadata
+        .semester_count as typeof schema.institutions.$inferInsert.semester_count,
     });
   }
 
