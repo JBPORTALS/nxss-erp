@@ -2,14 +2,14 @@ import { authRouter } from "./router/auth";
 import { batchesRouter } from "./router/batches";
 import { branchesRouter } from "./router/branch";
 import { calendarRouter } from "./router/calendar";
+import { institutinsRouter } from "./router/institution";
 import { sectionsRouter } from "./router/sections";
-import { semestersRouter } from "./router/semester";
 import { router } from "./trpc";
 
 export const appRouter = router({
   auth: authRouter,
   branch: branchesRouter,
-  semester: semestersRouter,
+  institution: institutinsRouter,
   calendar: calendarRouter,
   batches: batchesRouter,
   sections: sectionsRouter,

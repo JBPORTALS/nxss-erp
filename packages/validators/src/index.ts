@@ -132,4 +132,11 @@ export const CreateOrganizationScheme = z.object({
 
 export const ChooseExamPatternScheme = z.object({
   type: z.enum(["annual", "semester"]),
+  semester_count: z.string().min(1, "Select count value"),
+});
+
+export const CreateOrganizationBackendScheme = z.object({
+  name: z.string().min(1, "Required!"),
+  type: z.enum(["annual", "semester"]),
+  semester_count: z.string().min(1, "Select count value"),
 });

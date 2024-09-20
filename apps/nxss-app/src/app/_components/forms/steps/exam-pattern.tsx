@@ -6,10 +6,19 @@ import { z } from "zod";
 
 import { cn } from "@nxss/ui";
 import { Button } from "@nxss/ui/button";
-import { Form, FormControl, FormField, FormItem, useForm } from "@nxss/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  useForm,
+} from "@nxss/ui/form";
 import { Label } from "@nxss/ui/label";
 import { RadioGroup, RadioGroupItem } from "@nxss/ui/radio-group";
 import { ChooseExamPatternScheme } from "@nxss/validators";
+
+import { CreateOrganization } from "~/trpc/actions";
 
 export default function ExamPatternStep({
   onNext,
@@ -20,13 +29,23 @@ export default function ExamPatternStep({
 }) {
   const form = useForm({
     schema: ChooseExamPatternScheme,
+    defaultValues: {
+      type: "semester",
+      semester_count: "6",
+    },
   });
-  const { createOrganization, isLoaded, setActive } = useOrganizationList();
+  const { isLoaded, setActive } = useOrganizationList();
 
   const onSubmit = async (values: z.infer<typeof ChooseExamPatternScheme>) => {
     if (isLoaded) {
-      const organization = await createOrganization({ name: initialData.name });
-      setActive({ organization });
+      const organization = await CreateOrganization({
+        name: initialData.name,
+        ...values,
+      });
+
+      setActive({
+        organization: organization.id,
+      });
       onNext({
         examPattern: values.type,
         slug: organization.slug,
@@ -107,6 +126,76 @@ export default function ExamPatternStep({
                         </div>
                       </Label>
                       <RadioGroupItem value="semester" id="semester" />
+                    </div>
+                  </RadioGroup>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="semester_count"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Number of{" "}
+                  {form.getValues().type === "annual" ? "Years" : "Semesters"}
+                </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    {...field}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="space-y-2"
+                  >
+                    <div
+                      className={cn(
+                        `flex items-center space-x-2 rounded-md border p-4`,
+                        field.value === "2"
+                          ? "border-primary bg-accent"
+                          : "border-input",
+                      )}
+                    >
+                      <Label
+                        htmlFor="annual"
+                        className="flex flex-1 items-center justify-between"
+                      >
+                        2
+                      </Label>
+                      <RadioGroupItem value="2" id="2" />
+                    </div>
+                    <div
+                      className={cn(
+                        `flex items-center space-x-2 rounded-md border p-4`,
+                        field.value === "6"
+                          ? "border-primary bg-accent"
+                          : "border-input",
+                      )}
+                    >
+                      <Label
+                        htmlFor="annual"
+                        className="flex flex-1 items-center justify-between"
+                      >
+                        6
+                      </Label>
+                      <RadioGroupItem value="6" id="6" />
+                    </div>
+                    <div
+                      className={cn(
+                        `flex items-center space-x-2 rounded-md border p-4`,
+                        field.value === "8"
+                          ? "border-primary bg-accent"
+                          : "border-input",
+                      )}
+                    >
+                      <Label
+                        htmlFor="annual"
+                        className="flex flex-1 items-center justify-between"
+                      >
+                        8
+                      </Label>
+                      <RadioGroupItem value="8" id="8" />
                     </div>
                   </RadioGroup>
                 </FormControl>

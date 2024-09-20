@@ -10,7 +10,6 @@ import {
 } from "@nxss/ui/content-area";
 import { Separator } from "@nxss/ui/seperator";
 
-import { InviteDialog } from "~/app/_components/dailog/invite-dialog";
 import FacultyTabsClient from "~/app/_components/tabs/faculty-tabs";
 
 export default function Template(props: { children: React.ReactNode }) {
@@ -23,11 +22,9 @@ export default function Template(props: { children: React.ReactNode }) {
             All staff members with access to <b>RJS</b> institution.
           </ContentAreaDescription>
         </div>
-        <InviteDialog>
-          <Button>
-            Invite <UserPlus2 className="size-4" />
-          </Button>
-        </InviteDialog>
+        <Button>
+          Invite <UserPlus2 className="size-4" />
+        </Button>
       </ContentAreaHeader>
       <ContentAreaHeader>
         <FacultyTabsClient />

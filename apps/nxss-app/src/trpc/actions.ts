@@ -5,7 +5,11 @@ import { redirect } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 
-import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
+import {
+  CreateBranchScheme,
+  CreateOrganizationBackendScheme,
+  UpdateBranchScheme,
+} from "@nxss/validators";
 
 import { api } from "./server";
 
@@ -57,4 +61,12 @@ export const createBranch = async (
 export async function getOrg(slug: string) {
   const { id } = await clerkClient().organizations.getOrganization({ slug });
   return id;
+}
+
+export async function CreateOrganization(
+  params: z.infer<typeof CreateOrganizationBackendScheme>,
+) {
+  const org = await api.institution.create(params);
+  if (!org) throw new Error("error occured");
+  return { slug: org.slug, id: org.id, imageUrl: org.imageUrl };
 }
