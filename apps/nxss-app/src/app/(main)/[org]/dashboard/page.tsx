@@ -16,14 +16,17 @@ import {
   ContentAreaTitle,
 } from "@nxss/ui/content-area";
 
-export default async function Page() {
-  const { orgId, userId, sessionClaims } = auth();
+export default async function Page({ params }: { params: { org: string } }) {
+  const { orgId, userId } = auth();
 
   if (!userId) throw new Error("No user logged in");
 
   const { firstName, lastName } = await clerkClient().users.getUser(userId);
 
   if (!orgId) throw new Error("No organization selected");
+  const { name: orgName } = await clerkClient().organizations.getOrganization({
+    slug: params.org,
+  });
 
   return (
     <ContentArea>
@@ -33,10 +36,7 @@ export default async function Page() {
             Good Afternoon, {firstName} {lastName}
           </ContentAreaTitle>
           <ContentAreaDescription>
-            Access to{" "}
-            <span className="text-foreground">
-              {sessionClaims.metadata.org_name}
-            </span>{" "}
+            Access to <span className="text-foreground">{orgName}</span>{" "}
             institution's admin dashboard.
           </ContentAreaDescription>
         </ContentAreaHeader>
