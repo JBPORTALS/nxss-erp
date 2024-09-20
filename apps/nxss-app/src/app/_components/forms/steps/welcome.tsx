@@ -57,7 +57,7 @@ export default function WelcomeStep({
             Your organization is all set up and ready to go!
           </p>
         </div>
-        <div className="w-full justify-center rounded border border-purple-600 bg-purple-100 p-4">
+        <div className="w-full justify-center rounded border border-purple-600 bg-purple-100 p-4 dark:bg-purple-950/30">
           <div className="flex items-center justify-center gap-2 font-semibold">
             <div className="flex size-7 items-center justify-center rounded-full border border-purple-900 bg-purple-600">
               <Building className="size-4 text-white" />

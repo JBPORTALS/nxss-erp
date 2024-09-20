@@ -17,6 +17,7 @@ import { BreadcrumbNavbar } from "~/app/_components/breadcrumb";
 import NavbarItems from "~/app/_components/navbar-client-item";
 import ProfilePopover from "~/app/_components/popovers/profile-popover";
 import AsideBarClient from "~/app/_components/sidebar/asidebar-client";
+import CustomOrganizationSwitcher from "~/app/_components/switcher/organizatoin-switcher";
 
 export default async function Templates(props: {
   children: React.ReactNode;
@@ -26,7 +27,7 @@ export default async function Templates(props: {
     <div className="h-screen w-full">
       <div className="sticky inset-0 z-40 flex flex-col">
         <header className="relative flex h-[64px] items-center justify-between border-b bg-background/80 px-5 py-2.5 backdrop-blur-md">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Button
               size={"icon"}
               className="size-9 overflow-hidden rounded-full border border-border shadow-none"
@@ -34,19 +35,8 @@ export default async function Templates(props: {
               <RocketIcon className="size-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <OrganizationSwitcher
-                hidePersonal
-                createOrganizationUrl="/create-organization"
-                appearance={{
-                  elements: {
-                    organizationSwitcherPopoverActionButtonIconBox__manageOrganization:
-                      "hidden",
-                    organizationSwitcherPopoverActionButton__manageOrganization:
-                      "hidden",
-                    organizationSwitcherPopoverFooter: "hidden",
-                  },
-                }}
-              />
+              <SlashIcon className="size-4 -rotate-12 text-muted-foreground/40" />
+              <CustomOrganizationSwitcher />
               {/* <SlashIcon className="size-4 text-muted-foreground/40" /> */}
               {/* <Select value="2024">
                 <SelectTrigger
