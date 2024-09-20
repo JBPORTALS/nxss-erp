@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "@nxss/ui/theme";
 import { Toaster } from "@nxss/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";
@@ -15,7 +14,6 @@ import { buttonVariants } from "@nxss/ui/button";
 import { SyncActiveOrganization } from "~/utils/sync-active-organization";
 
 export function Providers(props: { children: React.ReactNode }) {
-  const { theme } = useTheme();
   return (
     <ClerkProvider
       afterSignOutUrl={"/sign-in"}
