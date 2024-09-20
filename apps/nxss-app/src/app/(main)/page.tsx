@@ -1,12 +1,21 @@
-import React from "react";
-import { OrganizationList } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
-export default function page() {
-  return (
-    <OrganizationList
-      hidePersonal
-      afterSelectOrganizationUrl={"/:slug/dashboard"}
-      afterCreateOrganizationUrl={"/create-organization"}
-    />
-  );
+export default async function page() {
+  const { orgId, userId } = auth();
+
+  if (!userId) redirect("/sign-in");
+
+  if (!orgId) {
+    const organizations =
+      await clerkClient().users.getOrganizationMembershipList({ userId });
+    if (organizations.totalCount > 0)
+      redirect(`/${organizations.data.at(0)?.organization.slug}/dashboard`); //if orgId is not active select first organization in the list
+    else redirect(`/create-organization`); //if there is no organization created  - create one
+  }
+
+  const { slug } = await clerkClient().organizations.getOrganization({
+    organizationId: orgId,
+  });
+  redirect(`/${slug}/dashboard`);
 }
