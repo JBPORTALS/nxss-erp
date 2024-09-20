@@ -1,6 +1,6 @@
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 
-import { db, schema } from "@nxss/db";
+import { db, eq, schema } from "@nxss/db";
 
 export async function POST(request: Request) {
   const payload: WebhookEvent = await request.json();
@@ -20,9 +20,20 @@ export async function POST(request: Request) {
     });
   }
 
+  if (payload.type === "organization.deleted") {
+    if (!payload.data.id)
+      return Response.json(
+        { message: "Organization Id not found" },
+        { status: 400 },
+      );
+
+    await db
+      .delete(schema.institutions)
+      .where(eq(schema.institutions.id, payload.data.id));
+  }
+
   return Response.json({ message: "Organization Synced" });
 }
-
 export async function GET() {
   return Response.json({ message: "Hello World!" });
 }
