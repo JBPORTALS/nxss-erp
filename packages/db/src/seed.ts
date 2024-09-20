@@ -89,13 +89,23 @@ async function main() {
   const institutionsData = Array.from<
     unknown,
     typeof institutions.$inferInsert
-  >({ length: 10 }, () => ({
-    id: faker.string.uuid(),
-    name: faker.company.name(),
-    created_by: faker.string.uuid(),
-    created_at: faker.date.past(),
-    updated_at: faker.date.recent(),
-  }));
+  >({ length: 10 }, () => {
+    const pattern = faker.helpers.arrayElement<
+      typeof institutions.$inferInsert.pattern
+    >(["annual", "semester"]);
+    const semester_count = faker.helpers.arrayElement(
+      pattern === "semester" ? [2, 4, 6, 8] : [2, 4],
+    );
+    return {
+      id: faker.string.uuid(),
+      name: faker.company.name(),
+      pattern,
+      semester_count,
+      created_by: faker.string.uuid(),
+      created_at: faker.date.past(),
+      updated_at: faker.date.recent(),
+    };
+  });
   const insertedInstitutions = await insertInBatches(
     institutions,
     institutionsData,
@@ -149,7 +159,15 @@ async function main() {
         )
         .flatMap((branch) =>
           Array.from<unknown, typeof semesters.$inferInsert>(
-            { length: academicYear.semester_count },
+            {
+              length:
+                insertedInstitutions
+                  .filter(
+                    (institution) =>
+                      institution.id === academicYear.institution_id,
+                  )
+                  .at(0)?.semester_count ?? 0,
+            },
             (_, i) => ({
               academic_year_id: academicYear.id,
               branch_id: branch.id,

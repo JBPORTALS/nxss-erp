@@ -16,8 +16,7 @@ export const academicYears = pgTable("academic_years", {
       onUpdate: "cascade",
     }),
   year: text("year").notNull(),
-  pattern: patternEnum("pattern").notNull(),
-  semester_count: integer("semester_count").notNull(),
+
   status: statusEnum("status").notNull(),
   start_date: timestamp("start_date"),
   end_date: timestamp("end_date"),
