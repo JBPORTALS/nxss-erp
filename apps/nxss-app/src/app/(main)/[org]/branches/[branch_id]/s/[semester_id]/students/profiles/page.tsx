@@ -9,7 +9,6 @@ import {
 import { Separator } from "@nxss/ui/seperator";
 
 import { api } from "~/trpc/server";
-import { actions } from "./actions";
 import { Student, useColumns } from "./columns";
 import { DataTableClient } from "./data-table";
 import { ImportExcelComponent } from "./import-students";

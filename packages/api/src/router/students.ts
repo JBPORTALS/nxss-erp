@@ -115,19 +115,56 @@ export const studentsRouter = router({
     }),
   toggleProfileStatus: protectedProcedure
     .input(
-      z.object({
-        studentId: z.number(),
-        newStatus: z.enum(["active", "inactive"]),
-      }),
+      z.union([
+        z.object({
+          studentId: z.number(),
+          newStatus: z.enum(["active", "inactive"]),
+        }),
+        z.array(
+          z.object({
+            studentId: z.number(),
+            newStatus: z.enum(["active", "inactive"]),
+          }),
+        ),
+      ]),
     )
     .mutation(async ({ ctx, input }) => {
-      const { studentId, newStatus } = input;
+      try {
+        if (Array.isArray(input)) {
+          // Multiple profile update
+          const updates = input.map(({ studentId, newStatus }) =>
+            ctx.db
+              .update(students)
+              .set({ status: newStatus, updated_at: new Date() })
+              .where(eq(students.id, studentId)),
+          );
 
-      await ctx.db
-        .update(students)
-        .set({ status: newStatus, updated_at: new Date() })
-        .where(eq(students.id, studentId));
+          await Promise.all(updates);
 
-      return { success: true };
+          return {
+            success: true,
+            message: `${input.length} profile(s) updated successfully`,
+            count: input.length,
+          };
+        } else {
+          // Single profile update
+          const { studentId, newStatus } = input;
+          await ctx.db
+            .update(students)
+            .set({ status: newStatus, updated_at: new Date() })
+            .where(eq(students.id, studentId));
+
+          return {
+            success: true,
+            message: `Profile updated successfully`,
+            count: 1,
+          };
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An error occurred while updating profile(s)",
+        });
+      }
     }),
 });

@@ -3,7 +3,7 @@
 import React from "react";
 
 import { DataTable } from "~/app/_components/data-table";
-import { actions } from "./actions";
+import { useActions } from "./actions";
 
 import "@tanstack/react-table";
 
@@ -17,10 +17,12 @@ export function DataTableClient({
   data: RouterOutputs["students"]["getStudentsByBranchAndSemester"];
 }) {
   const { DialogComponent, columns } = useColumns();
+  const { DialogComponent: ActionDialogComponent, actions } = useActions();
   return (
     <>
       <DataTable actions={actions} columns={columns} data={data} />
       {DialogComponent}
+      {ActionDialogComponent}
     </>
   );
 }

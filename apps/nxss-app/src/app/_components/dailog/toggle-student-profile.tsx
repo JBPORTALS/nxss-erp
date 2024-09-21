@@ -22,10 +22,16 @@ export function ToggleStudentDialog({
   status,
   isOpen,
   onOpenChange,
+  isBulk,
+  studentIds,
+  onSuccess,
 }: {
-  studentId: number;
+  studentId?: number;
   isOpen: boolean;
   status: "active" | "inactive";
+  studentIds?: number[];
+  isBulk?: boolean;
+  onSuccess?: () => void;
   onOpenChange: Dispatch<boolean>;
 }) {
   const router = useRouter();
@@ -33,13 +39,19 @@ export function ToggleStudentDialog({
     api.students.toggleProfileStatus.useMutation({
       onSuccess: () => {
         router.refresh();
+        onSuccess?.();
         toast.success("Profile deactivated");
         onOpenChange(false);
       },
     });
 
   async function onToggleProfile() {
-    await toggleStatus({ studentId, newStatus: status });
+    if (isBulk && studentIds)
+      await toggleStatus(
+        studentIds.map((studentId) => ({ studentId, newStatus: status })),
+      );
+    else if (studentId && !isBulk)
+      await toggleStatus({ studentId, newStatus: status });
   }
 
   return (
@@ -48,8 +60,8 @@ export function ToggleStudentDialog({
         <DialogHeader>
           <DialogTitle>Are your sure?</DialogTitle>
           <DialogDescription>
-            you want to {status == "active" ? "activate" : "deactivate"} this
-            account.
+            you want to {status == "active" ? "activate" : "deactivate"}{" "}
+            {isBulk ? "these accounts" : "this account"}.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

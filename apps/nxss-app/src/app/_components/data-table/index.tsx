@@ -1,5 +1,6 @@
 "use client";
 
+import type { Table as TanTable } from "@tanstack/react-table";
 import React from "react";
 import {
   ColumnDef,
@@ -22,7 +23,7 @@ import { MotionDiv } from "./motion-elements";
 
 interface ActionBase<TData> {
   id: string;
-  cell: (data: TData[]) => React.ReactNode;
+  cell: (selectedRows: TData[]) => React.ReactNode;
 }
 
 export type Action<TData> = ActionBase<TData>;
@@ -67,11 +68,21 @@ export function DataTable<TData, TValue>({
             {selectedRowsCount} row(s) selected
           </span>
           <div>
-            {actions.map((action) => (
-              <React.Fragment key={action.id}>
-                {action.cell(selectedRows)}
-              </React.Fragment>
-            ))}
+            {actions.map((action, index) => {
+              console.log(`Action ${index}:`, action); // Debug logging
+              if (typeof action.cell !== "function") {
+                console.error(
+                  `Action ${action.id} cell is not a function:`,
+                  action.cell,
+                );
+                return null; // Skip rendering this action
+              }
+              return (
+                <React.Fragment key={action.id}>
+                  {action.cell(selectedRows)}
+                </React.Fragment>
+              );
+            })}
           </div>
         </MotionDiv>
       )}
