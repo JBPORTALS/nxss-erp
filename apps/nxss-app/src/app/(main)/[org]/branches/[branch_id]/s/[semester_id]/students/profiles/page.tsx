@@ -9,23 +9,29 @@ import {
 import { Separator } from "@nxss/ui/seperator";
 
 import { DataTable } from "~/app/_components/data-table";
-import { columns, Payment } from "./columns";
+import { api } from "~/trpc/server";
+import { columns, Student } from "./columns";
 
-async function getData(): Promise<Payment[]> {
+async function getData({
+  branchId,
+  semesterId,
+}: {
+  branchId: number;
+  semesterId: number;
+}): Promise<Student[]> {
   // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ];
+  return api.students.getStudentsByBranchAndSemester({ branchId, semesterId });
 }
 
-const SectionsAndBatchesTable = async () => {
-  const data = await getData();
+const SectionsAndBatchesTable = async ({
+  params,
+}: {
+  params: { branch_id: string; semester_id: string };
+}) => {
+  const data = await getData({
+    branchId: parseInt(params.branch_id),
+    semesterId: parseInt(params.semester_id),
+  });
   // Function to generate a consistent color based on the name
   // const getAvatarColor = (name: string) => {
   //   let hash = 0;
