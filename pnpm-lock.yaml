@@ -458,6 +458,9 @@ importers:
 
   packages/db:
     dependencies:
+      '@clerk/clerk-sdk-node':
+        specifier: ^5.0.42
+        version: 5.0.42(react@18.2.0)
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
@@ -472,7 +475,7 @@ importers:
         version: 3.6.0
       drizzle-orm:
         specifier: ^0.32.2
-        version: 0.32.2(@neondatabase/serverless@0.9.5)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)
+        version: 0.32.2(@neondatabase/serverless@0.9.5)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)(react@18.2.0)
       drizzle-zod:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.32.2)(zod@3.23.8)
@@ -2401,6 +2404,20 @@ packages:
       - react-dom
     dev: false
 
+  /@clerk/backend@1.13.2(react@18.2.0):
+    resolution: {integrity: sha512-VpAkb/P/fybC+Rv1uEuUiMXTVxmnl1Umj9wMfS0ZIPx/hu6t3PLVZbGYeNwQULr6mUE5qhomJoEkTsqGyaR8Pg==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/shared': 2.8.1(react-dom@18.2.0)(react@18.2.0)
+      '@clerk/types': 4.21.0
+      cookie: 0.5.0
+      snakecase-keys: 5.4.4
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
+    dev: false
+
   /@clerk/clerk-react@5.9.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-I2gAceIkJtQl3uEyPbjUKPbDpssj7uJt+D0QY7cWOECLvpump+B8s19DJ6OFkuD7pwlzeZp5QrdMaMpcCUReEg==}
     engines: {node: '>=18.17.0'}
@@ -2413,6 +2430,19 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tslib: 2.4.1
+    dev: false
+
+  /@clerk/clerk-sdk-node@5.0.42(react@18.2.0):
+    resolution: {integrity: sha512-xUpShwFT1qpONWT2icDOa3tOO80+OJVqjKl3iPcYFl3OXOwth0vkyO+MUe6VEUuwaSZSZqznc1NR7OwRQT7IwA==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/backend': 1.13.2(react@18.2.0)
+      '@clerk/shared': 2.8.1(react-dom@18.2.0)(react@18.2.0)
+      '@clerk/types': 4.21.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
     dev: false
 
   /@clerk/elements@0.15.4(@clerk/shared@2.8.1)(@types/react-dom@18.3.0)(@types/react@18.2.79)(next@14.2.12)(react-dom@18.2.0)(react@18.2.0):
@@ -14072,7 +14102,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4):
+  /drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)(react@18.2.0):
     resolution: {integrity: sha512-3fXKzPzrgZIcnWCSLiERKN5Opf9Iagrag75snfFlKeKSYB1nlgPBshzW3Zn6dQymkyiib+xc4nIz0t8U+Xdpuw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -14166,6 +14196,7 @@ packages:
       '@types/pg': 8.11.10
       pg: 8.13.0
       postgres: 3.4.4
+      react: 18.2.0
     dev: false
 
   /drizzle-zod@0.5.1(drizzle-orm@0.32.2)(zod@3.23.8):
@@ -14174,7 +14205,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.32.2(@neondatabase/serverless@0.9.5)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)
+      drizzle-orm: 0.32.2(@neondatabase/serverless@0.9.5)(@planetscale/database@1.19.0)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)(react@18.2.0)
       zod: 3.23.8
     dev: false
 

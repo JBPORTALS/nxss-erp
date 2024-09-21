@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/clerk-sdk-node";
 import { faker } from "@faker-js/faker";
 import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -48,7 +49,7 @@ async function insertInBatches<T extends PgTable<any>>(
       const inserted = await db.insert(table).values(batch).returning();
       allInserted = allInserted.concat(inserted);
     } catch (error) {
-      console.error(`Error inserting batch into ${table._.name}:`, error);
+      console.error(`Error inserting batch into ${table}:`, error);
       throw error;
     }
   }
@@ -85,31 +86,35 @@ async function main() {
   console.log("Resetting tables 🧹");
   await resetAllTables();
 
-  console.log("Seeding institutions 🏫");
-  const institutionsData = Array.from<
-    unknown,
-    typeof institutions.$inferInsert
-  >({ length: 10 }, () => {
-    const pattern = faker.helpers.arrayElement<
-      typeof institutions.$inferInsert.pattern
-    >(["annual", "semester"]);
-    const semester_count = faker.helpers.arrayElement(
-      pattern === "semester" ? [2, 4, 6, 8] : [2, 4],
+  console.log("Fetching and seeding institutions from Clerk 🏫");
+  let insertedInstitutions;
+  try {
+    const organizations = await clerkClient.organizations.getOrganizationList();
+
+    // console.log(organizations);
+
+    const institutionsData = organizations.data.map((org) => ({
+      id: org.id,
+      name: org.name,
+      pattern: org.publicMetadata
+        ?.pattern as typeof institutions.$inferInsert.pattern,
+      semester_count: parseInt(org.publicMetadata?.semester_count as string),
+      created_by: org.createdBy,
+      created_at: new Date(org.createdAt),
+      updated_at: org.updatedAt ? new Date(org.updatedAt) : undefined,
+    }));
+
+    insertedInstitutions = await insertInBatches(
+      institutions,
+      institutionsData,
     );
-    return {
-      id: faker.string.uuid(),
-      name: faker.company.name(),
-      pattern,
-      semester_count,
-      created_by: faker.string.uuid(),
-      created_at: faker.date.past(),
-      updated_at: faker.date.recent(),
-    };
-  });
-  const insertedInstitutions = await insertInBatches(
-    institutions,
-    institutionsData,
-  );
+    console.log(
+      `Successfully seeded ${insertedInstitutions.length} institutions from Clerk data`,
+    );
+  } catch (error) {
+    console.error("Error fetching and seeding institutions from Clerk:", error);
+    throw error;
+  }
 
   console.log("Seeding academic years 📅");
   const academicYearsData = insertedInstitutions.flatMap(
@@ -209,23 +214,33 @@ async function main() {
   console.log("Seeding students 🎓");
   const studentsData = Array.from<unknown, typeof students.$inferInsert>(
     { length: 500 },
-    () => ({
-      full_name: faker.person.fullName(),
-      email: faker.internet.email(),
-      phone_number: faker.phone.number(),
-      date_of_birth: faker.date
-        .between({
-          from: new Date(2001, 0, 1),
-          to: new Date(2005, 11, 31),
-        })
-        .toISOString()
-        .split("T")[0], // Convert to YYYY-MM-DD format
-      year_of_join: faker.number.int({ min: 2010, max: 2024 }),
-      clerk_user_id: faker.string.uuid(),
-      clerk_org_id: faker.helpers.arrayElement(insertedInstitutions).id,
-      created_at: faker.date.past(),
-      updated_at: faker.date.recent(),
-    }),
+    () => {
+      const dateOfBirth = faker.date.between({
+        from: new Date(2001, 0, 1),
+        to: new Date(2005, 11, 31),
+      });
+      const yearOfBirth = dateOfBirth.getFullYear();
+      const yearOfJoin = faker.number.int({ min: yearOfBirth + 16, max: 2024 });
+
+      const randomBranch = faker.helpers.arrayElement(insertedBranches);
+      const randomSemester = faker.helpers.arrayElement(
+        insertedSemesters.filter((s) => s.branch_id === randomBranch.id),
+      );
+
+      return {
+        full_name: faker.person.fullName(),
+        email: faker.internet.email(),
+        phone_number: faker.phone.number(),
+        date_of_birth: dateOfBirth.toISOString().split("T")[0],
+        year_of_join: yearOfJoin,
+        clerk_user_id: faker.string.uuid(),
+        clerk_org_id: faker.helpers.arrayElement(insertedInstitutions).id,
+        branch_id: randomBranch.id,
+        current_semester_id: randomSemester.id,
+        created_at: faker.date.past(),
+        updated_at: faker.date.recent(),
+      };
+    },
   );
   await insertInBatches(students, studentsData);
 

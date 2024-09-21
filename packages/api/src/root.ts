@@ -4,6 +4,7 @@ import { branchesRouter } from "./router/branch";
 import { calendarRouter } from "./router/calendar";
 import { institutinsRouter } from "./router/institution";
 import { sectionsRouter } from "./router/sections";
+import { studentsRouter } from "./router/students";
 import { router } from "./trpc";
 
 export const appRouter = router({
@@ -13,6 +14,7 @@ export const appRouter = router({
   calendar: calendarRouter,
   batches: batchesRouter,
   sections: sectionsRouter,
+  students: studentsRouter,
 });
 
 // export type definition of API

@@ -18,6 +18,7 @@
     "seed": "pnpm with-env dotenv -v SEED_MODE=true tsx src/seed.ts"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^5.0.42",
     "@faker-js/faker": "^8.4.1",
     "@neondatabase/serverless": "^0.9.5",
     "@planetscale/database": "^1.18.0",
