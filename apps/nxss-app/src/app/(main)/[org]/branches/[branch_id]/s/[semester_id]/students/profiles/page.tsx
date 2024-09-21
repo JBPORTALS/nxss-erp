@@ -8,8 +8,9 @@ import {
 } from "@nxss/ui/content-area";
 import { Separator } from "@nxss/ui/seperator";
 
-import { DataTable } from "~/app/_components/data-table";
+import { Action, DataTable } from "~/app/_components/data-table";
 import { api } from "~/trpc/server";
+import { actions } from "./actions";
 import { columns, Student } from "./columns";
 
 async function getData({
@@ -55,7 +56,7 @@ const SectionsAndBatchesTable = async ({
       </ContentAreaHeader>
       <Separator />
       <ContentAreaContainer>
-        <DataTable columns={columns} data={data} />
+        <DataTable actions={actions} columns={columns} data={data} />
       </ContentAreaContainer>
     </ContentArea>
   );
