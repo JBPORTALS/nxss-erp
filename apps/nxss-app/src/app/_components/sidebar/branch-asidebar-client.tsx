@@ -48,6 +48,11 @@ export default function BranchAsidebarClient() {
             Profiles
           </SidebarItemClient>
           <SidebarItemClient
+            path={`/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/inactive-profiles`}
+          >
+            Inactive Profiles
+          </SidebarItemClient>
+          <SidebarItemClient
             path={`/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/sections-batches`}
           >
             Sections & Batches

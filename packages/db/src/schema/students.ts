@@ -1,9 +1,21 @@
 import { relations } from "drizzle-orm";
-import { date, integer, serial, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  date,
+  integer,
+  pgEnum,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 import { pgTable } from "./_table";
 import { branches } from "./branches";
 import { semesters } from "./semesters";
+
+export const profileStatusEnum = pgEnum("profileStatusEnum", [
+  "active",
+  "inactive",
+]);
 
 export const students = pgTable("students", {
   id: serial("id").primaryKey(),
@@ -12,6 +24,7 @@ export const students = pgTable("students", {
   phone_number: text("phone_number"),
   date_of_birth: date("date_of_birth"),
   year_of_join: integer("year_of_join"),
+  status: profileStatusEnum("status").default("active"),
   clerk_user_id: text("clerk_user_id"),
   clerk_org_id: text("clerk_org_id").notNull(),
   branch_id: integer("branch_id")

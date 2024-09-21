@@ -1,4 +1,3 @@
-import { Button } from "@nxss/ui/button";
 import {
   ContentArea,
   ContentAreaContainer,
@@ -9,10 +8,8 @@ import {
 import { Separator } from "@nxss/ui/seperator";
 
 import { api } from "~/trpc/server";
-import { actions } from "./actions";
-import { Student, useColumns } from "./columns";
+import { Student } from "./columns";
 import { DataTableClient } from "./data-table";
-import { ImportExcelComponent } from "./import-students";
 
 async function getData({
   branchId,
@@ -30,28 +27,26 @@ const SectionsAndBatchesTable = async ({
 }: {
   params: { branch_id: string; semester_id: string };
 }) => {
-  const data = await getData({
+  const data = await api.students.getInactiveProfiles({
     branchId: parseInt(params.branch_id),
     semesterId: parseInt(params.semester_id),
+    limit: 10,
+    offset: 0,
   });
 
   return (
     <ContentArea>
       <ContentAreaHeader className="flex flex-row justify-between">
         <div className="space-y-2">
-          <ContentAreaTitle>Profiles</ContentAreaTitle>
+          <ContentAreaTitle>Inactive Profiles</ContentAreaTitle>
           <ContentAreaDescription>
-            All Students in computer Science
+            All inactive students in computer Science
           </ContentAreaDescription>
         </div>
-        <ImportExcelComponent
-          branchId={parseInt(params.branch_id)}
-          semesterId={parseInt(params.semester_id)}
-        />
       </ContentAreaHeader>
       <Separator />
       <ContentAreaContainer>
-        <DataTableClient data={data} />
+        <DataTableClient data={data.students} />
       </ContentAreaContainer>
     </ContentArea>
   );

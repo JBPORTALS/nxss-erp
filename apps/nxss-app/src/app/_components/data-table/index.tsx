@@ -7,15 +7,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { easeInOut, motion } from "framer-motion";
+import { easeInOut } from "framer-motion";
 
-import { Button, ButtonProps } from "@nxss/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@nxss/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -28,24 +21,11 @@ import {
 import { MotionDiv } from "./motion-elements";
 
 interface ActionBase<TData> {
-  label: string;
-  onClick: (selectedRows: TData[]) => void;
+  id: string;
+  cell: (data: TData[]) => React.ReactNode;
 }
 
-interface ButtonAction<TData> extends ActionBase<TData> {
-  type: "button";
-  variant?: ButtonProps["variant"];
-}
-
-interface DropdownAction<TData> extends ActionBase<TData> {
-  type: "dropdown";
-  options: {
-    label: string;
-    onClick: (selectedRows: TData[]) => void;
-  }[];
-}
-
-export type Action<TData> = ButtonAction<TData> | DropdownAction<TData>;
+export type Action<TData> = ActionBase<TData>;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -74,41 +54,6 @@ export function DataTable<TData, TValue>({
     .rows.map((row) => row.original);
   const selectedRowsCount = selectedRows.length;
 
-  const renderAction = (action: Action<TData>, index: number) => {
-    if (action.type === "button") {
-      return (
-        <Button
-          key={index}
-          variant={action.variant ?? "secondary"}
-          className="ml-2 first:ml-0"
-          onClick={() => action.onClick(selectedRows)}
-        >
-          {action.label}
-        </Button>
-      );
-    } else if (action.type === "dropdown") {
-      return (
-        <DropdownMenu key={index}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" className="ml-2 first:ml-0">
-              {action.label}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {action.options.map((option, optionIndex) => (
-              <DropdownMenuItem
-                key={optionIndex}
-                onClick={() => option.onClick(selectedRows)}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    }
-  };
-
   return (
     <div>
       {selectedRowsCount > 0 && (
@@ -122,7 +67,11 @@ export function DataTable<TData, TValue>({
             {selectedRowsCount} row(s) selected
           </span>
           <div>
-            {actions.map((action, index) => renderAction(action, index))}
+            {actions.map((action) => (
+              <React.Fragment key={action.id}>
+                {action.cell(selectedRows)}
+              </React.Fragment>
+            ))}
           </div>
         </MotionDiv>
       )}

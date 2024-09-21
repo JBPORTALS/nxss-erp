@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { schema } from "@nxss/db";
@@ -27,6 +27,7 @@ export const studentsRouter = router({
             and(
               eq(students.branch_id, branchId),
               eq(students.current_semester_id, semesterId),
+              eq(students.status, "active"),
             ),
           );
 
@@ -80,5 +81,53 @@ export const studentsRouter = router({
       );
 
       return { insertedCount: insertedStudents.rowCount };
+    }),
+  getInactiveProfiles: protectedProcedure
+    .input(
+      z.object({
+        branchId: z.number().optional(),
+        semesterId: z.number().optional(),
+        limit: z.number().min(1).max(100).default(50),
+        offset: z.number().min(0).default(0),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { branchId, semesterId, limit, offset } = input;
+
+      let query = ctx.db
+        .select()
+        .from(students)
+        .where(eq(students.status, "inactive"))
+        .limit(limit)
+        .offset(offset);
+
+      const inactiveStudents = await query;
+
+      const totalCount = await ctx.db
+        .select({ count: sql`count(*)` })
+        .from(students)
+        .where(eq(students.status, "inactive"));
+
+      return {
+        students: inactiveStudents,
+        totalCount: Number(totalCount.at(0)?.count),
+      };
+    }),
+  toggleProfileStatus: protectedProcedure
+    .input(
+      z.object({
+        studentId: z.number(),
+        newStatus: z.enum(["active", "inactive"]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { studentId, newStatus } = input;
+
+      await ctx.db
+        .update(students)
+        .set({ status: newStatus, updated_at: new Date() })
+        .where(eq(students.id, studentId));
+
+      return { success: true };
     }),
 });

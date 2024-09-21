@@ -13,13 +13,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nxss/ui/dropdown-menu";
-import { toast } from "@nxss/ui/toast";
 
 import { ToggleStudentDialog } from "~/app/_components/dailog/toggle-student-profile";
-import { api } from "~/trpc/react";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -98,11 +95,8 @@ export const useColumns = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem>View student</DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-destructive hover:text-destructive"
-                  onSelect={() => openDialog(student.id)}
-                >
-                  Deactivate
+                <DropdownMenuItem onSelect={() => openDialog(student.id)}>
+                  Activate
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -116,7 +110,7 @@ export const useColumns = () => {
     columns,
     DialogComponent: activeStudentId ? (
       <ToggleStudentDialog
-        status="inactive"
+        status="active"
         isOpen={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         studentId={activeStudentId}
