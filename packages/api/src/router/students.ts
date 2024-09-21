@@ -30,13 +30,6 @@ export const studentsRouter = router({
             ),
           );
 
-        if (studentsList.length === 0) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "No students found for the given branch and semester",
-          });
-        }
-
         return studentsList;
       } catch (error) {
         if (error instanceof TRPCError) {
@@ -47,5 +40,45 @@ export const studentsRouter = router({
           message: "An unexpected error occurred",
         });
       }
+    }),
+  importStudents: protectedProcedure
+    .input(
+      z.object({
+        branchId: z.number(),
+        semesterId: z.number(),
+        students: z.array(
+          z.object({
+            full_name: z.string(),
+            email: z.string().email(),
+            phone_number: z.string(),
+            date_of_birth: z.string(),
+            year_of_join: z.number(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { branchId, semesterId, students: studentsData } = input;
+      const orgId = ctx.auth.orgId;
+
+      console.log(branchId);
+
+      if (!orgId)
+        return new TRPCError({
+          message: "Org not selected",
+          code: "BAD_GATEWAY",
+        });
+
+      // Process and insert the imported students
+      const insertedStudents = await ctx.db.insert(students).values(
+        studentsData.map((student) => ({
+          ...student,
+          clerk_org_id: orgId,
+          branch_id: branchId,
+          current_semester_id: semesterId,
+        })),
+      );
+
+      return { insertedCount: insertedStudents.rowCount };
     }),
 });

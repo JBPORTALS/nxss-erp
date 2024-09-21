@@ -43,6 +43,7 @@
     "superjson": "2.2.1",
     "svix": "^1.25.0",
     "uploadthing": "^6.13.2",
+    "xlsx": "^0.18.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {

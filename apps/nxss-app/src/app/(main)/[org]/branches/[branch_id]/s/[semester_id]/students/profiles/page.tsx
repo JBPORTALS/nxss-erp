@@ -8,10 +8,11 @@ import {
 } from "@nxss/ui/content-area";
 import { Separator } from "@nxss/ui/seperator";
 
-import { Action, DataTable } from "~/app/_components/data-table";
+import { DataTable } from "~/app/_components/data-table";
 import { api } from "~/trpc/server";
 import { actions } from "./actions";
 import { columns, Student } from "./columns";
+import { ImportExcelComponent } from "./import-students";
 
 async function getData({
   branchId,
@@ -33,15 +34,6 @@ const SectionsAndBatchesTable = async ({
     branchId: parseInt(params.branch_id),
     semesterId: parseInt(params.semester_id),
   });
-  // Function to generate a consistent color based on the name
-  // const getAvatarColor = (name: string) => {
-  //   let hash = 0;
-  //   for (let i = 0; i < name.length; i++) {
-  //     hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  //   }
-  //   const hue = hash % 360;
-  //   return `hsl(${hue}, 70%, 80%)`;
-  // };
 
   return (
     <ContentArea>
@@ -52,7 +44,10 @@ const SectionsAndBatchesTable = async ({
             All Students in computer Science
           </ContentAreaDescription>
         </div>
-        <Button>Import</Button>
+        <ImportExcelComponent
+          branchId={parseInt(params.branch_id)}
+          semesterId={parseInt(params.semester_id)}
+        />
       </ContentAreaHeader>
       <Separator />
       <ContentAreaContainer>
