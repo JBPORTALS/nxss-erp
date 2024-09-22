@@ -42,6 +42,34 @@ export const studentsRouter = router({
         });
       }
     }),
+  getByBatchId: protectedProcedure
+    .input(
+      z.object({
+        batchId: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { batchId } = input;
+
+      try {
+        const studentsList = await ctx.db
+          .select()
+          .from(students)
+          .where(
+            and(eq(students.batch_id, batchId), eq(students.status, "active")),
+          );
+
+        return studentsList;
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred",
+        });
+      }
+    }),
   importStudents: protectedProcedure
     .input(
       z.object({

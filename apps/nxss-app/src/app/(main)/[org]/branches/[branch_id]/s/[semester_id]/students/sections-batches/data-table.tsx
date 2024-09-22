@@ -8,6 +8,13 @@ import { MoreVertical } from "lucide-react";
 
 import { SectionWithBatches } from "@nxss/api";
 import { Button } from "@nxss/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@nxss/ui/dropdown-menu";
 import { TableCell, TableRow } from "@nxss/ui/table";
 
 import { DataTable } from "~/app/_components/data-table";
@@ -40,9 +47,22 @@ export function DataTableClient({ data }: DataTableClientProps) {
           </TableCell>
           <TableCell>{batch.studentCount}</TableCell>
           <TableCell>
-            <Button className="size-8" variant={"ghost"}>
-              <MoreVertical className="size-4 text-foreground" />
-            </Button>
+            <div className="text-right">
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Batch Actions</DropdownMenuLabel>
+                  <DropdownMenuItem>Rename</DropdownMenuItem>
+                  <DropdownMenuItem className="text-destructive">
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </TableCell>
         </TableRow>
       ))}

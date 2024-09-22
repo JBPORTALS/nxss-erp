@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import {
@@ -8,6 +6,7 @@ import {
   ChevronRight,
   MoreVertical,
   SlashIcon,
+  UserRoundPlusIcon,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
@@ -29,104 +28,22 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
-interface Student {
-  id: number;
-  name: string;
-  rollNumber: string;
-  email: string;
-  phoneNumber: string;
+import { api } from "~/trpc/server";
+import { DataTableClient } from "./data-table";
+
+async function getData({ batchId }: { batchId: number }) {
+  // Fetch data from your API here.
+  return api.students.getByBatchId({ batchId });
 }
 
-interface Batch {
-  id: number;
-  name: string;
-  students: Student[];
-}
-
-const SectionBatchDetails = () => {
-  const params = useParams();
-  const students = [
-    {
-      id: 1,
-      name: "Joe Doe",
-      email: "joe@gmail.com",
-      rollNumber: "364CS1234",
-      phoneNumber: "1234567890",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("joe@gmail.com")}.png`,
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane.smith@gmail.com",
-      rollNumber: "364CS2345",
-      phoneNumber: "2345678901",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("jane.smith@gmail.com")}.png`,
-    },
-    {
-      id: 3,
-      name: "Mike Johnson",
-      email: "mike.j@gmail.com",
-      rollNumber: "364CS3456",
-      phoneNumber: "3456789012",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("mike.j@gmail.com")}.png`,
-    },
-    {
-      id: 4,
-      name: "Emily Brown",
-      email: "emily.brown@gmail.com",
-      rollNumber: "364CS4567",
-      phoneNumber: "4567890123",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("emily.brown@gmail.com")}.png`,
-    },
-    {
-      id: 5,
-      name: "Chris Lee",
-      email: "chris.lee@gmail.com",
-      rollNumber: "364CS5678",
-      phoneNumber: "5678901234",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("chris.lee@gmail.com")}.png`,
-    },
-    {
-      id: 6,
-      name: "Sarah Wilson",
-      email: "sarah.w@gmail.com",
-      rollNumber: "364CS6789",
-      phoneNumber: "6789012345",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("sarah.w@gmail.com")}.png`,
-    },
-    {
-      id: 7,
-      name: "David Taylor",
-      email: "david.t@gmail.com",
-      rollNumber: "364CS7890",
-      phoneNumber: "7890123456",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("david.t@gmail.com")}.png`,
-    },
-    {
-      id: 8,
-      name: "Emma Davis",
-      email: "emma.d@gmail.com",
-      rollNumber: "364CS8901",
-      phoneNumber: "8901234567",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("emma.d@gmail.com")}.png`,
-    },
-    {
-      id: 9,
-      name: "Alex Martinez",
-      email: "alex.m@gmail.com",
-      rollNumber: "364CS9012",
-      phoneNumber: "9012345678",
-      avatar: `https://github.com/"alex.m@gmail.com.png`,
-    },
-    {
-      id: 10,
-      name: "Olivia Thompson",
-      email: "olivia.t@gmail.com",
-      rollNumber: "364CS0123",
-      phoneNumber: "0123456789",
-      avatar: `https://github.identicons.github.com/${encodeURIComponent("olivia.t@gmail.com")}.png`,
-    },
-  ];
+const SectionBatchDetails = async ({
+  params,
+}: {
+  params: { batch_id: string; section_id: string };
+}) => {
+  const data = await getData({
+    batchId: parseInt(params.batch_id),
+  });
 
   // Function to generate a consistent color based on the name
   const getAvatarColor = (name: string) => {
@@ -140,55 +57,25 @@ const SectionBatchDetails = () => {
 
   return (
     <ContentArea>
-      <ContentAreaHeader>
-        <ContentAreaTitle>
-          {decodeURI(params.section_id as string)}
-          {"  "}
-          <SlashIcon className="size-5 -rotate-12 text-muted-foreground/40" />{" "}
-          Batch {params.batch_id}
-        </ContentAreaTitle>
-        <ContentAreaDescription>
-          All students in this section & batch.
-        </ContentAreaDescription>
+      <ContentAreaHeader className="flex-row justify-between">
+        <div className="space-y-2">
+          <ContentAreaTitle>
+            {decodeURI(params.section_id as string)}
+            {"  "}
+            <SlashIcon className="size-5 -rotate-12 text-muted-foreground/40" />{" "}
+            Batch {params.batch_id}
+          </ContentAreaTitle>
+          <ContentAreaDescription>
+            All students in this section & batch.
+          </ContentAreaDescription>
+        </div>
+        <Button size={"lg"}>
+          <UserRoundPlusIcon className="size-5" /> Add
+        </Button>
       </ContentAreaHeader>
       <Separator />
       <ContentAreaContainer>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Roll Number</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone Number</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {students.map((student) => (
-              <TableRow key={student.id}>
-                <TableCell className="flex h-full items-center gap-2">
-                  <Avatar className="size-8 bg-transparent">
-                    <AvatarFallback
-                      style={{ background: getAvatarColor(student.name) }}
-                      className="text-background"
-                    >
-                      {student.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  {student.name}
-                </TableCell>
-                <TableCell>{student.rollNumber}</TableCell>
-                <TableCell>{student.email}</TableCell>
-                <TableCell>{student.phoneNumber}</TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="icon">
-                    <MoreVertical size={16} />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DataTableClient data={data} />
       </ContentAreaContainer>
     </ContentArea>
   );

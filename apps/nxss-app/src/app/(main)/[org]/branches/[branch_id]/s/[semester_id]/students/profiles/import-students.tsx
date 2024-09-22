@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Import } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
 import { toast } from "@nxss/ui/toast";
@@ -45,7 +46,12 @@ export const ImportExcelComponent: React.FC<ImportExcelProps> = ({
 
   return (
     <div className="flex items-center space-x-2">
-      <Button onClick={handleImport} disabled={importMutation.isPending}>
+      <Button
+        size={"lg"}
+        onClick={handleImport}
+        disabled={importMutation.isPending}
+      >
+        <Import className="size-5" />
         {importMutation.isPending ? "Importing..." : "Import"}
       </Button>
     </div>
