@@ -33,8 +33,8 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
+import { StudentInviteDialog } from "../dailog/add-students";
 import { InviteDialog } from "../dailog/invite-dialog";
-import { StudentInviteDialog } from "../dailog/student-invite-dialog";
 
 type Student = {
   id: string;

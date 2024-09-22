@@ -28,6 +28,7 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
+import { AddStudentsDialog } from "~/app/_components/dailog/add-students";
 import { api } from "~/trpc/server";
 import { DataTableClient } from "./data-table";
 
@@ -69,9 +70,11 @@ const SectionBatchDetails = async ({
             All students in this section & batch.
           </ContentAreaDescription>
         </div>
-        <Button size={"lg"}>
-          <UserRoundPlusIcon className="size-5" /> Add
-        </Button>
+        <AddStudentsDialog batchName="" sectionName="">
+          <Button size={"lg"}>
+            <UserRoundPlusIcon className="size-5" /> Add
+          </Button>
+        </AddStudentsDialog>
       </ContentAreaHeader>
       <Separator />
       <ContentAreaContainer>

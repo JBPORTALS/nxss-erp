@@ -28,6 +28,7 @@
     "@trpc/client": "11.0.0-rc.459",
     "@trpc/react-query": "11.0.0-rc.459",
     "@trpc/server": "11.0.0-rc.459",
+    "@uidotdev/usehooks": "^2.4.1",
     "@uploadthing/react": "^6.7.2",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.3.8",
