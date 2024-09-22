@@ -43,7 +43,9 @@ function useShouldRender(
     case "branch":
       return (
         !params.subject_id &&
-        pathname.startsWith(`/${params.org}/branches/${params.branch_id}`)
+        pathname.startsWith(
+          `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}`,
+        )
       );
     default:
       return false;
