@@ -51,7 +51,7 @@ export const useColumns = () => {
       },
     },
     {
-      accessorKey: "total_students",
+      accessorKey: "students_count",
       header: "Total Students",
     },
     {

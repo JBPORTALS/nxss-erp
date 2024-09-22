@@ -32,20 +32,20 @@ export function DataTableClient({ data }: DataTableClientProps) {
     <>
       {row.batches.map((batch) => (
         <TableRow
-          key={batch.id}
+          key={batch.batch_id}
           className="w-full items-center justify-between py-1"
         >
           <TableCell></TableCell>
           <TableCell>
             <Link
-              href={`/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/sections-batches/${row.section_id}/${batch.id}`}
+              href={`/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/sections-batches/${row.section_id}/${batch.batch_id}`}
             >
               <Button variant={"link"} className="justify-start px-0">
-                {batch.name}
+                {batch.batch_name}
               </Button>
             </Link>
           </TableCell>
-          <TableCell>{batch.studentCount}</TableCell>
+          <TableCell>{batch.student_count}</TableCell>
           <TableCell>
             <div className="text-right">
               <DropdownMenu modal={false}>
