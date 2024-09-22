@@ -10,6 +10,7 @@ import {
 
 import { pgTable } from "./_table";
 import { branches } from "./branches";
+import { batches } from "./groups";
 import { semesters } from "./semesters";
 
 export const profileStatusEnum = pgEnum("profileStatusEnum", [
@@ -30,6 +31,9 @@ export const students = pgTable("students", {
   branch_id: integer("branch_id")
     .notNull()
     .references(() => branches.id),
+  batch_id: integer("batch_id").references(() => batches.id, {
+    onDelete: "set null",
+  }),
   current_semester_id: integer("current_semester_id")
     .notNull()
     .references(() => semesters.id),

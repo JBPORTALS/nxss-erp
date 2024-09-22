@@ -1,11 +1,12 @@
 "use client";
 
-import type { Table as TanTable } from "@tanstack/react-table";
 import React from "react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
+  Row,
   useReactTable,
 } from "@tanstack/react-table";
 import { easeInOut } from "framer-motion";
@@ -31,22 +32,35 @@ export type Action<TData> = ActionBase<TData>;
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  actions: Action<TData>[];
+  actions?: Action<TData>[];
+  expandedContent?: (row: TData) => React.ReactNode;
+  enableExpanding?: boolean;
+  getRowCanExpand?: (row: Row<TData>) => boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  actions,
+  actions = [],
+  expandedContent,
+  enableExpanding = false,
+  getRowCanExpand,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
+  const [expanded, setExpanded] = React.useState({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onRowSelectionChange: setRowSelection,
+    onExpandedChange: setExpanded,
+    getRowCanExpand,
+    enableExpanding,
     state: {
       rowSelection,
+      expanded,
     },
   });
 
@@ -68,21 +82,11 @@ export function DataTable<TData, TValue>({
             {selectedRowsCount} row(s) selected
           </span>
           <div>
-            {actions.map((action, index) => {
-              console.log(`Action ${index}:`, action); // Debug logging
-              if (typeof action.cell !== "function") {
-                console.error(
-                  `Action ${action.id} cell is not a function:`,
-                  action.cell,
-                );
-                return null; // Skip rendering this action
-              }
-              return (
-                <React.Fragment key={action.id}>
-                  {action.cell(selectedRows)}
-                </React.Fragment>
-              );
-            })}
+            {actions.map((action) => (
+              <React.Fragment key={action.id}>
+                {action.cell(selectedRows)}
+              </React.Fragment>
+            ))}
           </div>
         </MotionDiv>
       )}
@@ -106,16 +110,23 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
+              <React.Fragment key={row.id}>
+                <TableRow
+                  data-state={row.getIsSelected() ? "selected" : undefined}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+                {row.getIsExpanded() && expandedContent && (
+                  <>{expandedContent(row.original)}</>
+                )}
+              </React.Fragment>
             ))
           ) : (
             <TableRow>

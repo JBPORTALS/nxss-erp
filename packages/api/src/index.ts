@@ -1,6 +1,11 @@
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./root";
+import type {
+  GetSectionsAndBatchesResult,
+  SectionsRouter,
+  SectionWithBatches,
+} from "./router/sections";
 import {
   createContextInner,
   createContext as createTRPCContext,
@@ -34,4 +39,11 @@ type RouterInputs = inferRouterInputs<AppRouter>;
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export { createTRPCContext, createContextInner, appRouter, createCaller };
-export type { AppRouter, RouterInputs, RouterOutputs };
+export type {
+  AppRouter,
+  RouterInputs,
+  RouterOutputs,
+  SectionsRouter,
+  SectionWithBatches,
+  GetSectionsAndBatchesResult,
+};
