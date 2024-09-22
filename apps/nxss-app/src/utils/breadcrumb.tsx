@@ -1,4 +1,5 @@
 import { useParams, usePathname } from "next/navigation";
+import { useOrganization } from "@clerk/nextjs";
 
 import { api } from "~/trpc/react";
 
@@ -14,8 +15,9 @@ export const usePathMap = (): BreadcrumbItem[] => {
     { id: (params.branch_id as string) ?? "" },
     { enabled: !!params.branch_id },
   );
+  const { organization } = useOrganization();
 
-  const getOrganizationName = () => "KSIT"; // Placeholder
+  const getOrganizationName = () => organization?.name ?? ""; // Placeholder
   const getBranchName = () => data?.name ?? ""; // Use branch name from API
 
   const dashboardItem: BreadcrumbItem = {
@@ -33,19 +35,19 @@ export const usePathMap = (): BreadcrumbItem[] => {
     },
     {
       label: "Faculty",
-      href: `/${params.org}/branches/${params.branch_id}/faculty`,
+      href: `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/faculty`,
     },
     {
       label: "Student Profiles",
-      href: `/${params.org}/branches/${params.branch_id}/students/profiles`,
+      href: `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/profiles`,
     },
     {
       label: "Sections & Batches",
-      href: `/${params.org}/branches/${params.branch_id}/students/sections-batches`,
+      href: `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/sections-batches`,
     },
     {
       label: `${decodeURI(params.section_id as string)} / Batch ${decodeURI(params.batch_id as string)}`,
-      href: `/${params.org}/branches/${params.branch_id}/students/sections-batches/${params.section_id}/${params.batch_id}`,
+      href: `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/sections-batches/${params.section_id}/${params.batch_id}`,
     },
   ];
 
