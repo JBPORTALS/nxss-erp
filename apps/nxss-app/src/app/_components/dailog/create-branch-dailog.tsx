@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@nxss/ui/button";
