@@ -9,13 +9,19 @@ interface BreadcrumbItem {
 }
 
 export const usePathMap = (): BreadcrumbItem[] => {
-  const params = useParams();
+  const params = useParams() as Record<any, string>;
   const pathname = usePathname();
   const { data } = api.branch.getDetails.useQuery(
     { id: (params.branch_id as string) ?? "" },
     { enabled: !!params.branch_id },
   );
   const { organization } = useOrganization();
+  const batch = api.batches.getDetails.useQuery(params.batch_id!, {
+    enabled: !!params.batch_id,
+  });
+  const section = api.sections.getDetails.useQuery(params.section_id!, {
+    enabled: !![params.section_id],
+  });
 
   const getOrganizationName = () => organization?.name ?? ""; // Placeholder
   const getBranchName = () => data?.name ?? ""; // Use branch name from API
@@ -46,7 +52,7 @@ export const usePathMap = (): BreadcrumbItem[] => {
       href: `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/sections-batches`,
     },
     {
-      label: `${decodeURI(params.section_id as string)} / Batch ${decodeURI(params.batch_id as string)}`,
+      label: `Section ${section.data?.name ?? ""} / ${batch.data?.name ?? ""}`,
       href: `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/students/sections-batches/${params.section_id}/${params.batch_id}`,
     },
   ];

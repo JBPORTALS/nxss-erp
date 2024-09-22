@@ -1,7 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
 import { and, asc, eq, schema } from "@nxss/db";
 import { CreateBatchScheme, UpdateBatchScheme } from "@nxss/validators";
+
 import { protectedProcedure, router } from "../trpc";
 
 const { batches, branches, semesters, sections } = schema;
@@ -21,15 +23,10 @@ export const batchesRouter = router({
   }),
 
   getDetails: protectedProcedure
-    .input(z.object({ id: z.string().min(1, "Batch ID is required!") }))
+    .input(z.string().min(1, "Batch ID is required!"))
     .query(async ({ ctx, input }) => {
       const batchDetails = await ctx.db.query.batches.findFirst({
-        where: eq(batches.id, parseInt(input.id)),
-        with: {
-          branch: true,
-          semester: true,
-          section: true,
-        },
+        where: eq(batches.id, parseInt(input)),
       });
 
       if (!batchDetails) {
@@ -112,13 +109,13 @@ export const batchesRouter = router({
       z.object({
         branch_id: z.number().min(1),
         semester_id: z.number().min(1),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const batchList = await ctx.db.query.batches.findMany({
         where: and(
           eq(batches.branch_id, input.branch_id),
-          eq(batches.semester_id, input.semester_id)
+          eq(batches.semester_id, input.semester_id),
         ),
         orderBy: asc(batches.name),
       });

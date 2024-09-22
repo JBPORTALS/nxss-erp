@@ -45,32 +45,27 @@ const SectionBatchDetails = async ({
   const data = await getData({
     batchId: parseInt(params.batch_id),
   });
-
-  // Function to generate a consistent color based on the name
-  const getAvatarColor = (name: string) => {
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue = hash % 360;
-    return `hsl(${hue}, 70%, 80%)`;
-  };
+  const batch = await api.batches.getDetails(params.batch_id);
+  const section = await api.sections.getDetails(params.section_id);
 
   return (
     <ContentArea>
       <ContentAreaHeader className="flex-row justify-between">
         <div className="space-y-2">
           <ContentAreaTitle>
-            {decodeURI(params.section_id as string)}
+            {`Section ${section.name}`}
             {"  "}
             <SlashIcon className="size-5 -rotate-12 text-muted-foreground/40" />{" "}
-            Batch {params.batch_id}
+            {batch.name}
           </ContentAreaTitle>
           <ContentAreaDescription>
             All students in this section & batch.
           </ContentAreaDescription>
         </div>
-        <AddStudentsDialog batchName="" sectionName="">
+        <AddStudentsDialog
+          batchName={batch.name}
+          sectionName={`Section ${section.name}`}
+        >
           <Button size={"lg"}>
             <UserRoundPlusIcon className="size-5" /> Add
           </Button>

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { and, asc, eq, like, schema } from "@nxss/db";
+import { semesters } from "@nxss/db/schema";
 import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
 
 import { protectedProcedure, router } from "../trpc";
@@ -92,6 +93,18 @@ export const branchesRouter = router({
         })
         .returning();
 
+      const branch_id = response.at(0)?.id;
+
+      // if (branch_id) {
+      //   const semester = await ctx.db
+      //     .insert(semesters)
+      //     .values({
+      //       branch_id,
+      //       academic_year_id: 3,
+      //       number: 1,
+      //       status: "current",
+      //     });
+      // }
       if (!response.at(0)?.id)
         throw new TRPCError({
           message: "Can't able to create the branch, Retry",

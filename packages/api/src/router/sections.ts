@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { asc, eq, inArray, schema, sql } from "@nxss/db";
+import { and, asc, eq, inArray, schema, sql } from "@nxss/db";
 
 import { protectedProcedure, router } from "../trpc";
 
@@ -57,7 +57,12 @@ export const sectionsRouter = router({
                 })
                 .from(batches)
                 .leftJoin(students, eq(students.batch_id, batches.id))
-                .where(eq(batches.section_id, section.section_id))
+                .where(
+                  and(
+                    eq(batches.section_id, section.section_id),
+                    eq(students.status, "active"),
+                  ),
+                )
                 .groupBy(batches.id, batches.name, batches.section_id)
                 .orderBy(asc(batches.name));
 
@@ -66,7 +71,7 @@ export const sectionsRouter = router({
                 section_name: section.section_name,
                 students_count: batchesResult
                   .map((batch) => parseInt(batch.student_count.toString()))
-                  .reduce((prev, acc) => prev + acc),
+                  .reduce((prev, acc) => prev + acc, 0),
                 batches: batchesResult,
               };
             }),
@@ -132,20 +137,13 @@ export const sectionsRouter = router({
       }
     }),
   getDetails: protectedProcedure
-    .input(z.number())
+    .input(z.string())
     .query(async ({ ctx, input: sectionId }) => {
       const { db } = ctx;
 
       try {
         const sectionDetails = await db.query.sections.findFirst({
-          where: eq(sections.id, sectionId),
-          with: {
-            batches: {
-              with: {
-                students: true,
-              },
-            },
-          },
+          where: eq(sections.id, parseInt(sectionId)),
         });
 
         if (!sectionDetails) {
