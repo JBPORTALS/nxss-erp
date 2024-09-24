@@ -1,72 +1,57 @@
-import type { Config } from "tailwindcss";
-// @ts-expect-error - no types
-import nativewind from "nativewind/preset";
-import plugin from "tailwindcss/plugin";
+import { hairlineWidth } from "nativewind/theme";
+import { Config } from "tailwindcss";
 
+/** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./app/**/*.{ts,tsx}"],
+  darkMode: "class",
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  presets: [require("nativewind/preset")],
   theme: {
     extend: {
       colors: {
-        background: "rgb(var(--background) / <alpha-value>)",
-        foreground: "rgb(var(--foreground) / <alpha-value>)",
-        card: "rgb(var(--card) / <alpha-value>)",
-        "card-foreground": "rgb(var(--card-foreground) / <alpha-value>)",
-        popover: "rgb(var(--popover) / <alpha-value>)",
-        "popover-foreground": "rgb(var(--popover-foreground) / <alpha-value>)",
-        primary: "rgb(var(--primary) / <alpha-value>)",
-        "primary-foreground": "rgb(var(--primary-foreground) / <alpha-value>)",
-        secondary: "rgb(var(--secondary) / <alpha-value>)",
-        "secondary-foreground":
-          "rgb(var(--secondary-foreground) / <alpha-value>)",
-        muted: "rgb(var(--muted) / <alpha-value>)",
-        "muted-foreground": "rgb(var(--muted-foreground) / <alpha-value>)",
-        accent: "rgb(var(--accent) / <alpha-value>)",
-        "accent-foreground": "rgb(var(--accent-foreground) / <alpha-value>)",
-        destructive: "rgb(var(--destructive) / <alpha-value>)",
-        "destructive-foreground":
-          "rgb(var(--destructive-foreground) / <alpha-value>)",
-        border: "rgb(var(--border) / <alpha-value>)",
-        input: "rgb(var(--input) / <alpha-value>)",
-        ring: "rgb(var(--ring) / <alpha-value>)",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
-      borderRadius: {
-        DEFAULT: "var(--radius)",
+
+      borderWidth: {
+        hairline: hairlineWidth(),
       },
       fontFamily: {
-        sans: ["OpenSans-Regular"],
-      },
-      fontWeight: {
-        normal: "400",
-        medium: "500",
-        semibold: "600",
-        bold: "700",
-        extrabold: "800",
+        sans: ["GeistVF", "System"],
+        mono: ["GeistMonoVF", "System"],
       },
     },
   },
-  presets: [nativewind],
-  plugins: [
-    plugin(function ({ addUtilities, theme }) {
-      const fontWeightMap = {
-        "400": "OpenSans-Regular",
-        "500": "OpenSans-Medium",
-        "600": "OpenSans-SemiBold",
-        "700": "OpenSans-Bold",
-        "800": "OpenSans-ExtraBold",
-      };
-
-      const newUtilities = Object.entries(theme("fontWeight")).reduce(
-        (acc, [key, value]) => {
-          acc[`.font-${key}`] = {
-            fontFamily: fontWeightMap[value] || fontWeightMap["400"], // Default to Regular if weight not found
-          };
-          return acc;
-        },
-        {},
-      );
-
-      addUtilities(newUtilities);
-    }),
-  ],
+  plugins: [],
 } satisfies Config;

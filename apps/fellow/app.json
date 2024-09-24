@@ -10,10 +10,14 @@
       [
         "expo-font",
         {
-          "OpenSans": "./assets/fonts/OpenSans.ttf"
+          "GeistVF": "./assets/fonts/GeistVF.ttf",
+          "GeistMonoVF": "./assets/fonts/GeistMonoVF.ttf"
         }
       ]
     ],
+    "experiments": {
+      "typedRoutes": true
+    },
     "name": "fellow",
     "slug": "fellow",
     "userInterfaceStyle": "automatic",
