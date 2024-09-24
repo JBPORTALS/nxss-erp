@@ -36,6 +36,9 @@
     },
     "//#clean": {
       "cache": false
+    },
+    "tailwind": {
+      "outputs": ["styles/tailwind.css"]
     }
   },
   "globalEnv": [
