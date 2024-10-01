@@ -1,7 +1,9 @@
+import React, { useCallback } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Path, Svg } from "react-native-svg";
-import { Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useOAuth } from "@clerk/clerk-expo";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -9,10 +11,28 @@ import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
 import { Text } from "~/components/ui/text";
 import { H2, H3, Muted } from "~/components/ui/typography";
+import { NAV_THEME } from "~/lib/constants";
 
 export default function Screen() {
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+
+  const onGoogleOauth = useCallback(async () => {
+    try {
+      const { setActive, createdSessionId } = await startOAuthFlow();
+      if (createdSessionId) {
+        setActive?.({ session: createdSessionId });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        backgroundColor={NAV_THEME.light.background}
+        style="inverted"
+      />
       <View className="flex-1 items-center justify-between bg-background p-6">
         <H3>Fellow</H3>
         <H2 className="text-center font-medium text-[#4C4065]">
@@ -36,7 +56,11 @@ export default function Screen() {
             <Muted className="px-2">OR CONTINUE WITH</Muted>
             <Separator className="flex-1" />
           </View>
-          <Button className="w-full" variant={"secondary"}>
+          <Button
+            onPress={() => onGoogleOauth()}
+            className="w-full"
+            variant={"secondary"}
+          >
             <Svg width="16" height="16" viewBox="0 0 17 17" fill="none">
               <Path
                 d="M16.5 8.51109C16.5 7.85332 16.4455 7.37332 16.3277 6.87555H8.66327V9.8444H13.1621C13.0714 10.5822 12.5816 11.6933 11.4932 12.4399L11.4779 12.5393L13.9013 14.3791L14.0692 14.3955C15.6111 13 16.5 10.9466 16.5 8.51109Z"
