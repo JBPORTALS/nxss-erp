@@ -99,6 +99,9 @@ importers:
       expo-system-ui:
         specifier: ~3.0.7
         version: 3.0.7(expo@51.0.34)
+      expo-web-browser:
+        specifier: ~13.0.3
+        version: 13.0.3(expo@51.0.34)
       lucide-react-native:
         specifier: ^0.378.0
         version: 0.378.0(react-native-svg@15.2.0)(react-native@0.74.5)(react@18.2.0)

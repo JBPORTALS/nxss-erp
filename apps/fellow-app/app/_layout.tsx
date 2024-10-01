@@ -1,11 +1,11 @@
 import "~/global.css";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
-import { ClerkLoaded, ClerkProvider } from "@clerk/clerk-expo";
+import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 
@@ -23,6 +23,24 @@ export {
 
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
+
+function InitialLayout() {
+  const { isSignedIn, isLoaded } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    const isAuthSegment = segments[0] === "(auth)";
+
+    if (isSignedIn && isAuthSegment) {
+      router.replace("/(app)");
+    } else if (!isSignedIn) {
+      router.replace("/(auth)");
+    }
+  }, [isSignedIn, isLoaded]);
+  return <Slot screenOptions={{ headerShown: false }} />;
+}
 
 export default function RootLayout() {
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
@@ -75,13 +93,13 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={LIGHT_THEME}>
-      <ClerkProvider publishableKey={publishableKey}>
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
         <ClerkLoaded>
           <StatusBar
             style={"dark"}
             backgroundColor={LIGHT_THEME.colors.background}
           />
-          <Slot screenOptions={{ headerShown: false }} />
+          <InitialLayout />
           <PortalHost />
         </ClerkLoaded>
       </ClerkProvider>
