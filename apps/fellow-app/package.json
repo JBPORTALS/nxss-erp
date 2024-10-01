@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@clerk/types": "^4.23.0",
     "@types/react": "~18.2.79",
     "typescript": "~5.3.3"
   },
