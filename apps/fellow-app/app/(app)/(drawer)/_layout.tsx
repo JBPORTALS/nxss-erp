@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Link, Redirect, Stack } from "expo-router";
@@ -6,24 +5,12 @@ import { Drawer } from "expo-router/drawer";
 import { useAuth, useOrganization, useUser } from "@clerk/clerk-expo";
 import {
   DrawerContentScrollView,
-  DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import {
-  Building,
-  Building2,
-  ChevronRight,
-  ChevronsUpDown,
-} from "lucide-react-native";
+import { Building, ChevronRight } from "lucide-react-native";
 
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "~/components/ui/collapsible";
-import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
 import { Large, Muted } from "~/components/ui/typography";
 

@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 import { Muted } from "~/components/ui/typography";
 
 export default function SelectOrganization() {
-  const { organization, isLoaded: isOrgLoaded } = useOrganization();
+  const { organization } = useOrganization();
   const { isLoaded, setActive, userMemberships } = useOrganizationList({
     userMemberships: true,
   });

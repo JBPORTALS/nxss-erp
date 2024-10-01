@@ -8,7 +8,6 @@ export default function _layout() {
   return (
     <SafeAreaProvider>
       <StatusBar style="inverted" />
-
       <Stack screenOptions={{ headerShadowVisible: false, animation: "ios" }} />
     </SafeAreaProvider>
   );
