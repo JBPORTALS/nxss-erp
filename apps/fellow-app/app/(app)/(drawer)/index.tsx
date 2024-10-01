@@ -3,7 +3,7 @@ import { Drawer } from "expo-router/drawer";
 import { useUser } from "@clerk/clerk-expo";
 import { HomeIcon } from "lucide-react-native";
 
-import { H3 } from "~/components/ui/typography";
+import { H2 } from "~/components/ui/typography";
 
 export default function HomeScreen() {
   const { user } = useUser();
@@ -18,9 +18,9 @@ export default function HomeScreen() {
           title: "Fellow",
         }}
       />
-      <H3 className="font-medium">
+      <H2 className="font-medium">
         Good morning, {user?.firstName} {user?.lastName}
-      </H3>
+      </H2>
     </View>
   );
 }

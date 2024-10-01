@@ -35,6 +35,7 @@ export default function AppLayout() {
           drawerStyle: {
             backgroundColor: "#ffffff",
           },
+          drawerLabelStyle: { marginLeft: -20, fontWeight: "600" },
           drawerStatusBarAnimation: "fade",
           headerRight(props) {
             return (
