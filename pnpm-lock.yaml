@@ -48,6 +48,9 @@ importers:
       '@rn-primitives/avatar':
         specifier: ~1.0.4
         version: 1.0.5(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0)
+      '@rn-primitives/collapsible':
+        specifier: ^1.0.4
+        version: 1.0.4(@types/react@18.2.79)(react-dom@18.2.0)(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0)
       '@rn-primitives/label':
         specifier: ^1.0.4
         version: 1.0.4(@types/react@18.2.79)(react-dom@18.2.0)(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0)
@@ -6603,6 +6606,32 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /@radix-ui/react-collapsible@1.1.0(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-zQY7Epa8sTL0mq4ajSJpjgn2YmCgyrG7RsQgLp3C0LQVkG7+Tf6Pv1CeNWZLyqMjhdPkBa5Lx7wYBeSu7uCSTA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@radix-ui/primitive': 1.1.0
+      '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.2.79)(react@18.2.0)
+      '@radix-ui/react-context': 1.1.0(@types/react@18.2.79)(react@18.2.0)
+      '@radix-ui/react-id': 1.1.0(@types/react@18.2.79)(react@18.2.0)
+      '@radix-ui/react-presence': 1.1.0(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.3.0)(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.2.79)(react@18.2.0)
+      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.2.79)(react@18.2.0)
+      '@types/react': 18.2.79
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@radix-ui/react-collection@1.1.0(@types/react-dom@18.3.0)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-GZsZslMJEyo1VKm5L1ZJY8tGDxZNPAoUeQUIbKeJfoi7Q4kmig5AsgLMYYuyYbfjd8fBmFORAIwYAkXMnXZgZw==}
     peerDependencies:
@@ -10295,6 +10324,31 @@ packages:
       react: 18.2.0
       react-native: 0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.4)(@types/react@18.2.79)(react@18.2.0)
       react-native-web: 0.19.12(react-dom@18.2.0)(react@18.2.0)
+    dev: false
+
+  /@rn-primitives/collapsible@1.0.4(@types/react@18.2.79)(react-dom@18.2.0)(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0):
+    resolution: {integrity: sha512-YcuIJhGlefFeDM9amiZC/PRm4VmXA74/hQSRhc6VvCojDqCAx0t4wiwdq/4rU0YoL+FoYHkcChwisgD69KHD0Q==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+      react-native-web: '*'
+    peerDependenciesMeta:
+      react-native:
+        optional: true
+      react-native-web:
+        optional: true
+    dependencies:
+      '@radix-ui/react-collapsible': 1.1.0(@types/react@18.2.79)(react-dom@18.2.0)(react@18.2.0)
+      '@rn-primitives/hooks': 1.0.4(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0)
+      '@rn-primitives/slot': 1.0.4(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0)
+      '@rn-primitives/types': 1.0.4(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0)
+      react: 18.2.0
+      react-native: 0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.4)(@types/react@18.2.79)(react@18.2.0)
+      react-native-web: 0.19.12(react-dom@18.2.0)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - react-dom
     dev: false
 
   /@rn-primitives/hooks@1.0.4(react-native-web@0.19.12)(react-native@0.74.5)(react@18.2.0):

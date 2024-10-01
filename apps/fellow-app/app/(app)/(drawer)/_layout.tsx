@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Link, Redirect, Stack } from "expo-router";
@@ -8,13 +9,27 @@ import {
   DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
+import {
+  Building,
+  Building2,
+  ChevronRight,
+  ChevronsUpDown,
+} from "lucide-react-native";
 
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible";
+import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
-import { Large } from "~/components/ui/typography";
+import { Large, Muted } from "~/components/ui/typography";
 
 export default function AppLayout() {
   const { isSignedIn } = useAuth();
+  const [open, setOpen] = useState(false);
   const { user } = useUser();
   if (!isSignedIn) return <Redirect href={"/(auth)"} />;
   return (
@@ -28,6 +43,26 @@ export default function AppLayout() {
                 <Large className="px-4 py-4">Fellow</Large>
                 <DrawerItemList {...props} />
               </DrawerContentScrollView>
+
+              <View className="px-4 pb-6">
+                <Button
+                  variant={"outline"}
+                  className="native:h-14 justify-between bg-transparent py-4"
+                >
+                  <View className="flex-row items-center gap-2">
+                    <Avatar alt="Org Icon" className="size-8">
+                      <AvatarFallback className="bg-primary">
+                        <Building color={"white"} size={16} />
+                      </AvatarFallback>
+                    </Avatar>
+                    <View>
+                      <Text className="text-sm font-semibold">KSIT</Text>
+                      <Muted className="font-semibold">Computer Science</Muted>
+                    </View>
+                  </View>
+                  <ChevronRight color={"black"} size={16} />
+                </Button>
+              </View>
             </View>
           );
         }}
