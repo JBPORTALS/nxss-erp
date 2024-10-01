@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Link, Redirect, Stack } from "expo-router";
 import { Drawer } from "expo-router/drawer";
-import { useAuth, useUser } from "@clerk/clerk-expo";
+import { useAuth, useOrganization, useUser } from "@clerk/clerk-expo";
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -29,7 +29,7 @@ import { Large, Muted } from "~/components/ui/typography";
 
 export default function AppLayout() {
   const { isSignedIn } = useAuth();
-  const [open, setOpen] = useState(false);
+  const { organization } = useOrganization();
   const { user } = useUser();
   if (!isSignedIn) return <Redirect href={"/(auth)"} />;
   return (
@@ -45,23 +45,29 @@ export default function AppLayout() {
               </DrawerContentScrollView>
 
               <View className="px-4 pb-6">
-                <Button
-                  variant={"outline"}
-                  className="native:h-14 justify-between bg-transparent py-4"
-                >
-                  <View className="flex-row items-center gap-2">
-                    <Avatar alt="Org Icon" className="size-8">
-                      <AvatarFallback className="bg-primary">
-                        <Building color={"white"} size={16} />
-                      </AvatarFallback>
-                    </Avatar>
-                    <View>
-                      <Text className="text-sm font-semibold">KSIT</Text>
-                      <Muted className="font-semibold">Computer Science</Muted>
+                <Link href={"/select-organization"} asChild>
+                  <Button
+                    variant={"outline"}
+                    className="native:h-14 justify-between bg-transparent py-4"
+                  >
+                    <View className="flex-row items-center gap-2">
+                      <Avatar alt="Org Icon" className="size-8">
+                        <AvatarFallback className="bg-primary">
+                          <Building color={"white"} size={16} />
+                        </AvatarFallback>
+                      </Avatar>
+                      <View>
+                        <Text className="text-sm font-semibold">
+                          {organization?.name}
+                        </Text>
+                        <Muted className="font-semibold">
+                          Computer Science
+                        </Muted>
+                      </View>
                     </View>
-                  </View>
-                  <ChevronRight color={"black"} size={16} />
-                </Button>
+                    <ChevronRight color={"black"} size={16} />
+                  </Button>
+                </Link>
               </View>
             </View>
           );
