@@ -1,16 +1,15 @@
-import { Redirect, Stack } from "expo-router";
-import { useAuth } from "@clerk/clerk-expo";
+import React from "react";
+import { Text, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Slot, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
-export default function AppLayout() {
-  const { isSignedIn } = useAuth();
-
-  if (!isSignedIn) return <Redirect href={"/(auth)"} />;
+export default function _layout() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: true,
-        headerShadowVisible: false,
-      }}
-    />
+    <SafeAreaProvider>
+      <StatusBar style="inverted" />
+
+      <Stack screenOptions={{ headerShadowVisible: false }} />
+    </SafeAreaProvider>
   );
 }
