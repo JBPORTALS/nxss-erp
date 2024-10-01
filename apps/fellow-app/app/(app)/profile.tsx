@@ -1,5 +1,5 @@
-import React from "react";
-import { View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 import { Stack } from "expo-router";
 import { useAuth } from "@clerk/clerk-expo";
 
@@ -8,20 +8,28 @@ import { Text } from "~/components/ui/text";
 
 export default function Profile() {
   const { signOut } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSignOut = useCallback(async () => {
+    setIsLoading(true);
+    await signOut();
+    setIsLoading(false);
+  }, []);
   return (
-    <View>
-      <Stack
-        screenOptions={{
+    <View className="p-4">
+      <Stack.Screen
+        options={{
           title: "Profile",
-          headerRight: undefined,
-          headerLeft: undefined,
+          headerTitleAlign: "center",
         }}
       />
       <Button
-        onPress={() => signOut()}
+        onPress={() => onSignOut()}
         className="w-full"
-        variant={"secondary"}
+        disabled={isLoading}
+        variant={"destructive"}
       >
+        {isLoading && <ActivityIndicator color={"white"} />}
         <Text>Sign out</Text>
       </Button>
     </View>

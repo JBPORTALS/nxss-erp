@@ -14,9 +14,10 @@ export default function HomeScreen() {
   const { user } = useUser();
   return (
     <View className="h-full flex-1 items-center gap-6 bg-background p-4">
-      <Stack
-        screenOptions={{
+      <Stack.Screen
+        options={{
           title: "Fellow",
+          headerTitleAlign: "center",
           headerLeft(props) {
             return <MenuIcon color={"black"} />;
           },
