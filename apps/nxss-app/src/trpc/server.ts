@@ -1,4 +1,4 @@
-/**@ts-expect-error */
+/**@ts-ignore */
 import { cache } from "react";
 import { headers } from "next/headers";
 import { auth } from "@clerk/nextjs/server";
