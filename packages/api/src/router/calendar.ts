@@ -121,6 +121,10 @@ export const calendarRouter = router({
         });
       }
 
+      /**
+       *  @todo Need to merge it finally in transaction
+       *  @member Manu
+       */
       const scope = await ctx.db.insert(calendarBranches).values({
         calendar_id: eventId,
         branch_id: input.scope.branchId,
