@@ -7,6 +7,7 @@ import Select, { MultiValue } from "react-select";
 import { cn } from "@nxss/ui";
 import { Badge } from "@nxss/ui/badge";
 import { Separator } from "@nxss/ui/seperator";
+import { Skeleton } from "@nxss/ui/skeleton";
 
 import { api } from "~/trpc/react";
 
@@ -57,7 +58,15 @@ const DynamicBranchSelect = ({
 
   return (
     <Select
+      isLoading={semesters.isLoading || branches.isLoading}
       closeMenuOnSelect={false}
+      loadingMessage={() => (
+        <div className="flex w-full flex-col gap-2">
+          {Array.from({ length: 4 }).flatMap((_, i) => (
+            <Skeleton className="h-10 w-full rounded-md delay-75" />
+          ))}
+        </div>
+      )}
       defaultValue={values}
       onChange={(newValue) => setValues(newValue)}
       isMulti

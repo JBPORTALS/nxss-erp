@@ -51,6 +51,7 @@
     "./sheet": "./src/sheet.tsx",
     "./switch": "./src/switch.tsx",
     "./content-area": "./src/content-area.tsx",
+    "./skeleton": "./src/skeleton.tsx",
     "./icons": "./src/icons.tsx"
   },
   "license": "MIT",
