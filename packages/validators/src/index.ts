@@ -124,6 +124,11 @@ export const eventSchema = z.object({
   datetime,
   location: z.string().optional(),
   includeTime: z.boolean(),
+  scope: z.object({
+    branch: z.string().optional(),
+    semester: z.string().optional(),
+    section: z.string().optional(),
+  }),
 });
 
 export const CreateOrganizationScheme = z.object({

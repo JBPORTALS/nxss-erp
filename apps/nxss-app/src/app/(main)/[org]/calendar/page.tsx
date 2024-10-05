@@ -46,6 +46,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@nxss/ui/dialog";
@@ -74,6 +75,7 @@ import { Textarea } from "@nxss/ui/textarea";
 import { toast } from "@nxss/ui/toast";
 import { eventSchema } from "@nxss/validators";
 
+import MultiSelect from "~/app/_components/select/multi-select";
 import { api } from "~/trpc/react";
 
 const types = [
@@ -171,7 +173,7 @@ function AddEventDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent onClick={(e) => e.stopPropagation()} className="w-[450px]">
+      <DialogContent onClick={(e) => e.stopPropagation()} className="w-[540px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Square
@@ -424,6 +426,23 @@ function AddEventDialog({
                   <FormLabel>{"Description (optional)"}</FormLabel>
                   <FormControl>
                     <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="scope"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{"Scope"}</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      values={field.value}
+                      onSelect={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

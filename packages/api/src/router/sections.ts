@@ -87,6 +87,27 @@ export const sectionsRouter = router({
         }
       },
     ),
+  getAll: protectedProcedure
+    .input(z.object({ semesterId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const { db } = ctx;
+
+      try {
+        const sectionsResult = await db
+          .select()
+          .from(sections)
+          .where(eq(sections.semester_id, input.semesterId))
+          .orderBy(asc(sections.name));
+
+        return sectionsResult;
+      } catch (error) {
+        console.error("Error in getSections:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An error occurred while fetching sections and batches",
+        });
+      }
+    }),
   delete: protectedProcedure
     .input(z.number())
     .mutation(async ({ ctx, input: sectionId }) => {
