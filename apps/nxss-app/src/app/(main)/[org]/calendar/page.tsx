@@ -159,15 +159,24 @@ function AddEventDialog({
   });
 
   async function onSubmit(values: z.infer<typeof eventSchema>) {
+    const [branch, semester, section, batch] = values.scope;
+    if (!branch) return;
+
     await mutateAsync({
       start_date: values?.datetime?.from ?? new Date(),
       end_date: values?.datetime?.to,
       is_all_day: !values.includeTime,
       title: values.title,
       description: values.description,
-      audience_type: "all",
+      audience_type: "students",
       event_type: eventType,
       location: values.location,
+      scope: {
+        branchId: parseInt(branch?.value),
+        semesterId: semester?.value ? parseInt(semester.value) : undefined,
+        sectionId: section?.value ? parseInt(section.value) : undefined,
+        batchId: batch?.value ? parseInt(batch.value) : undefined,
+      },
     });
   }
   return (
@@ -233,7 +242,7 @@ function AddEventDialog({
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
+                            "h-10 w-full pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground",
                           )}
                         >

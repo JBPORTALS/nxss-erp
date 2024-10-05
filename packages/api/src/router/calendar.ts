@@ -112,13 +112,29 @@ export const calendarRouter = router({
         })
         .returning();
 
-      if (!event.at(0)?.id) {
+      const eventId = event.at(0)?.id;
+
+      if (!eventId) {
         throw new TRPCError({
           message: "Unable to create the event, please retry",
           code: "BAD_REQUEST",
         });
       }
 
+      const scope = await ctx.db.insert(calendarBranches).values({
+        calendar_id: eventId,
+        branch_id: input.scope.branchId,
+        semester_id: input.scope.semesterId,
+        section: input.scope.sectionId,
+        batch: input.scope.batchId,
+      });
+
+      if (scope.rowCount !== 1) {
+        throw new TRPCError({
+          message: "Unable to create the scope for event, please retry",
+          code: "BAD_REQUEST",
+        });
+      }
       return event.at(0);
     }),
 

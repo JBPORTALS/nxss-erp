@@ -90,6 +90,12 @@ export const CreateCalendarEventScheme = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   event_type: z.enum(["event", "opportunity", "holiday", "exam_schedule"]),
+  scope: z.object({
+    branchId: z.number(),
+    semesterId: z.number().optional(),
+    sectionId: z.number().optional(),
+    batchId: z.number().optional(),
+  }),
   audience_type: z.enum(["staff", "students", "all"]),
   is_all_day: z.boolean().optional(),
   start_date: z.date(),
