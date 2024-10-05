@@ -229,11 +229,11 @@ async function main() {
 
       return {
         full_name: faker.person.fullName(),
-        email: faker.internet.email(),
-        phone_number: faker.phone.number(),
+        email: faker.internet.email({ lastName: "+clerk_test" }),
+        phone_number: faker.helpers.fromRegExp("+1[0-9]{3}55501[0-9][0-9]"),
         date_of_birth: dateOfBirth.toISOString().split("T")[0],
         year_of_join: yearOfJoin,
-        clerk_user_id: faker.string.uuid(),
+        clerk_user_id: null,
         clerk_org_id: faker.helpers.arrayElement(insertedInstitutions).id,
         branch_id: randomBranch.id,
         current_semester_id: randomSemester.id,
@@ -249,9 +249,9 @@ async function main() {
     { length: 100 },
     () => ({
       full_name: faker.person.fullName(),
-      email: faker.internet.email(),
-      phone_number: faker.phone.number(),
-      clerk_user_id: faker.string.uuid(),
+      email: faker.internet.email({ lastName: "+clerk_test" }),
+      phone_number: faker.helpers.fromRegExp("+1[0-9]{3}55501[0-9][0-9]"),
+      clerk_user_id: null,
       clerk_org_id: faker.helpers.arrayElement(insertedInstitutions).id,
       created_at: faker.date.past(),
       updated_at: faker.date.recent(),

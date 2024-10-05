@@ -28,4 +28,12 @@ export const semesterRouter = router({
 
       return defaultSemester;
     }),
+  getSemesterList: protectedProcedure
+    .input(z.object({ branchId: z.number() }))
+    .query(({ input, ctx }) => {
+      const { branchId } = input;
+      return ctx.db.query.semesters.findMany({
+        where: eq(semesters.branch_id, branchId),
+      });
+    }),
 });

@@ -1,28 +1,21 @@
-import { notFound } from "next/navigation";
-import { OrganizationSwitcher } from "@clerk/nextjs";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import React from "react";
 import { RocketIcon, SlashIcon } from "lucide-react";
 
-import { cn } from "@nxss/ui";
 import { Button } from "@nxss/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@nxss/ui/select";
 
 import { BreadcrumbNavbar } from "~/app/_components/breadcrumb";
 import NavbarItems from "~/app/_components/navbar-client-item";
 import ProfilePopover from "~/app/_components/popovers/profile-popover";
 import AsideBarClient from "~/app/_components/sidebar/asidebar-client";
+import Switchers from "~/app/_components/switcher";
 import CustomOrganizationSwitcher from "~/app/_components/switcher/organizatoin-switcher";
+import SemesterSwitcher from "~/app/_components/switcher/semester-switcher";
 
 export default async function Templates(props: {
   children: React.ReactNode;
-  params: { org: string; branch_id: string };
+  params: { org: string; branch_id: string; semester_id: string };
 }) {
+  console.log(props.params);
   return (
     <div className="h-screen w-full">
       <div className="sticky inset-0 z-40 flex flex-col">
@@ -35,8 +28,7 @@ export default async function Templates(props: {
               <RocketIcon className="size-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <SlashIcon className="size-4 -rotate-12 text-muted-foreground/40" />
-              <CustomOrganizationSwitcher />
+              <Switchers />
               {/* <SlashIcon className="size-4 text-muted-foreground/40" /> */}
               {/* <Select value="2024">
                 <SelectTrigger
