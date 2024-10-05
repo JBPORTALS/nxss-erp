@@ -209,7 +209,7 @@ async function main() {
         section_id: section.id,
       })),
   );
-  await insertInBatches(batches, batchesData);
+  const insertedBatches = await insertInBatches(batches, batchesData);
 
   console.log("Seeding students 🎓");
   const studentsData = Array.from<unknown, typeof students.$inferInsert>(
@@ -293,16 +293,18 @@ async function main() {
           const semester = faker.helpers.arrayElement(
             insertedSemesters.filter((s) => s.branch_id === branch.id),
           );
+          const section = faker.helpers.arrayElement(
+            insertedSections.filter((s) => s.semester_id === semester.id),
+          );
+          const batch = faker.helpers.arrayElement(
+            insertedBatches.filter((b) => b.section_id === section.id),
+          );
           return {
             calendar_id: calendarEvent.id,
             branch_id: branch.id,
             semester_id: semester.id,
-            section: faker.helpers.arrayElement(["A", "B", "C", "D"]),
-            batch: faker.helpers.arrayElement([
-              "Batch 1",
-              "Batch 2",
-              "Batch 3",
-            ]),
+            section: section.id,
+            batch: batch.id,
           };
         },
       ),

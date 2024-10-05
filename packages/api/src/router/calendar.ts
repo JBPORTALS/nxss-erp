@@ -204,8 +204,8 @@ export const calendarRouter = router({
               .number()
               .min(1, "Semester ID is required")
               .optional(),
-            section: z.string().optional(),
-            batch: z.string().optional(),
+            section: z.number().min(1, "Semester ID is required").optional(),
+            batch: z.number().min(1, "Semester ID is required").optional(),
           }),
         ),
       }),

@@ -5,6 +5,7 @@ import { createSelectSchema } from "drizzle-zod";
 import { pgTable } from "./_table";
 import { branches } from "./branches";
 import { audienceTypeEnum, eventTypeEnum } from "./enum";
+import { batches, sections } from "./groups";
 import { semesters } from "./semesters";
 
 export const calendar = pgTable("calendar", {
@@ -36,9 +37,12 @@ export const calendarBranches = pgTable("calendar_branches", {
   semester_id: integer("semester_id").references(() => semesters.id, {
     onDelete: "cascade",
   }),
-  section: text("section"),
-  batch: text("batch"),
+  section: integer("section").references(() => sections.id, {
+    onDelete: "cascade",
+  }),
+  batch: integer("batch").references(() => batches.id, { onDelete: "cascade" }),
 });
+
 // Calendar Event Relations
 export const calendarEventRelations = relations(calendar, ({ many }) => ({
   calendarBranches: many(calendarBranches),
