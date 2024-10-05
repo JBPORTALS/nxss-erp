@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { ListEnd } from "lucide-react";
-import Select, { MultiValue } from "react-select";
+import React from "react";
+import { ListEnd, Loader } from "lucide-react";
+import Select, { MultiValue, MultiValueProps } from "react-select";
 
 import { cn } from "@nxss/ui";
 import { Badge } from "@nxss/ui/badge";
@@ -11,26 +11,16 @@ import { Skeleton } from "@nxss/ui/skeleton";
 
 import { api } from "~/trpc/react";
 
-const DynamicBranchSelect = ({
-  onSelect,
-}: {
-  onSelect: (values?: {
-    branch?: string;
-    semester?: string;
-    section?: string;
-  }) => void;
-  values?: {
-    branch?: string;
-    section?: string;
-    semester?: string;
-  };
+export const ScopeSelect = ({
+  values,
+  ...props
+}: React.ComponentProps<typeof Select> & {
+  values: MultiValue<{ label: string; value: string }>;
 }) => {
-  const [values, setValues] = useState<
-    MultiValue<{ label: string; value: string }>
-  >([]);
-
   const branch = values?.at(0);
   const semester = values?.at(1);
+  const section = values?.at(2);
+  const batch = values?.at(3);
 
   // Mock data - replace with actual data fetching logic
   const branches = api.branch.getBranchList.useQuery();
@@ -38,15 +28,33 @@ const DynamicBranchSelect = ({
     { branchId: parseInt(branch?.value!) },
     { enabled: !!branch },
   );
+  const sections = api.sections.getAll.useQuery(
+    { semesterId: parseInt(semester?.value!) },
+    { enabled: !!semester },
+  );
+  const batches = api.batches.getBatchList.useQuery(
+    { sectionId: parseInt(section?.value!) },
+    { enabled: !!section },
+  );
 
   const branchOptions = branches.data?.flatMap((branch) => ({
     value: branch.id.toString(),
     label: branch.name,
   }));
 
-  const semesterOptions = semesters.data?.flatMap((branch) => ({
-    value: branch.id.toString(),
-    label: `Semester ${branch.number}`,
+  const semesterOptions = semesters.data?.flatMap((semester) => ({
+    value: semester.id.toString(),
+    label: `Semester ${semester.number}`,
+  }));
+
+  const sectionsOptions = sections.data?.flatMap((section) => ({
+    value: section.id.toString(),
+    label: `Section ${section.name}`,
+  }));
+
+  const batchesOptions = batches.data?.flatMap((batches) => ({
+    value: batches.id.toString(),
+    label: `${batches.name}`,
   }));
 
   const options =
@@ -54,11 +62,20 @@ const DynamicBranchSelect = ({
       ? branchOptions
       : branch && !semester
         ? semesterOptions
-        : [];
+        : branch && semester && !section
+          ? sectionsOptions
+          : branch && semester && section && !batch
+            ? batchesOptions
+            : [];
 
   return (
     <Select
-      isLoading={semesters.isLoading || branches.isLoading}
+      isLoading={
+        semesters.isLoading ||
+        branches.isLoading ||
+        sections.isLoading ||
+        batches.isLoading
+      }
       closeMenuOnSelect={false}
       loadingMessage={() => (
         <div className="flex w-full flex-col gap-2">
@@ -68,7 +85,6 @@ const DynamicBranchSelect = ({
         </div>
       )}
       defaultValue={values}
-      onChange={(newValue) => setValues(newValue)}
       isMulti
       options={options}
       placeholder={"Select scope"}
@@ -84,12 +100,18 @@ const DynamicBranchSelect = ({
           ),
         menu: (state) =>
           cn(
-            "pointer-events-auto mt-2 rounded-md border bg-popover p-3 text-popover-foreground shadow-md outline-none",
+            "pointer-events-auto mt-2 rounded-md border bg-popover px-2 py-3 text-popover-foreground shadow-md outline-none",
           ),
-        menuPortal: (state) => cn(state.position),
+        dropdownIndicator: (state) =>
+          cn(
+            "cursor-pointer text-muted-foreground transition-all duration-300 hover:text-foreground",
+            state.selectProps.menuIsOpen && "rotate-180",
+          ),
+        clearIndicator: (state) =>
+          cn("cursor-pointer text-muted-foreground hover:text-foreground"),
         option: (state) =>
           cn(
-            "cursor-pointer rounded-md px-3 py-2 transition-all duration-200",
+            "cursor-pointer rounded-md px-3 py-2 text-sm transition-all duration-200",
             state.isFocused && "bg-accent",
           ),
         placeholder: (state) => cn("pl-2 text-sm text-muted-foreground"),
@@ -119,9 +141,11 @@ const DynamicBranchSelect = ({
             </Badge>
           </React.Fragment>
         ),
+        LoadingIndicator: (props) => (
+          <Loader className="duration-[4000] size-5 animate-spin" />
+        ),
       }}
+      {...props}
     />
   );
 };
-
-export default DynamicBranchSelect;

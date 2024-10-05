@@ -75,7 +75,7 @@ import { Textarea } from "@nxss/ui/textarea";
 import { toast } from "@nxss/ui/toast";
 import { eventSchema } from "@nxss/validators";
 
-import MultiSelect from "~/app/_components/select/multi-select";
+import { ScopeSelect } from "~/app/_components/select/scope-select";
 import { api } from "~/trpc/react";
 
 const types = [
@@ -201,6 +201,20 @@ function AddEventDialog({
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{"Description (optional)"}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -416,21 +430,7 @@ function AddEventDialog({
               )}
             />
 
-            {/* <pre>{JSON.stringify(form.watch().datetime, undefined, 2)}</pre> */}
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{"Description (optional)"}</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* <pre>{JSON.stringify(form.watch().scope, undefined, 2)}</pre> */}
 
             <FormField
               control={form.control}
@@ -439,10 +439,7 @@ function AddEventDialog({
                 <FormItem>
                   <FormLabel>{"Scope"}</FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      values={field.value}
-                      onSelect={field.onChange}
-                    />
+                    <ScopeSelect values={field.value} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

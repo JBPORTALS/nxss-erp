@@ -124,11 +124,17 @@ export const eventSchema = z.object({
   datetime,
   location: z.string().optional(),
   includeTime: z.boolean(),
-  scope: z.object({
-    branch: z.string().optional(),
-    semester: z.string().optional(),
-    section: z.string().optional(),
-  }),
+  scope: z
+    .array(
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      }),
+      {
+        required_error: "Atlease one scope must be select",
+      },
+    )
+    .min(1, "Atlease one scope must be select"),
 });
 
 export const CreateOrganizationScheme = z.object({

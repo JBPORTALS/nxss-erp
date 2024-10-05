@@ -9,18 +9,16 @@ import { protectedProcedure, router } from "../trpc";
 const { batches, branches, semesters, sections } = schema;
 
 export const batchesRouter = router({
-  getBatchList: protectedProcedure.query(async ({ ctx }) => {
-    const batchList = await ctx.db.query.batches.findMany({
-      orderBy: asc(batches.name),
-      with: {
-        branch: true,
-        semester: true,
-        section: true,
-      },
-    });
+  getBatchList: protectedProcedure
+    .input(z.object({ sectionId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const batchList = await ctx.db.query.batches.findMany({
+        orderBy: asc(batches.name),
+        where: eq(batches.section_id, input.sectionId),
+      });
 
-    return batchList;
-  }),
+      return batchList;
+    }),
 
   getDetails: protectedProcedure
     .input(z.string().min(1, "Batch ID is required!"))
