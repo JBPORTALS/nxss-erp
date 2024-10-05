@@ -25,17 +25,22 @@ import { api } from "~/trpc/react";
 
 export const SemesterSwitcher = () => {
   const params = useParams();
-  const { data, isLoading } = api.semester.getSemesterList.useQuery({
-    branchId: parseInt(params.branch_id as string),
-  });
+  const { data, isLoading } = api.semester.getSemesterList.useQuery(
+    {
+      branchId: parseInt(params.branch_id as string),
+    },
+    { enabled: !!params.branch_id },
+  );
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+
+  console.log("branchId", params);
 
   if (isLoading) {
     return null;
   }
 
-  const semesters = data ?? [];
+  const semesters = data;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -52,7 +57,7 @@ export const SemesterSwitcher = () => {
               <span className="w-full truncate">
                 Semester{" "}
                 {
-                  semesters.find(
+                  semesters?.find(
                     (sem) => sem.id === parseInt(params.semester_id as string),
                   )?.number
                 }
@@ -74,7 +79,7 @@ export const SemesterSwitcher = () => {
           <CommandList>
             <CommandEmpty>No semester found.</CommandEmpty>
             <CommandGroup>
-              {semesters.map((sem) => (
+              {semesters?.map((sem) => (
                 <CommandItem
                   key={sem.id}
                   value={sem.id.toString()}

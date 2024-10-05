@@ -1,6 +1,8 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { and, asc, eq, or, schema } from "@nxss/db";
+import { academicYears } from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
 
@@ -30,10 +32,34 @@ export const semesterRouter = router({
     }),
   getSemesterList: protectedProcedure
     .input(z.object({ branchId: z.number() }))
-    .query(({ input, ctx }) => {
+    .query(async ({ input, ctx }) => {
       const { branchId } = input;
-      return ctx.db.query.semesters.findMany({
-        where: eq(semesters.branch_id, branchId),
+      const institutionId = ctx.auth.orgId;
+
+      if (!institutionId)
+        throw new TRPCError({
+          message: "No organization selected",
+          code: "BAD_GATEWAY",
+        });
+
+      const academicYear = await ctx.db.query.academicYears.findFirst({
+        where: and(
+          eq(academicYears.year, "2024"),
+          eq(academicYears.institution_id, institutionId),
+        ),
+      });
+
+      if (!academicYear)
+        throw new TRPCError({
+          message: "No academic year",
+          code: "INTERNAL_SERVER_ERROR",
+        });
+
+      return await ctx.db.query.semesters.findMany({
+        where: and(
+          eq(semesters.branch_id, branchId),
+          eq(semesters.academic_year_id, academicYear.id),
+        ),
       });
     }),
 });

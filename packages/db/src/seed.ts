@@ -117,25 +117,20 @@ async function main() {
   }
 
   console.log("Seeding academic years 📅");
-  const academicYearsData = insertedInstitutions.flatMap(
-    (institution: typeof institutions.$inferSelect) =>
-      Array.from<unknown, typeof academicYears.$inferInsert>(
-        { length: 3 },
-        () => ({
-          institution_id: institution.id,
-          year: faker.date.future().getFullYear().toString(),
-          pattern: faker.helpers.arrayElement(["semester", "annual"]),
-          semester_count: faker.number.int({ min: 1, max: 3 }),
-          status: faker.helpers.arrayElement([
-            "current",
-            "completed",
-            "upcoming",
-          ]),
-          start_date: faker.date.future(),
-          end_date: faker.date.future(),
-        }),
-      ),
+  const academicYearsData = insertedInstitutions.map(
+    (institution: typeof institutions.$inferSelect) => ({
+      institution_id: institution.id,
+      year: "2024",
+      pattern: institution.pattern,
+      semester_count: institution.semester_count,
+      status: faker.helpers.arrayElement<
+        typeof academicYears.$inferInsert.status
+      >(["current", "completed", "upcoming"]),
+      start_date: new Date(Date.now()),
+      end_date: faker.date.future({ years: 1 }),
+    }),
   );
+
   const insertedAcademicYears = await insertInBatches(
     academicYears,
     academicYearsData,
@@ -177,11 +172,7 @@ async function main() {
               academic_year_id: academicYear.id,
               branch_id: branch.id,
               number: i + 1,
-              status: faker.helpers.arrayElement([
-                "current",
-                "completed",
-                "upcoming",
-              ]),
+              status: (i + 1) % 2 === 0 ? "upcoming" : "current",
             }),
           ),
         ),
