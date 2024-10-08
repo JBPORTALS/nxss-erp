@@ -19,8 +19,8 @@ jobs:
 
       - name: Run Prisma Migrate
         run: |
-          npx prisma generate
-          npx prisma migrate deploy
+          pnpm db:generate
+          pnpm db:migrate
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
