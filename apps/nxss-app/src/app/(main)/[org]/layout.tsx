@@ -29,22 +29,6 @@ export default async function Templates(props: {
             </Button>
             <div className="flex items-center gap-2">
               <Switchers />
-              {/* <SlashIcon className="size-4 text-muted-foreground/40" /> */}
-              {/* <Select value="2024">
-                <SelectTrigger
-                  className={cn(
-                    "w-fit border-none px-2 font-semibold shadow-none outline-none hover:bg-accent",
-                  )}
-                >
-                  <SelectValue placeholder="Select Academic Year" />
-                </SelectTrigger>
-                <SelectContent className="p-2 text-base">
-                  <SelectItem value="2024">Year 2024</SelectItem>
-                  <SelectItem value="2023">Year 2023</SelectItem>
-                  <SelectItem value="2022">Year 2022</SelectItem>
-                </SelectContent>
-              </Select> */}
-
               <NavbarItems />
             </div>
           </div>
