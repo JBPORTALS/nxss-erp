@@ -39,10 +39,15 @@ jobs:
         id: create_neon_branch
         uses: neondatabase/create-branch-action@v5
         with:
-          username: JB Portals
+          username: maindb_owner
           project_id: ${{ vars.NEON_PROJECT_ID }}
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
           api_key: ${{ secrets.NEON_API_KEY }}
+
+      - name: Run Migrations
+        run: npm run db:migrate
+        env:
+          DATABASE_URL: "${{ steps.create_neon_branch.outputs.db_url }}"
 
   # The step above creates a new Neon branch.
   # You may want to do something with the new branch, such as run migrations, run tests
@@ -52,11 +57,6 @@ jobs:
   # It's important you don't log the DATABASE_URL as output as it contains a username and
   # password for your database.
   # For example, you can uncomment the lines below to run a database migration command:
-  #      - name: Run Migrations
-  #        run: npm run db:migrate
-  #        env:
-  #          # to use pooled connection
-  #          DATABASE_URL: "${{ steps.create_neon_branch.outputs.db_url_with_pooler }}"
   #          # OR to use unpooled connection
   #          # DATABASE_URL: "${{ steps.create_neon_branch.outputs.db_url }}"
 
