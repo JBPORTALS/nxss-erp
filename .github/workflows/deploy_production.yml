@@ -18,7 +18,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
 
-      - name: Run Prisma Migrate
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run db Migrate
         run: |
           pnpm db:generate
           pnpm db:migrate
