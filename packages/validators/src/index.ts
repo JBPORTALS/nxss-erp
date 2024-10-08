@@ -141,6 +141,9 @@ export const eventSchema = z.object({
       },
     )
     .min(1, "Atlease one scope must be select"),
+  audienceType: z.enum(["students", "staff", "all"], {
+    required_error: "Missing audience type",
+  }),
 });
 
 export const CreateOrganizationScheme = z.object({

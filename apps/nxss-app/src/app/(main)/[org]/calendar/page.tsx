@@ -10,11 +10,14 @@ import {
   CirclePlusIcon,
   DotIcon,
   Edit,
+  GraduationCap,
   PinIcon,
   PlusCircle,
   Square,
   Text,
   TrashIcon,
+  User2Icon,
+  Users2Icon,
 } from "lucide-react";
 import { z } from "zod";
 
@@ -68,6 +71,14 @@ import {
   ToolbarProps,
   View,
 } from "@nxss/ui/schedular";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@nxss/ui/select";
 import { Separator } from "@nxss/ui/seperator";
 import { Switch } from "@nxss/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
@@ -155,6 +166,7 @@ function AddEventDialog({
         to: addDays(new Date(Date.now()), 1),
       },
       includeTime: false,
+      audienceType: "all",
     },
   });
 
@@ -168,7 +180,7 @@ function AddEventDialog({
       is_all_day: !values.includeTime,
       title: values.title,
       description: values.description,
-      audience_type: "students",
+      audience_type: values.audienceType,
       event_type: eventType,
       location: values.location,
       scope: {
@@ -207,9 +219,8 @@ function AddEventDialog({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input placeholder="Title" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -221,14 +232,33 @@ function AddEventDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{"Description (optional)"}</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea
+                      placeholder="Description (optional) ..."
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            {eventType !== "holiday" && (
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Location (optional)..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
@@ -443,6 +473,51 @@ function AddEventDialog({
 
             <FormField
               control={form.control}
+              name="audienceType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{"Audience"}</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select ..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="all">
+                        <div className="flex items-center gap-2">
+                          <Users2Icon className="size-4" /> All
+                        </div>
+                      </SelectItem>
+                      <SelectItem
+                        className="flex items-center gap-2"
+                        value="students"
+                      >
+                        <div className="flex items-center gap-1">
+                          <GraduationCap className="size-4" /> Students
+                        </div>
+                      </SelectItem>
+                      <SelectItem
+                        className="flex items-center gap-2"
+                        value="staff"
+                      >
+                        <div className="flex items-center gap-1">
+                          <User2Icon className="size-4" />
+                          Staff
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="scope"
               render={({ field }) => (
                 <FormItem>
@@ -454,22 +529,6 @@ function AddEventDialog({
                 </FormItem>
               )}
             />
-
-            {eventType !== "holiday" && (
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{"Location (optional)"}</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
 
             <DialogFooter className="justify-end">
               <Button
