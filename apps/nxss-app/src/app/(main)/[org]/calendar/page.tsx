@@ -799,7 +799,7 @@ function SchedulerWithContext() {
             <div className="flex w-full gap-2">
               <Text className="size-5 text-muted-foreground" />
               <p className="w-3/4 text-xs">
-                {event.description ?? "No description..."}
+                {event.description ?? "No description ..."}
               </p>
             </div>
             <div className="flex w-full gap-2">
