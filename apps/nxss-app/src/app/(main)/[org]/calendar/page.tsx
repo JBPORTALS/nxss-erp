@@ -16,6 +16,7 @@ import {
   Square,
   Text,
   TrashIcon,
+  User,
   User2Icon,
   Users2Icon,
 } from "lucide-react";
@@ -724,6 +725,7 @@ function SchedulerWithContext() {
         allDay: event.is_all_day,
         type: event.event_type,
         location: event.location,
+        audienceType: event.audience_type,
       })),
     [data],
   );
@@ -799,6 +801,10 @@ function SchedulerWithContext() {
               <p className="w-3/4 text-xs">
                 {event.description ?? "No description..."}
               </p>
+            </div>
+            <div className="flex w-full gap-2">
+              <User className="size-5 text-muted-foreground" />
+              <p className="w-3/4 text-xs capitalize">{event.audienceType}</p>
             </div>
             <div className="flex w-full gap-2">
               <PinIcon className="size-5 text-muted-foreground" />
