@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreVertical } from "lucide-react";
 
-import { students } from "@nxss/db/schema";
+import { staff, students } from "@nxss/db/schema";
 import { Avatar, AvatarFallback } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
 import { Checkbox } from "@nxss/ui/checkbox";
@@ -20,7 +20,7 @@ import { ToggleStudentDialog } from "~/app/_components/dailog/toggle-student-pro
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Student = typeof students.$inferSelect;
+export type Staff = typeof staff.$inferSelect;
 
 export const useColumns = () => {
   const [activeStudentId, setActiveStudentId] = useState<number | null>(null);
@@ -31,7 +31,7 @@ export const useColumns = () => {
     setIsDialogOpen(true);
   }, []);
 
-  const columns: ColumnDef<Student>[] = [
+  const columns: ColumnDef<Staff>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -82,7 +82,6 @@ export const useColumns = () => {
       id: "actions",
       cell: ({ row }) => {
         const student = row.original;
-        const [isDialogOpen, setIsDialogOpen] = useState(false);
 
         return (
           <div className="flex items-center justify-end">
@@ -94,7 +93,7 @@ export const useColumns = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem>View student</DropdownMenuItem>
+                <DropdownMenuItem>View Staff</DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-destructive hover:text-destructive"
                   onSelect={() => openDialog(student.id)}
