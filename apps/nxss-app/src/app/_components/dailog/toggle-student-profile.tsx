@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, useState } from "react";
+import { Dispatch } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@nxss/ui/button";
@@ -11,7 +11,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@nxss/ui/dialog";
 import { toast } from "@nxss/ui/toast";
 
