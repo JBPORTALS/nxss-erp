@@ -2,6 +2,7 @@
 
 import React, { useCallback, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { Protect, useAuth } from "@clerk/nextjs";
 import { addDays, format, set, startOfMonth, subDays } from "date-fns";
 import {
   ArrowRight,
@@ -701,16 +702,19 @@ function CalendarToolBar(props: ToolbarProps<Event, { title: string }>) {
 
 function SchedulerWithContext() {
   const { date, view, typeFilter } = React.useContext(ScheduleContext);
+  const { orgRole } = useAuth();
 
-  console.log(typeFilter);
+  console.log(orgRole);
 
   const { data, isLoading } = api.calendar.getEventList.useQuery(
     {
       date,
       typeFilter,
+      audienceType: orgRole == "org:staff" ? "staff" : undefined,
     },
     {
       queryHash: `${startOfMonth(date).getMonth()}-${startOfMonth(date).getFullYear()}-${typeFilter.join("-")}`,
+      enabled: !!orgRole,
     },
   );
 
@@ -744,6 +748,7 @@ function SchedulerWithContext() {
           toast.info(`Event deleted successfully`);
         },
       });
+
     const pathname = usePathname();
     const router = useRouter();
     return (
@@ -761,25 +766,27 @@ function SchedulerWithContext() {
                     "bg-purple-600 text-purple-600",
                 )}
               />
-              <div className="flex items-center justify-end gap-1">
-                <Button
-                  onClick={() => router.push(`${pathname}/v/${event.id}`)}
-                  size={"icon"}
-                  variant={"ghost"}
-                  className="size-11 rounded-full"
-                >
-                  <Edit className="size-5" />
-                </Button>
-                <Button
-                  isLoading={isDeleting}
-                  onClick={() => deleteEventMutate({ id: event.id })}
-                  size={"icon"}
-                  variant={"ghost"}
-                  className="size-11 rounded-full text-destructive hover:text-destructive"
-                >
-                  {!isDeleting && <TrashIcon className="size-4" />}
-                </Button>
-              </div>
+              <Protect role="org:admin">
+                <div className="flex items-center justify-end gap-1">
+                  <Button
+                    onClick={() => router.push(`${pathname}/v/${event.id}`)}
+                    size={"icon"}
+                    variant={"ghost"}
+                    className="size-11 rounded-full"
+                  >
+                    <Edit className="size-5" />
+                  </Button>
+                  <Button
+                    isLoading={isDeleting}
+                    onClick={() => deleteEventMutate({ id: event.id })}
+                    size={"icon"}
+                    variant={"ghost"}
+                    className="size-11 rounded-full text-destructive hover:text-destructive"
+                  >
+                    {!isDeleting && <TrashIcon className="size-4" />}
+                  </Button>
+                </div>
+              </Protect>
             </div>
             <h3 className="text-xl font-medium">{event?.title}</h3>
             <div className="flex w-full items-center gap-2">
@@ -853,37 +860,39 @@ export default function page() {
               Academic Levels
             </ContentAreaDescription>
           </div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button>
-                Create <PlusCircle className="size-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              onClick={(e) => e.preventDefault()}
-              className="w-[200px] p-1"
-              align="end"
-            >
-              <AddEventDialog eventType="event">
-                <Button className="w-full justify-start" variant={"ghost"}>
-                  <Square className="size-2 rounded-sm bg-indigo-600 text-indigo-600" />{" "}
-                  Event
+          <Protect role="org:admin">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button>
+                  Create <PlusCircle className="size-4" />
                 </Button>
-              </AddEventDialog>
-              <AddEventDialog eventType="holiday">
-                <Button className="w-full justify-start" variant={"ghost"}>
-                  <Square className="size-2 rounded-sm bg-green-800 text-green-800" />
-                  Holiday
-                </Button>
-              </AddEventDialog>
-              <AddEventDialog eventType="opportunity">
-                <Button className="w-full justify-start" variant={"ghost"}>
-                  <Square className="size-2 rounded-sm bg-purple-600 text-purple-600" />
-                  Opportunity
-                </Button>
-              </AddEventDialog>
-            </PopoverContent>
-          </Popover>
+              </PopoverTrigger>
+              <PopoverContent
+                onClick={(e) => e.preventDefault()}
+                className="w-[200px] p-1"
+                align="end"
+              >
+                <AddEventDialog eventType="event">
+                  <Button className="w-full justify-start" variant={"ghost"}>
+                    <Square className="size-2 rounded-sm bg-indigo-600 text-indigo-600" />{" "}
+                    Event
+                  </Button>
+                </AddEventDialog>
+                <AddEventDialog eventType="holiday">
+                  <Button className="w-full justify-start" variant={"ghost"}>
+                    <Square className="size-2 rounded-sm bg-green-800 text-green-800" />
+                    Holiday
+                  </Button>
+                </AddEventDialog>
+                <AddEventDialog eventType="opportunity">
+                  <Button className="w-full justify-start" variant={"ghost"}>
+                    <Square className="size-2 rounded-sm bg-purple-600 text-purple-600" />
+                    Opportunity
+                  </Button>
+                </AddEventDialog>
+              </PopoverContent>
+            </Popover>
+          </Protect>
         </ContentAreaHeader>
         <Separator />
         <ContentAreaContainer>

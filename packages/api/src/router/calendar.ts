@@ -27,10 +27,11 @@ export const calendarRouter = router({
       z.object({
         date: z.date({ required_error: "Date is missing" }),
         typeFilter: z.array(z.enum(["event", "holiday", "opportunity"])),
+        audienceType: z.enum(["staff", "students", "all"]).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { date, typeFilter } = input;
+      const { date, typeFilter, audienceType } = input;
       const fromDate = startOfMonth(date);
       const toDate = endOfMonth(date);
 
@@ -40,6 +41,7 @@ export const calendarRouter = router({
           typeFilter.length !== 0
             ? inArray(calendar.event_type, typeFilter)
             : undefined,
+          audienceType ? eq(calendar.audience_type, audienceType) : undefined,
         ),
         orderBy: asc(calendar.start_date),
         with: {
