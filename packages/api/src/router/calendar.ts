@@ -21,6 +21,7 @@ import {
   gt,
   gte,
   inArray,
+  isNull,
   lt,
   lte,
   or,
@@ -314,10 +315,12 @@ export const calendarRouter = router({
         });
       }
 
-      const semester_id = student.batch?.section.semester_id;
-      const branch_id = student.batch?.section.branch_id;
-      const section_id = student.batch?.section_id;
+      // console.log("student", student);
+
+      const semester_id = student.current_semester_id;
+      const branch_id = student.branch_id;
       const batch_id = student.batch_id;
+      const section_id = student.batch?.section_id;
 
       if (!date)
         throw new TRPCError({
@@ -350,15 +353,23 @@ export const calendarRouter = router({
         with: {
           calendarBranches: {
             where: and(
-              branch_id ? eq(calendarBranches.branch_id, branch_id) : undefined,
               or(
-                semester_id
-                  ? eq(calendarBranches.semester_id, semester_id)
-                  : undefined,
+                eq(calendarBranches.branch_id, branch_id),
+                isNull(calendarBranches.branch_id),
+              ),
+              or(
+                eq(calendarBranches.semester_id, semester_id),
+                isNull(calendarBranches.semester_id),
+              ),
+              or(
                 section_id
                   ? eq(calendarBranches.section, section_id)
                   : undefined,
+                isNull(calendarBranches.section),
+              ),
+              or(
                 batch_id ? eq(calendarBranches.batch, batch_id) : undefined,
+                isNull(calendarBranches.batch),
               ),
             ),
           },
