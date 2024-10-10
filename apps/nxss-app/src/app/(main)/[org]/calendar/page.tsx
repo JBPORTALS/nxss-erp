@@ -173,8 +173,10 @@ function AddEventDialog({
   });
 
   async function onSubmit(values: z.infer<typeof eventSchema>) {
-    const [branch, semester, section, batch] = values.scope;
-    if (!branch) return;
+    const branch = values?.scope?.at(0);
+    const semester = values?.scope?.at(1);
+    const section = values?.scope?.at(2);
+    const batch = values?.scope?.at(3);
 
     await mutateAsync({
       start_date: values?.datetime?.from ?? new Date(),
@@ -185,12 +187,17 @@ function AddEventDialog({
       audience_type: values.audienceType,
       event_type: eventType,
       location: values.location,
-      scope: {
-        branchId: parseInt(branch?.value),
-        semesterId: semester?.value ? parseInt(semester.value) : undefined,
-        sectionId: section?.value ? parseInt(section.value) : undefined,
-        batchId: batch?.value ? parseInt(batch.value) : undefined,
-      },
+      scope:
+        values.audienceType !== "all"
+          ? {
+              branchId: branch?.value ? parseInt(branch?.value) : undefined,
+              semesterId: semester?.value
+                ? parseInt(semester.value)
+                : undefined,
+              sectionId: section?.value ? parseInt(section.value) : undefined,
+              batchId: batch?.value ? parseInt(batch.value) : undefined,
+            }
+          : undefined,
     });
   }
   return (
@@ -471,7 +478,9 @@ function AddEventDialog({
               )}
             />
 
-            {/* <pre>{JSON.stringify(form.watch().scope, undefined, 2)}</pre> */}
+            {/* <pre>
+              {JSON.stringify(form.getFieldState("scope"), undefined, 2)}
+            </pre> */}
 
             <FormField
               control={form.control}
@@ -518,19 +527,21 @@ function AddEventDialog({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="scope"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{"Scope"}</FormLabel>
-                  <FormControl>
-                    <ScopeSelect values={field.value} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {form.getValues().audienceType !== "all" && (
+              <FormField
+                control={form.control}
+                name="scope"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{"Scope for students"}</FormLabel>
+                    <FormControl>
+                      <ScopeSelect values={field.value ?? []} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <DialogFooter className="justify-end">
               <Button

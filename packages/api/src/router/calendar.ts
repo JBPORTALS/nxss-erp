@@ -9,6 +9,7 @@ import {
   eq,
   eventTypeEnum,
   inArray,
+  or,
   schema,
 } from "@nxss/db";
 import {
@@ -41,7 +42,12 @@ export const calendarRouter = router({
           typeFilter.length !== 0
             ? inArray(calendar.event_type, typeFilter)
             : undefined,
-          audienceType ? eq(calendar.audience_type, audienceType) : undefined,
+          audienceType === "staff"
+            ? or(
+                eq(calendar.audience_type, "staff"),
+                eq(calendar.audience_type, "all"),
+              )
+            : undefined,
         ),
         orderBy: asc(calendar.start_date),
         with: {
@@ -128,10 +134,10 @@ export const calendarRouter = router({
        */
       const scope = await ctx.db.insert(calendarBranches).values({
         calendar_id: eventId,
-        branch_id: input.scope.branchId,
-        semester_id: input.scope.semesterId,
-        section: input.scope.sectionId,
-        batch: input.scope.batchId,
+        branch_id: input.scope?.branchId,
+        semester_id: input.scope?.semesterId,
+        section: input.scope?.sectionId,
+        batch: input.scope?.batchId,
       });
 
       if (scope.rowCount !== 1) {

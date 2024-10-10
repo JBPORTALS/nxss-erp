@@ -31,9 +31,9 @@ export const calendarBranches = pgTable("calendar_branches", {
   calendar_id: integer("calendar_id")
     .notNull()
     .references(() => calendar.id, { onDelete: "cascade" }),
-  branch_id: integer("branch_id")
-    .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
+  branch_id: integer("branch_id").references(() => branches.id, {
+    onDelete: "cascade",
+  }),
   semester_id: integer("semester_id").references(() => semesters.id, {
     onDelete: "cascade",
   }),
