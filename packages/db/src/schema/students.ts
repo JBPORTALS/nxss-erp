@@ -50,4 +50,8 @@ export const studentsRelations = relations(students, ({ one }) => ({
     fields: [students.current_semester_id],
     references: [semesters.id],
   }),
+  batch: one(batches, {
+    fields: [students.batch_id],
+    references: [batches.id],
+  }),
 }));

@@ -196,8 +196,6 @@ async function main() {
     (section: typeof sections.$inferSelect) =>
       Array.from<unknown, typeof batches.$inferInsert>({ length: 2 }, () => ({
         name: faker.helpers.arrayElement(["Batch 1", "Batch 2", "Batch 3"]),
-        branch_id: section.branch_id,
-        semester_id: section.semester_id,
         section_id: section.id,
       })),
   );

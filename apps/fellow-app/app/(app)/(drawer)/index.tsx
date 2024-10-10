@@ -22,9 +22,7 @@ export default function HomeScreen() {
           title: "Fellow",
         }}
       />
-      <H2 className="font-medium">
-        Good morning, {user?.firstName} {user?.lastName}
-      </H2>
+      <H2 className="font-medium">Good morning, {user?.firstName}</H2>
       <P>{data?.title}</P>
       <Button onPress={() => refetch()}>
         <Text>Refetch</Text>

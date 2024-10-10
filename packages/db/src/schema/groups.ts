@@ -21,12 +21,6 @@ export const sections = pgTable("sections", {
 export const batches = pgTable("batches", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  branch_id: integer("branch_id")
-    .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
-  semester_id: integer("semester_id")
-    .notNull()
-    .references(() => semesters.id, { onDelete: "cascade" }),
   section_id: integer("section_id")
     .notNull()
     .references(() => sections.id, { onDelete: "cascade" }),
@@ -44,4 +38,11 @@ export const sectionsRelations = relations(sections, ({ one, many }) => ({
     references: [semesters.id],
   }),
   batches: many(batches), // One-to-many: a section can have many batches
+}));
+
+export const batchesRelations = relations(batches, ({ one }) => ({
+  section: one(sections, {
+    fields: [batches.section_id],
+    references: [sections.id],
+  }),
 }));

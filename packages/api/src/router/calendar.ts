@@ -1,5 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { endOfMonth, startOfMonth } from "date-fns";
+import {
+  endOfDay,
+  endOfMonth,
+  formatDistanceToNow,
+  isFuture,
+  isPast,
+  isSameDay,
+  isWithinInterval,
+  startOfDay,
+  startOfMonth,
+} from "date-fns";
 import { z } from "zod";
 
 import {
@@ -8,10 +18,15 @@ import {
   between,
   eq,
   eventTypeEnum,
+  gt,
+  gte,
   inArray,
+  lt,
+  lte,
   or,
   schema,
 } from "@nxss/db";
+import { students } from "@nxss/db/schema";
 import {
   CreateCalendarEventScheme,
   UpdateCalendarEventScheme,
@@ -263,5 +278,128 @@ export const calendarRouter = router({
       }
 
       return allResponses;
+    }),
+  getStudentEvents: protectedProcedure
+    .input(
+      z.object({
+        date: z.date({ required_error: "Date is missing" }).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const date = input.date;
+      // Step 1: Find the student's details
+      const student = await ctx.db.query.students.findFirst({
+        where: eq(students.clerk_user_id, ctx.auth.userId),
+        with: {
+          batch: {
+            with: {
+              section: {
+                with: {
+                  semester: {
+                    with: {
+                      branch: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!student) {
+        throw new TRPCError({
+          message: "Student not found",
+          code: "NOT_FOUND",
+        });
+      }
+
+      const semester_id = student.batch?.section.semester_id;
+      const branch_id = student.batch?.section.branch_id;
+      const section_id = student.batch?.section_id;
+      const batch_id = student.batch_id;
+
+      if (!date)
+        throw new TRPCError({
+          message: "date not defined",
+          code: "BAD_REQUEST",
+        });
+
+      // Step 2: Fetch related events
+
+      const startOfQueryDate = startOfDay(date);
+      const endOfQueryDate = endOfDay(date);
+
+      const events = await ctx.db.query.calendar.findMany({
+        where: and(
+          or(
+            between(calendar.start_date, startOfQueryDate, endOfQueryDate),
+            and(
+              lt(calendar.start_date, endOfQueryDate),
+              or(
+                gt(calendar.end_date, startOfQueryDate),
+                eq(calendar.end_date, endOfQueryDate),
+              ),
+            ),
+          ),
+          or(
+            eq(calendar.audience_type, "all"),
+            eq(calendar.audience_type, "students"),
+          ),
+        ),
+        with: {
+          calendarBranches: {
+            where: and(
+              branch_id ? eq(calendarBranches.branch_id, branch_id) : undefined,
+              or(
+                semester_id
+                  ? eq(calendarBranches.semester_id, semester_id)
+                  : undefined,
+                section_id
+                  ? eq(calendarBranches.section, section_id)
+                  : undefined,
+                batch_id ? eq(calendarBranches.batch, batch_id) : undefined,
+              ),
+            ),
+          },
+        },
+      });
+
+      // Filter out events that don't have matching calendarBranches
+      const now = new Date();
+      const filteredEvents = events
+        .filter((event) => event.calendarBranches.length > 0)
+        .map((event) => {
+          let formattedTime: string;
+          const startDate = new Date(event.start_date);
+          const endDate = event.end_date ? new Date(event.end_date) : null;
+
+          if (isPast(startDate) && (!endDate || isPast(endDate))) {
+            // Event is completed
+            formattedTime = `about ${formatDistanceToNow(startDate)} ago`;
+          } else if (isFuture(startDate)) {
+            // Event is upcoming
+            formattedTime = `in ${formatDistanceToNow(startDate)}`;
+          } else if (
+            isWithinInterval(now, { start: startDate, end: endDate || now })
+          ) {
+            // Event is ongoing
+            formattedTime = "Now";
+          } else {
+            // Fallback: just show the start date
+            formattedTime = formatDistanceToNow(startDate);
+          }
+
+          return {
+            ...event,
+            formattedTime,
+            isSlotStart: isSameDay(startDate, date),
+            isSlotEnd: endDate
+              ? isSameDay(endDate, date)
+              : isSameDay(startDate, date),
+          };
+        });
+
+      return filteredEvents;
     }),
 });
