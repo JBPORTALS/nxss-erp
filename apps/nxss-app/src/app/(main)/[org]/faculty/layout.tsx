@@ -1,6 +1,7 @@
-import { UserPlus2 } from "lucide-react";
+"use client";
 
-import { Button } from "@nxss/ui/button";
+import { useOrganization } from "@clerk/nextjs";
+
 import {
   ContentArea,
   ContentAreaContainer,
@@ -10,29 +11,25 @@ import {
 } from "@nxss/ui/content-area";
 import { Separator } from "@nxss/ui/seperator";
 
-import FacultyTabsClient from "~/app/_components/tabs/faculty-tabs";
+import AddStaffDialog from "~/app/_components/dailog/add-staff";
 
-export default function Template(props: { children: React.ReactNode }) {
+export default function Template({ children }: { children: React.ReactNode }) {
+  const { organization } = useOrganization();
+
   return (
     <ContentArea>
-      <ContentAreaHeader className="flex flex-row justify-between">
-        <div className="flex flex-col gap-2">
+      <ContentAreaHeader className="flex-row justify-between">
+        <div className="space-y-2">
           <ContentAreaTitle>Faculty</ContentAreaTitle>
           <ContentAreaDescription>
-            All staff members with access to <b>RJS</b> institution.
+            All staff members with access to{" "}
+            <span className="text-foreground">{organization?.name}</span> Branch
           </ContentAreaDescription>
         </div>
-        <Button>
-          Invite <UserPlus2 className="size-4" />
-        </Button>
-      </ContentAreaHeader>
-      <ContentAreaHeader>
-        <FacultyTabsClient />
+        <AddStaffDialog />
       </ContentAreaHeader>
       <Separator />
-      <ContentAreaContainer className="w-full">
-        {props.children}
-      </ContentAreaContainer>
+      <ContentAreaContainer className="w-full">{children}</ContentAreaContainer>
     </ContentArea>
   );
 }

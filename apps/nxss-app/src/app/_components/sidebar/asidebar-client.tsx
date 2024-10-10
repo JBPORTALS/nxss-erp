@@ -1,25 +1,15 @@
 import { Protect } from "@clerk/nextjs";
 import {
-  BookIcon,
   Box,
   Calendar,
-  CalendarIcon,
-  GraduationCapIcon,
   HomeIcon,
   LayoutDashboard,
   Settings,
-  SettingsIcon,
   Users2Icon,
-  UsersIcon,
   UsersRound,
 } from "lucide-react";
 
-import {
-  Sidebar,
-  SidebarBody,
-  SidebarItemWithSubmenu,
-  SidebarLabel,
-} from "@nxss/ui/asidebar";
+import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
 import { ComboboxDemo } from "@nxss/ui/combobox";
 import { VStack } from "@nxss/ui/stack";
 

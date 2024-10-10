@@ -32,12 +32,12 @@ export default function BranchAsidebarClient() {
           <HomeIcon className="h-4 w-4" />
           Home
         </SidebarItemClient>
-        <SidebarItemClient
+        {/* <SidebarItemClient
           path={`/${params.org}/branches/${params.branch_id}/s/${params.semester_id}/faculty`}
         >
           <UsersIcon className="h-4 w-4" />
           Faculty
-        </SidebarItemClient>
+        </SidebarItemClient> */}
         <SidebarItemWithSubmenu
           icon={<GraduationCapIcon className="h-4 w-4" />}
           label="Students"
