@@ -60,6 +60,9 @@ export const semesterRouter = router({
           eq(semesters.branch_id, branchId),
           eq(semesters.academic_year_id, academicYear.id),
         ),
+        with: {
+          branch: true,
+        },
       });
     }),
 });

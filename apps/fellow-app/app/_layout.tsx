@@ -10,6 +10,7 @@ import { Theme, ThemeProvider } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 
 import { NAV_THEME } from "~/lib/constants";
+import { TRPCProvider } from "~/utils/api";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -92,17 +93,19 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={LIGHT_THEME}>
-      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <ClerkLoaded>
-          <StatusBar
-            style={"dark"}
-            backgroundColor={LIGHT_THEME.colors.background}
-          />
-          <InitialLayout />
-          <PortalHost />
-        </ClerkLoaded>
-      </ClerkProvider>
-    </ThemeProvider>
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <TRPCProvider>
+        <ThemeProvider value={LIGHT_THEME}>
+          <ClerkLoaded>
+            <StatusBar
+              style={"dark"}
+              backgroundColor={LIGHT_THEME.colors.background}
+            />
+            <InitialLayout />
+            <PortalHost />
+          </ClerkLoaded>
+        </ThemeProvider>
+      </TRPCProvider>
+    </ClerkProvider>
   );
 }

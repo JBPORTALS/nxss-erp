@@ -148,6 +148,7 @@ async function main() {
         ]),
       })),
   );
+
   const insertedBranches = await insertInBatches(branches, branchesData);
 
   console.log("Seeding semesters 🗓️");
