@@ -12,7 +12,7 @@ export default function SignUpPage() {
             Sign in
           </Button>
         </Link>
-        <SignUp />
+        <SignUp fallbackRedirectUrl={"/create-organization"} />
       </ClerkLoaded>
     </div>
   );

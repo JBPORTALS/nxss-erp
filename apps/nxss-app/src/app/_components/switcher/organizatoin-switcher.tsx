@@ -68,9 +68,17 @@ export const CustomOrganizationSwitcher = () => {
                   )?.organization.name
                 }
               </span>
-              <Badge variant={"secondary"} className="text-xs font-normal">
-                Free
-              </Badge>
+              {organizations.find(
+                (mem) => mem.organization.id === organization.id,
+              )?.role === "org:staff" ? (
+                <Badge variant={"secondary"} className="text-xs">
+                  Staff
+                </Badge>
+              ) : (
+                <Badge variant={"secondary"} className="text-xs">
+                  Free
+                </Badge>
+              )}
             </div>
           ) : (
             "Select organization..."
@@ -87,42 +95,85 @@ export const CustomOrganizationSwitcher = () => {
           <CommandList>
             <CommandEmpty>No organization found.</CommandEmpty>
             <CommandGroup>
-              {organizations.map((mem) => (
-                <CommandItem
-                  key={mem.organization.id}
-                  value={mem.organization.id}
-                  onSelect={() => {
-                    router.push(`/${mem.organization.slug}/dashboard`);
-                  }}
-                  asChild
-                >
-                  <Button
-                    variant={"ghost"}
-                    className="flex w-full justify-between truncate text-xs font-normal"
+              {organizations
+                .filter((org) => org.role === "org:admin")
+                .map((mem) => (
+                  <CommandItem
+                    key={mem.organization.id}
+                    value={mem.organization.id}
+                    onSelect={() => {
+                      router.push(`/${mem.organization.slug}/dashboard`);
+                    }}
+                    asChild
                   >
-                    <div className="flex items-center gap-2">
-                      <Avatar className="size-6">
-                        <AvatarImage src={mem.organization.imageUrl} />
-                      </Avatar>
-                      {mem.organization.name}
-                      <Badge
-                        variant={"secondary"}
-                        className="text-xs font-normal"
-                      >
-                        Free
-                      </Badge>
-                    </div>
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        organization?.id === mem.organization.id
-                          ? "opacity-100"
-                          : "opacity-0",
-                      )}
-                    />
-                  </Button>
-                </CommandItem>
-              ))}
+                    <Button
+                      variant={"ghost"}
+                      className="flex w-full justify-between truncate text-xs font-normal"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Avatar className="size-6">
+                          <AvatarImage src={mem.organization.imageUrl} />
+                        </Avatar>
+                        {mem.organization.name}
+                        <Badge
+                          variant={"secondary"}
+                          className="text-xs font-normal"
+                        >
+                          Free
+                        </Badge>
+                      </div>
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          organization?.id === mem.organization.id
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                    </Button>
+                  </CommandItem>
+                ))}
+            </CommandGroup>
+            <CommandSeparator />
+            <CommandGroup>
+              {organizations
+                .filter((org) => org.role === "org:staff")
+                .map((mem) => (
+                  <CommandItem
+                    key={mem.organization.id}
+                    value={mem.organization.id}
+                    onSelect={() => {
+                      router.push(`/${mem.organization.slug}/dashboard`);
+                    }}
+                    asChild
+                  >
+                    <Button
+                      variant={"ghost"}
+                      className="flex w-full justify-between truncate text-xs font-normal"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Avatar className="size-6">
+                          <AvatarImage src={mem.organization.imageUrl} />
+                        </Avatar>
+                        {mem.organization.name}
+                        <Badge
+                          variant={"secondary"}
+                          className="text-xs font-normal"
+                        >
+                          Staff
+                        </Badge>
+                      </div>
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          organization?.id === mem.organization.id
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                    </Button>
+                  </CommandItem>
+                ))}
             </CommandGroup>
           </CommandList>
           <CommandSeparator />

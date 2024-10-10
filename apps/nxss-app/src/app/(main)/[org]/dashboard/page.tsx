@@ -1,4 +1,6 @@
-import { Protect } from "@clerk/nextjs";
+"use client";
+
+import { Protect, useOrganization, useUser } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import {
@@ -16,27 +18,20 @@ import {
   ContentAreaTitle,
 } from "@nxss/ui/content-area";
 
-export default async function Page({ params }: { params: { org: string } }) {
-  const { orgId, userId } = auth();
-
-  if (!userId) throw new Error("No user logged in");
-
-  const { firstName, lastName } = await clerkClient().users.getUser(userId);
-
-  if (!orgId) throw new Error("No organization selected");
-  const { name: orgName } = await clerkClient().organizations.getOrganization({
-    slug: params.org,
-  });
+export default function Page() {
+  const { user } = useUser();
+  const { organization } = useOrganization();
 
   return (
     <ContentArea>
       <Protect role="org:admin">
         <ContentAreaHeader>
           <ContentAreaTitle>
-            Good Afternoon, {firstName} {lastName}
+            Good Afternoon, {user?.firstName} {user?.lastName}
           </ContentAreaTitle>
           <ContentAreaDescription>
-            Access to <span className="text-foreground">{orgName}</span>{" "}
+            Access to{" "}
+            <span className="text-foreground">{organization?.name}</span>{" "}
             institution's admin dashboard.
           </ContentAreaDescription>
         </ContentAreaHeader>

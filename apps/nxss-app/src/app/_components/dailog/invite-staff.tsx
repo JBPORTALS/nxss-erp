@@ -15,6 +15,8 @@ import {
 } from "@nxss/ui/dialog";
 import { toast } from "@nxss/ui/toast";
 
+import { api } from "~/trpc/react";
+
 export function InviteStaffDialog({
   staffMembers,
   isOpen,
@@ -24,31 +26,24 @@ export function InviteStaffDialog({
   isOpen: boolean;
   onOpenChange: Dispatch<boolean>;
 }) {
-  const { organization } = useOrganization();
-  const [isPending, setIsPending] = useState(false);
   const router = useRouter();
+  const invite = api.staff.inviteStaffMember.useMutation({
+    onSuccess(data) {
+      toast.success(`Invited ${data.email}`);
+      onOpenChange(false);
+      router.refresh();
+    },
+    onError(error) {
+      toast.error(`${error.message}`);
+    },
+  });
 
   async function onInviteStaff() {
-    setIsPending(true);
     await Promise.all(
       staffMembers.map(async (staff) => {
-        await organization
-          ?.inviteMember({
-            emailAddress: staff.email,
-            role: "org:staff",
-          })
-          .then((inv) =>
-            toast.success(`Invitation sent to ${inv.emailAddress}`),
-          )
-          .catch((reason) => {
-            console.log(reason);
-            toast.error(`${staff.email} ${reason.errors[0].message}`);
-          });
+        await invite.mutateAsync({ staffId: staff.id });
       }),
     );
-    onOpenChange(false);
-    router.refresh();
-    setIsPending(false);
   }
 
   return (
@@ -76,7 +71,7 @@ export function InviteStaffDialog({
           </Button>
           <Button
             variant="primary"
-            isLoading={isPending}
+            isLoading={invite.isPending}
             onClick={onInviteStaff}
           >
             Invite Staff

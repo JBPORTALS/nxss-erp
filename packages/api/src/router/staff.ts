@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -65,7 +66,11 @@ export const staffRouter = router({
 
   getAllStaff: protectedProcedure.query(async ({ ctx }) => {
     try {
-      return await ctx.db.select().from(staff).orderBy(desc(staff.created_at));
+      return await ctx.db
+        .select()
+        .from(staff)
+        .where(eq(staff.clerk_org_id, ctx.auth.orgId!))
+        .orderBy(desc(staff.created_at));
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -130,6 +135,62 @@ export const staffRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while updating the staff member",
+        });
+      }
+    }),
+  inviteStaffMember: protectedProcedure
+    .input(
+      z.object({
+        staffId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const staffMember = await ctx.db
+          .select({
+            id: staff.id,
+            email: staff.email,
+            full_name: staff.full_name,
+          })
+          .from(staff)
+          .where(eq(staff.id, input.staffId))
+          .limit(1);
+
+        if (staffMember.length === 0) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Staff member not found",
+          });
+        }
+
+        const member = staffMember[0];
+
+        if (!member)
+          throw new TRPCError({
+            message: "No staff exists with this id",
+            code: "BAD_REQUEST",
+          });
+
+        const invitation =
+          await clerkClient.organizations.createOrganizationInvitation({
+            organizationId: ctx.auth.orgId as string,
+            emailAddress: member.email,
+            inviterUserId: ctx.auth.userId,
+            role: "org:staff",
+            redirectUrl: `http://localhost:3000/accept-invitation`,
+          });
+
+        return {
+          success: true,
+          email: member.email,
+          invitationId: invitation.id,
+        };
+      } catch (error: any) {
+        console.error(`Failed to invite staff member:`, error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.errors[0].message,
         });
       }
     }),
