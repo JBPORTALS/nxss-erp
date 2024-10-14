@@ -1,6 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Calendar, CalendarUtils, DateData } from "react-native-calendars";
+import { Link } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { format } from "date-fns";
 import { CalendarDays } from "lucide-react-native";
@@ -103,38 +111,47 @@ export default function CalendarScreen() {
             Events for {new Date(selected).toLocaleDateString()}
           </Text>
           {events.map((event, index) => (
-            <Card
-              key={index}
-              className={cn(
-                "rounded-xl bg-secondary",
-                !event.isSlotStart && "rounded-l-none border-l-4",
-                !event.isSlotEnd && "rounded-r-none border-r-4",
-              )}
-              style={{
-                borderLeftColor: "red",
-              }}
+            <Link
+              asChild
+              className="w-full"
+              key={event.id}
+              href={`/(modal)/event/${event.id}`}
             >
-              <CardHeader className="flex-row items-center justify-between">
-                <View className="w-full flex-shrink">
-                  <CardTitle className="w-full text-base">
-                    {event.title.slice(0, 80)}
-                  </CardTitle>
-                  <CardDescription>{event.formattedTime}</CardDescription>
-                </View>
-                <Badge className="" variant={"outline"}>
-                  <Text
-                    className={cn(
-                      "text-sm capitalize",
-                      event.event_type === "event" && "text-primary",
-                      event.event_type === "holiday" && "text-green-600",
-                      event.event_type === "opportunity" && "text-blue-600",
-                    )}
-                  >
-                    {event.event_type}
-                  </Text>
-                </Badge>
-              </CardHeader>
-            </Card>
+              <TouchableNativeFeedback>
+                <Card
+                  key={index}
+                  className={cn(
+                    "rounded-xl bg-secondary",
+                    !event.isSlotStart && "rounded-l-none border-l-4",
+                    !event.isSlotEnd && "rounded-r-none border-r-4",
+                  )}
+                  style={{
+                    borderLeftColor: "red",
+                  }}
+                >
+                  <CardHeader className="flex-row items-center justify-between">
+                    <View className="w-full flex-shrink">
+                      <CardTitle className="w-full text-base">
+                        {event.title.slice(0, 80)}
+                      </CardTitle>
+                      <CardDescription>{event.formattedTime}</CardDescription>
+                    </View>
+                    <Badge className="" variant={"outline"}>
+                      <Text
+                        className={cn(
+                          "text-sm capitalize",
+                          event.event_type === "event" && "text-primary",
+                          event.event_type === "holiday" && "text-green-600",
+                          event.event_type === "opportunity" && "text-blue-600",
+                        )}
+                      >
+                        {event.event_type}
+                      </Text>
+                    </Badge>
+                  </CardHeader>
+                </Card>
+              </TouchableNativeFeedback>
+            </Link>
           ))}
         </View>
       ) : (

@@ -40,7 +40,13 @@ function InitialLayout() {
       router.replace("/(auth)");
     }
   }, [isSignedIn, isLoaded]);
-  return <Slot screenOptions={{ headerShown: false }} />;
+  return (
+    <Slot
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
+  );
 }
 
 export default function RootLayout() {
