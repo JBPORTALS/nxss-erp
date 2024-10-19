@@ -12,6 +12,7 @@ import {
   DotIcon,
   Edit,
   GraduationCap,
+  Paperclip,
   PinIcon,
   PlusCircle,
   Square,
@@ -20,6 +21,7 @@ import {
   User,
   User2Icon,
   Users2Icon,
+  X,
 } from "lucide-react";
 import { z } from "zod";
 
@@ -51,7 +53,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@nxss/ui/dialog";
@@ -76,7 +77,6 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -90,6 +90,7 @@ import { eventSchema } from "@nxss/validators";
 
 import { ScopeSelect } from "~/app/_components/select/scope-select";
 import { api } from "~/trpc/react";
+import { UploadButton } from "~/utils/uploadthing";
 
 const types = [
   { label: "Event", value: "event" },
@@ -185,6 +186,7 @@ function AddEventDialog({
       title: values.title,
       description: values.description,
       audience_type: values.audienceType,
+      attachment_url: values.attachmentUrl,
       event_type: eventType,
       location: values.location,
       scope:
@@ -542,6 +544,66 @@ function AddEventDialog({
                 )}
               />
             )}
+
+            <FormField
+              control={form.control}
+              name="attachmentUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Attachment (PDF only)</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-2">
+                      {!field.value && (
+                        <UploadButton
+                          className={cn(
+                            "ut-button:bg-transparent ut-button:w-full ut-button:border-border ut-button:border ut-button:text-foreground ut-button:hover:bg-accent w-full",
+                          )}
+                          endpoint="imageUploader"
+                          content={{ allowedContent: "PDF File" }}
+                          onClientUploadComplete={(res) => {
+                            if (res && res.length > 0) {
+                              const uploadedUrl = res?.at(0)?.url;
+                              field.onChange(uploadedUrl);
+                              toast.success("PDF uploaded successfully");
+                            }
+                          }}
+                          onUploadError={(error: Error) => {
+                            toast.error(`Upload failed: ${error.message}`);
+                          }}
+                          config={{
+                            mode: "auto",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </FormControl>
+                  {field.value && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <Paperclip className="h-4 w-4" />
+                      <a
+                        href={field.value}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-500 hover:underline"
+                      >
+                        View uploaded PDF
+                      </a>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          field.onChange(undefined);
+                        }}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter className="justify-end">
               <Button

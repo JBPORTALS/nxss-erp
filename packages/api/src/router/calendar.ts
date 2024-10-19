@@ -103,7 +103,12 @@ export const calendarRouter = router({
       const event = await ctx.db.query.calendar.findFirst({
         where: eq(calendar.id, input.id),
         with: {
-          calendarBranches: true,
+          calendarBranches: {
+            with: {
+              branch: true,
+              semester: true,
+            },
+          },
         },
       });
 
@@ -177,16 +182,16 @@ export const calendarRouter = router({
             input.description && input.description?.length > 0
               ? input.description
               : null,
-          event_type: input.event_type,
-          audience_type: input.audience_type,
-          is_all_day: input.is_all_day,
-          start_date: input.start_date,
-          end_date: input.end_date,
+          event_type: input.eventType,
+          audience_type: input.audienceType,
+          is_all_day: !input.includeTime,
+          start_date: input.datetime?.from,
+          end_date: input.datetime?.to,
           location:
             input.location && input.location?.length > 0
               ? input.location
               : null,
-          attachment_url: input.attachment_url,
+          attachment_url: input.attachmentUrl,
         })
         .where(eq(calendar.id, input.id))
         .returning();
@@ -197,6 +202,14 @@ export const calendarRouter = router({
           code: "BAD_REQUEST",
         });
       }
+
+      if (input.audienceType !== "all")
+        await ctx.db.update(calendarBranches).set({
+          branch_id: input.scope?.branchId,
+          semester_id: input.scope?.semesterId,
+          section: input.scope?.sectionId,
+          batch: input.scope?.batchId,
+        });
 
       return response.at(0);
     }),

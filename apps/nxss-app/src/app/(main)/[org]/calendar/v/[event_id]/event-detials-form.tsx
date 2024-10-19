@@ -3,7 +3,18 @@
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { format, set, subDays } from "date-fns";
-import { ArrowRight, CalendarIcon, PinIcon, Square, Text } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarIcon,
+  GraduationCap,
+  Paperclip,
+  PinIcon,
+  Square,
+  Text,
+  User2Icon,
+  Users2Icon,
+  X,
+} from "lucide-react";
 import { z } from "zod";
 
 import { RouterOutputs } from "@nxss/api";
@@ -28,13 +39,22 @@ import {
 } from "@nxss/ui/form";
 import { Input } from "@nxss/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@nxss/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@nxss/ui/select";
 import { Separator } from "@nxss/ui/seperator";
 import { Switch } from "@nxss/ui/switch";
 import { Textarea } from "@nxss/ui/textarea";
 import { toast } from "@nxss/ui/toast";
 import { eventSchema } from "@nxss/validators";
 
+import { ScopeSelect } from "~/app/_components/select/scope-select";
 import { api } from "~/trpc/react";
+import { UploadButton } from "~/utils/uploadthing";
 
 export function EventDetialsForm({
   event,
@@ -52,6 +72,17 @@ export function EventDetialsForm({
         to: event.end_date ?? undefined,
       },
       includeTime: !event.is_all_day,
+      audienceType: event.audience_type,
+      attachmentUrl: event.attachment_url ?? undefined,
+      scope: event.calendarBranches
+        .map((s) => [
+          { value: s.branch?.id.toString(), label: s.branch?.name },
+          {
+            value: s.semester?.id.toString(),
+            label: `Semester ${s.semester?.number}`,
+          },
+        ])
+        .at(0),
     },
   });
   const { mutateAsync: updateEventMutate, isPending: isUpdating } =
@@ -71,14 +102,31 @@ export function EventDetialsForm({
   const event_id = useParams().event_id as string;
 
   async function onUpdate(values: z.infer<typeof eventSchema>) {
+    const branch = values?.scope?.at(0);
+    const semester = values?.scope?.at(1);
+    const section = values?.scope?.at(2);
+    const batch = values?.scope?.at(3);
     await updateEventMutate({
       id: parseInt(event_id),
+      datetime: values.datetime,
+      includeTime: values.includeTime,
       title: values.title,
-      start_date: values?.datetime?.from,
-      end_date: values?.datetime?.to,
       description: values.description,
+      audienceType: values.audienceType,
+      eventType: event.event_type,
+      attachmentUrl: values.attachmentUrl,
       location: values.location,
-      is_all_day: !values.includeTime,
+      scope:
+        values.audienceType !== "all"
+          ? {
+              branchId: branch?.value ? parseInt(branch?.value) : undefined,
+              semesterId: semester?.value
+                ? parseInt(semester.value)
+                : undefined,
+              sectionId: section?.value ? parseInt(section.value) : undefined,
+              batchId: batch?.value ? parseInt(batch.value) : undefined,
+            }
+          : undefined,
     });
   }
 
@@ -359,6 +407,128 @@ export function EventDetialsForm({
                 />
               </div>
             )}
+            {/* <pre>{JSON.stringify(form.getValues().scope)}</pre> */}
+            <FormField
+              control={form.control}
+              name="audienceType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{"Audience"}</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select ..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="all">
+                        <div className="flex items-center gap-2">
+                          <Users2Icon className="size-4" /> All
+                        </div>
+                      </SelectItem>
+                      <SelectItem
+                        className="flex items-center gap-2"
+                        value="students"
+                      >
+                        <div className="flex items-center gap-1">
+                          <GraduationCap className="size-4" /> Students
+                        </div>
+                      </SelectItem>
+                      <SelectItem
+                        className="flex items-center gap-2"
+                        value="staff"
+                      >
+                        <div className="flex items-center gap-1">
+                          <User2Icon className="size-4" />
+                          Staff
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.getValues().audienceType !== "all" && (
+              <FormField
+                control={form.control}
+                name="scope"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{"Scope for students"}</FormLabel>
+                    <FormControl>
+                      <ScopeSelect values={field.value ?? []} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <FormField
+              control={form.control}
+              name="attachmentUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Attachment (PDF only)</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-2">
+                      {!field.value && (
+                        <UploadButton
+                          className={cn(
+                            "ut-button:bg-transparent ut-button:w-full ut-button:border-border ut-button:border ut-button:text-foreground ut-button:hover:bg-accent w-full",
+                          )}
+                          endpoint="imageUploader"
+                          content={{ allowedContent: "PDF File" }}
+                          onClientUploadComplete={(res) => {
+                            if (res && res.length > 0) {
+                              const uploadedUrl = res?.at(0)?.url;
+                              field.onChange(uploadedUrl);
+                              toast.success("PDF uploaded successfully");
+                            }
+                          }}
+                          onUploadError={(error: Error) => {
+                            toast.error(`Upload failed: ${error.message}`);
+                          }}
+                          config={{
+                            mode: "auto",
+                          }}
+                        />
+                      )}
+
+                      {field.value && (
+                        <div className="mt-2 flex items-center gap-2">
+                          <Paperclip className="h-4 w-4" />
+                          <a
+                            href={field.value}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-500 hover:underline"
+                          >
+                            View uploaded PDF
+                          </a>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              form.setValue("attachmentUrl", undefined);
+                            }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
           <CardFooter className="flex items-center justify-end gap-4">
             <Button

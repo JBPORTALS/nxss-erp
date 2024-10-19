@@ -106,21 +106,6 @@ export const CreateCalendarEventScheme = z.object({
   attachment_url: z.string().optional(),
 });
 
-export const UpdateCalendarEventScheme = z.object({
-  id: z.number().min(1, "Event ID is required"),
-  title: z.string().min(1, "Title is required").optional(),
-  description: z.string().optional(),
-  event_type: z
-    .enum(["event", "opportunity", "holiday", "exam_schedule"])
-    .optional(),
-  audience_type: z.enum(["staff", "students", "all"]).optional(),
-  is_all_day: z.boolean().optional(),
-  start_date: z.date().optional(),
-  end_date: z.date().optional(),
-  location: z.string().optional(),
-  attachment_url: z.string().optional(),
-});
-
 const datetime: z.ZodSchema<DateRange | undefined> = z.object({
   from: z.date({ required_error: "From date is required" }),
   to: z.date().optional(),
@@ -132,6 +117,7 @@ const baseEventSchema = z.object({
   datetime,
   location: z.string().optional(),
   includeTime: z.boolean(),
+  attachmentUrl: z.string().optional(),
 });
 
 const scopeSchema = z.object({
@@ -164,6 +150,20 @@ export const eventSchema = z.discriminatedUnion("audienceType", [
   allAudienceEventSchema,
 ]);
 
+const updateBaseSchema = z.object({
+  id: z.number().min(1, "ID is required"),
+  eventType: z.enum(["event", "opportunity", "holiday", "exam_schedule"]),
+  scope: z
+    .object({
+      branchId: z.number().optional(),
+      semesterId: z.number().optional(),
+      sectionId: z.number().optional(),
+      batchId: z.number().optional(),
+    })
+    .optional(),
+  audienceType: z.enum(["all", "students", "staff"]),
+});
+
 export const CreateOrganizationScheme = z.object({
   name: z.string().min(1, "Required!"),
 });
@@ -178,3 +178,14 @@ export const CreateOrganizationBackendScheme = z.object({
   type: z.enum(["annual", "semester"]),
   semester_count: z.string().min(1, "Select count value"),
 });
+
+// export const UpdateCalendarEventScheme = eventSchema.transform((arg) => {
+//   return {
+//     ...arg,
+//     id: z.number().min(1, "ID is required"),
+//
+//   };
+// });
+
+export const UpdateCalendarEventScheme =
+  baseEventSchema.merge(updateBaseSchema);
