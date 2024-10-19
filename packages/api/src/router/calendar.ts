@@ -205,10 +205,10 @@ export const calendarRouter = router({
 
       if (input.audienceType !== "all")
         await ctx.db.update(calendarBranches).set({
-          branch_id: input.scope?.branchId,
-          semester_id: input.scope?.semesterId,
-          section: input.scope?.sectionId,
-          batch: input.scope?.batchId,
+          branch_id: input.scope?.branchId ?? null,
+          semester_id: input.scope?.semesterId ?? null,
+          section: input.scope?.sectionId ?? null,
+          batch: input.scope?.batchId ?? null,
         });
 
       return response.at(0);
