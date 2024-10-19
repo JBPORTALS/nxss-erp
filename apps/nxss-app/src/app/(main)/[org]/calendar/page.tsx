@@ -192,7 +192,11 @@ function AddEventDialog({
       scope:
         values.audienceType !== "all"
           ? {
-              branchId: branch?.value ? parseInt(branch?.value) : undefined,
+              branchId: branch?.value
+                ? !isNaN(parseInt(branch?.value))
+                  ? parseInt(branch.value)
+                  : undefined
+                : undefined,
               semesterId: semester?.value
                 ? parseInt(semester.value)
                 : undefined,

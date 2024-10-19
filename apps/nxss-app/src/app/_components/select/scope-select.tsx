@@ -26,7 +26,7 @@ export const ScopeSelect = ({
   const branches = api.branch.getBranchList.useQuery();
   const semesters = api.semester.getSemesterList.useQuery(
     { branchId: parseInt(branch?.value!) },
-    { enabled: !!branch },
+    { enabled: !!branch && branch.value !== "all" },
   );
   const sections = api.sections.getAll.useQuery(
     { semesterId: parseInt(semester?.value!) },
@@ -37,10 +37,11 @@ export const ScopeSelect = ({
     { enabled: !!section },
   );
 
-  const branchOptions = branches.data?.flatMap((branch) => ({
-    value: branch.id.toString(),
-    label: branch.name,
-  }));
+  const branchOptions =
+    branches.data?.flatMap((branch) => ({
+      value: branch.id.toString(),
+      label: branch.name,
+    })) ?? [];
 
   const semesterOptions = semesters.data?.flatMap((semester) => ({
     value: semester.id.toString(),
@@ -59,7 +60,7 @@ export const ScopeSelect = ({
 
   const options =
     !branch && !semester
-      ? branchOptions
+      ? [{ value: "all", label: "All" }, ...branchOptions]
       : branch && !semester
         ? semesterOptions
         : branch && semester && !section

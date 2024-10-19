@@ -76,11 +76,17 @@ export function EventDetialsForm({
       attachmentUrl: event.attachment_url ?? undefined,
       scope: event.calendarBranches
         .map((s) => [
-          { value: s.branch?.id.toString(), label: s.branch?.name },
           {
-            value: s.semester?.id.toString(),
-            label: `Semester ${s.semester?.number}`,
+            value: s.branch_id ? s.branch?.id.toString() : "all",
+            label: s.branch?.name ? s.branch.name : "All",
           },
+
+          s.branch_id
+            ? {
+                value: s.semester?.id.toString(),
+                label: `Semester ${s.semester?.number}`,
+              }
+            : undefined,
         ])
         .at(0),
     },
@@ -119,7 +125,11 @@ export function EventDetialsForm({
       scope:
         values.audienceType !== "all"
           ? {
-              branchId: branch?.value ? parseInt(branch?.value) : undefined,
+              branchId: branch?.value
+                ? !isNaN(parseInt(branch?.value))
+                  ? parseInt(branch.value)
+                  : undefined
+                : undefined,
               semesterId: semester?.value
                 ? parseInt(semester.value)
                 : undefined,
