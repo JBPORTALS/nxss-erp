@@ -28,7 +28,7 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
-import { AddStudentsDialog } from "~/app/_components/dailog/add-students";
+import { AddStudentsDialog } from "~/app/_components/dailog/add-student";
 import { api } from "~/trpc/server";
 import { DataTableClient } from "./data-table";
 

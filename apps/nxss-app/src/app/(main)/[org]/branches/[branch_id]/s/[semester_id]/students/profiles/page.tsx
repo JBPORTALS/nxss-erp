@@ -1,3 +1,5 @@
+import { PlusCircle } from "lucide-react";
+
 import { Button } from "@nxss/ui/button";
 import {
   ContentArea,
@@ -8,6 +10,7 @@ import {
 } from "@nxss/ui/content-area";
 import { Separator } from "@nxss/ui/seperator";
 
+import AddStudentDialog from "~/app/_components/dailog/add-student";
 import { api } from "~/trpc/server";
 import { Student, useColumns } from "./columns";
 import { DataTableClient } from "./data-table";
@@ -43,10 +46,7 @@ const SectionsAndBatchesTable = async ({
             All Students in computer Science
           </ContentAreaDescription>
         </div>
-        <ImportExcelComponent
-          branchId={parseInt(params.branch_id)}
-          semesterId={parseInt(params.semester_id)}
-        />
+        <AddStudentDialog />
       </ContentAreaHeader>
       <Separator />
       <ContentAreaContainer>

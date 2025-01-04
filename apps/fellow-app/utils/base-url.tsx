@@ -19,7 +19,7 @@ export const getBaseUrl = () => {
   console.warn("Localhost : ", localhost);
 
   if (!localhost) {
-    // return "https://turbo.t3.gg";
+    return "http://192.168.123.111:3000";
     throw new Error(
       "Failed to get localhost. Please point to your production server.",
     );

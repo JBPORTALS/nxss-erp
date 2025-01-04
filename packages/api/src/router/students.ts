@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { and, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import { z } from "zod";
@@ -7,7 +8,7 @@ import { batches } from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
 
-const { branches, semesters, students } = schema;
+const { students } = schema;
 
 export const studentsRouter = router({
   getStudentsByBranchAndSemester: protectedProcedure
@@ -40,6 +41,41 @@ export const studentsRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An unexpected error occurred",
+        });
+      }
+    }),
+  addStudent: protectedProcedure
+    .input(
+      z.object({
+        full_name: z.string(),
+        email: z.string().email(),
+        phone_number: z.string().optional(),
+        branch_id: z.number(),
+        current_semester_id: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const org_id = ctx.auth.orgId;
+
+        if (!org_id)
+          throw new TRPCError({
+            message: "No selected orgnaization",
+            code: "BAD_REQUEST",
+          });
+
+        const newStaff = await ctx.db
+          .insert(students)
+          .values({
+            ...input,
+            clerk_org_id: org_id,
+          })
+          .returning();
+        return newStaff[0];
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An error occurred while adding the student",
         });
       }
     }),
@@ -343,6 +379,62 @@ export const studentsRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching students for the batch",
+        });
+      }
+    }),
+  inviteStudentMember: protectedProcedure
+    .input(
+      z.object({
+        studentId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const studentMember = await ctx.db
+          .select({
+            id: students.id,
+            email: students.email,
+            full_name: students.full_name,
+          })
+          .from(students)
+          .where(eq(students.id, input.studentId))
+          .limit(1);
+
+        if (studentMember.length === 0) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "student member not found",
+          });
+        }
+
+        const member = studentMember[0];
+
+        if (!member)
+          throw new TRPCError({
+            message: "No student exists with this id",
+            code: "BAD_REQUEST",
+          });
+
+        const invitation =
+          await clerkClient.organizations.createOrganizationInvitation({
+            organizationId: ctx.auth.orgId as string,
+            emailAddress: member.email,
+            inviterUserId: ctx.auth.userId,
+            role: "org:student",
+            redirectUrl: "fellow://accept-invitation",
+          });
+
+        return {
+          success: true,
+          email: member.email,
+          invitationId: invitation.id,
+        };
+      } catch (error: any) {
+        console.error(`Failed to invite student:`, error);
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.errors[0].message,
         });
       }
     }),

@@ -33,7 +33,7 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
-import { StudentInviteDialog } from "../dailog/add-students";
+import { StudentInviteDialog } from "../dailog/add-student";
 import { InviteDialog } from "../dailog/invite-dialog";
 
 type Student = {

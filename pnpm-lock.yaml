@@ -102,6 +102,9 @@ importers:
       expo:
         specifier: ^51.0.24
         version: 51.0.34(@babel/core@7.25.2)(@babel/preset-env@7.25.7)
+      expo-crypto:
+        specifier: ~13.0.2
+        version: 13.0.2(expo@51.0.34)
       expo-document-picker:
         specifier: ^12.0.2
         version: 12.0.2(expo@51.0.34)
@@ -135,6 +138,9 @@ importers:
       expo-web-browser:
         specifier: ~13.0.3
         version: 13.0.3(expo@51.0.34)
+      jwt-decode:
+        specifier: ^4.0.0
+        version: 4.0.0
       lucide-react-native:
         specifier: ^0.378.0
         version: 0.378.0(react-native-svg@15.2.0)(react-native@0.74.5)(react@18.2.0)
