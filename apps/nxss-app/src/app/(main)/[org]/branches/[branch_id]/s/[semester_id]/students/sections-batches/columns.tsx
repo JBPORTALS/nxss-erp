@@ -2,12 +2,7 @@
 
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  ChevronDown,
-  ChevronRight,
-  MoreHorizontal,
-  MoreVertical,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, MoreVertical } from "lucide-react";
 
 import { SectionWithBatches } from "@nxss/api";
 import { Button } from "@nxss/ui/button";
@@ -18,6 +13,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@nxss/ui/dropdown-menu";
+
+import { NewBatchDialog } from "~/app/_components/dailog/batch-actions";
 
 export const useColumns = () => {
   const columns: ColumnDef<SectionWithBatches>[] = [
@@ -68,7 +65,15 @@ export const useColumns = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Section Actions</DropdownMenuLabel>
-                <DropdownMenuItem>Create New Batch</DropdownMenuItem>
+                <NewBatchDialog>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    Create New Batch
+                  </DropdownMenuItem>
+                </NewBatchDialog>
                 <DropdownMenuItem>Rename</DropdownMenuItem>
                 <DropdownMenuItem className="text-destructive">
                   Delete
