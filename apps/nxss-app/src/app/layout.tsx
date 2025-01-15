@@ -34,10 +34,9 @@ export const metadata: Metadata = {
   title: "NexussERP",
   description: "Simple monorepo with shared backend for web & mobile apps",
   openGraph: {
-    title: "Create T3 Turbo",
+    title: "NexussERP",
     description: "Simple monorepo with shared backend for web & mobile apps",
-    url: "https://create-t3-turbo.vercel.app",
-    siteName: "Create T3 Turbo",
+    siteName: "NexussERP",
   },
   twitter: {
     card: "summary_large_image",
@@ -58,7 +57,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "flex bg-background font-sans text-foreground antialiased",
+          "dark flex bg-background font-sans text-foreground antialiased",
           InterFont.variable,
           IMBPlexMono.variable,
         )}

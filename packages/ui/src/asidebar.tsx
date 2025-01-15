@@ -74,8 +74,8 @@ export const SidebarItem = React.forwardRef<
     ref={ref}
     variant="ghost"
     className={cn(
-      "w-full items-center justify-start gap-2 px-2",
-      isActive && "bg-accent text-accent-foreground",
+      "w-full items-center justify-start gap-2 px-2 font-normal",
+      isActive && "bg-accent font-medium text-accent-foreground",
       className,
     )}
     {...props}
