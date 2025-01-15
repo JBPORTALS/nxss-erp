@@ -26,6 +26,7 @@ import {
 } from "@nxss/ui/card";
 import { ScrollArea } from "@nxss/ui/scrollarea";
 import { Separator } from "@nxss/ui/seperator";
+import { Skeleton } from "@nxss/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nxss/ui/tooltip";
 
@@ -39,6 +40,7 @@ export function InstitutionBranchSidebar() {
   const pathname = usePathname();
   const params = useParams();
   const { data, isLoading } = api.branch.getBranchList.useQuery();
+  const utils = api.useUtils();
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="flex w-20 flex-col items-center py-4">
@@ -85,36 +87,40 @@ export function InstitutionBranchSidebar() {
               <PlusIcon className="size-6" />
             </Button>
           </CreateBranchDailog>
-          {data?.map((branch) => (
-            <Tooltip>
-              <TooltipTrigger>
-                <Avatar asChild>
-                  <Button
-                    onClick={() =>
-                      router.push(`/${params.org}/branches/${branch.id}`)
-                    }
-                    size={"icon"}
-                    variant={"ghost"}
-                    className={cn(
-                      "size-12 border-2 border-border",
-                      pathname.startsWith(
-                        `/${params.org}/branches/${branch.id}`,
-                      )
-                        ? "border-[3px] border-primary p-0.5"
-                        : "active:scale-95",
-                    )}
-                  >
-                    <AvatarImage src="https://github.com/kite" />
-                    <AvatarFallback className="capitalize">
-                      {branch.name.split(" ")[0]?.charAt(0)}
-                      {branch.name.split(" ")[1]?.charAt(0)}
-                    </AvatarFallback>
-                  </Button>
-                </Avatar>
-              </TooltipTrigger>
-              <TooltipContent side={"right"}>{branch.name}</TooltipContent>
-            </Tooltip>
-          ))}
+          {data?.flatMap((branch) => {
+            utils.branch.getDetails.prefetch({ id: branch.id.toString() });
+
+            return (
+              <Tooltip>
+                <TooltipTrigger>
+                  <Avatar asChild>
+                    <Button
+                      onClick={() =>
+                        router.push(`/${params.org}/branches/${branch.id}`)
+                      }
+                      size={"icon"}
+                      variant={"ghost"}
+                      className={cn(
+                        "size-12 border-2 border-border",
+                        pathname.startsWith(
+                          `/${params.org}/branches/${branch.id}`,
+                        )
+                          ? "border-[3px] border-primary p-0.5"
+                          : "active:scale-95",
+                      )}
+                    >
+                      <AvatarImage src="https://github.com/kite" />
+                      <AvatarFallback className="capitalize">
+                        {branch.name.split(" ")[0]?.charAt(0)}
+                        {branch.name.split(" ")[1]?.charAt(0)}
+                      </AvatarFallback>
+                    </Button>
+                  </Avatar>
+                </TooltipTrigger>
+                <TooltipContent side={"right"}>{branch.name}</TooltipContent>
+              </Tooltip>
+            );
+          })}
         </div>
       </nav>
     </ScrollArea>
@@ -122,10 +128,15 @@ export function InstitutionBranchSidebar() {
 }
 
 export function BranchDetialsSidebar() {
+  const params = useParams<{ branch_id: string }>();
+  const { data, isLoading: isBranchDataLoading } =
+    api.branch.getDetails.useQuery({ id: params.branch_id });
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="h-fit w-60 space-y-7 px-4 pb-20 pt-4">
-        <div className="text-lg font-semibold">Computer Science</div>
+        <div className="text-lg font-semibold">
+          {isBranchDataLoading ? <Skeleton className="h-4 w-40" /> : data?.name}
+        </div>
 
         {/**Active Semesters */}
         <div className="space-y-2">
