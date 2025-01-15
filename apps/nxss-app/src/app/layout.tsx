@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Poppins } from "next/font/google";
+import { IBM_Plex_Mono, Inter, JetBrains_Mono } from "next/font/google";
 
 import { cn } from "@nxss/ui";
 import { ThemeProvider } from "@nxss/ui/theme";
@@ -14,15 +14,15 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Providers } from "./providers";
 
-const LatoFont = Poppins({
-  variable: "--font-poppins",
+const InterFont = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const IMBPlexMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const IMBPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
-  weight: ["100", "300", "400", "700", "200", "500", "600"],
+  weight: ["100", "200", "300", "400", "700", "200", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -59,7 +59,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body
         className={cn(
           "flex bg-background font-sans text-foreground antialiased",
-          LatoFont.variable,
+          InterFont.variable,
           IMBPlexMono.variable,
         )}
       >
