@@ -3,5 +3,11 @@ export default async function BranchPage({
 }: {
   params: { branch_id: string; org: string };
 }) {
-  return <div>Branch Content Section</div>;
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+        Branch Content Section
+      </h3>
+    </div>
+  );
 }
