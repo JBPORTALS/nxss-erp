@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@nxss/ui/table";
 
-import CreateBranchDailog from "~/app/_components/dailog/create-branch-dailog";
+import CreateBranchDailog from "~/components/create-branch-dailog";
 import { api } from "~/trpc/server";
 
 export default async function Page({

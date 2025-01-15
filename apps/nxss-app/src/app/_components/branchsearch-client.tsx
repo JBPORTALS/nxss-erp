@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@nxss/ui/input";
 import { HStack } from "@nxss/ui/stack";
 
-import CreateBranchDailog from "~/app/_components/dailog/create-branch-dailog";
+import CreateBranchDailog from "~/components/create-branch-dailog";
 
 export function BranchSearch({
   initialSearchTerm,

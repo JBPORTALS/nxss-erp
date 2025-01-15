@@ -1,6 +1,7 @@
 "use client";
 
 import { Toaster } from "@nxss/ui/toast";
+import { TooltipProvider } from "@nxss/ui/tooltip";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -35,7 +36,9 @@ export function Providers(props: { children: React.ReactNode }) {
     >
       <SyncActiveOrganization />
 
-      <TRPCReactProvider>{props.children}</TRPCReactProvider>
+      <TRPCReactProvider>
+        <TooltipProvider>{props.children}</TooltipProvider>
+      </TRPCReactProvider>
       <Toaster
         richColors
         icons={{

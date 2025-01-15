@@ -27,14 +27,18 @@ import {
 import { ScrollArea } from "@nxss/ui/scrollarea";
 import { Separator } from "@nxss/ui/seperator";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nxss/ui/tooltip";
 
 import CustomOrganizationSwitcher from "~/app/_components/switcher/organizatoin-switcher";
+import { api } from "~/trpc/react";
+import CreateBranchDailog from "./create-branch-dailog";
 
 export function InstitutionBranchSidebar() {
   const { isLoaded, organization } = useOrganization();
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
+  const { data, isLoading } = api.branch.getBranchList.useQuery();
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="flex w-20 flex-col items-center py-4">
@@ -72,23 +76,35 @@ export function InstitutionBranchSidebar() {
 
           <Separator className="w-full" />
 
-          <Button
-            size={"icon"}
-            className="size-12 rounded-full"
-            variant={"secondary"}
-          >
-            <PlusIcon className="size-6" />
-          </Button>
-          <Avatar asChild>
+          <CreateBranchDailog>
             <Button
               size={"icon"}
-              variant={"ghost"}
-              className="size-12 border-2 border-border"
+              className="size-12 rounded-full"
+              variant={"secondary"}
             >
-              <AvatarImage src="https://github.com/kite.png" />
-              <AvatarFallback>AE</AvatarFallback>
+              <PlusIcon className="size-6" />
             </Button>
-          </Avatar>
+          </CreateBranchDailog>
+          {data?.map((branch) => (
+            <Tooltip>
+              <TooltipTrigger>
+                <Avatar asChild>
+                  <Button
+                    size={"icon"}
+                    variant={"ghost"}
+                    className="size-12 border-2 border-border active:scale-95"
+                  >
+                    <AvatarImage src="https://github.com/kite" />
+                    <AvatarFallback className="capitalize">
+                      {branch.name.split(" ")[0]?.charAt(0)}
+                      {branch.name.split(" ")[1]?.charAt(0)}
+                    </AvatarFallback>
+                  </Button>
+                </Avatar>
+              </TooltipTrigger>
+              <TooltipContent side={"right"}>{branch.name}</TooltipContent>
+            </Tooltip>
+          ))}
         </div>
       </nav>
     </ScrollArea>

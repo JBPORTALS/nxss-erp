@@ -52,6 +52,7 @@
     "./switch": "./src/switch.tsx",
     "./content-area": "./src/content-area.tsx",
     "./skeleton": "./src/skeleton.tsx",
+    "./tooltip": "./src/tooltip.tsx",
     "./icons": "./src/icons.tsx"
   },
   "license": "MIT",
@@ -81,6 +82,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.6",
     "add": "^2.0.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
