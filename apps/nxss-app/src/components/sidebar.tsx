@@ -61,7 +61,7 @@ export function InstitutionBranchSidebar() {
               variant={"ghost"}
               className={cn(
                 "size-12 border-2 border-border",
-                pathname.startsWith(`/${params.org}`)
+                [`/${params.org}/dashboard`].includes(pathname)
                   ? "border-[3px] border-primary p-0.5"
                   : "active:scale-95",
               )}
@@ -90,9 +90,19 @@ export function InstitutionBranchSidebar() {
               <TooltipTrigger>
                 <Avatar asChild>
                   <Button
+                    onClick={() =>
+                      router.push(`/${params.org}/branches/${branch.id}`)
+                    }
                     size={"icon"}
                     variant={"ghost"}
-                    className="size-12 border-2 border-border active:scale-95"
+                    className={cn(
+                      "size-12 border-2 border-border",
+                      pathname.startsWith(
+                        `/${params.org}/branches/${branch.id}`,
+                      )
+                        ? "border-[3px] border-primary p-0.5"
+                        : "active:scale-95",
+                    )}
                   >
                     <AvatarImage src="https://github.com/kite" />
                     <AvatarFallback className="capitalize">
