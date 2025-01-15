@@ -2,11 +2,12 @@
 
 import React from "react";
 import Image from "next/image";
+import { useOrganization } from "@clerk/nextjs";
 import {
+  CalendarIcon,
   GraduationCapIcon,
   LayoutDashboardIcon,
   PlusIcon,
-  RocketIcon,
   SettingsIcon,
 } from "lucide-react";
 
@@ -24,7 +25,10 @@ import { ScrollArea } from "@nxss/ui/scrollarea";
 import { Separator } from "@nxss/ui/seperator";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 
+import CustomOrganizationSwitcher from "~/app/_components/switcher/organizatoin-switcher";
+
 export function InstitutionBranchSidebar() {
+  const { isLoaded, organization } = useOrganization();
   return (
     <ScrollArea>
       <div className="flex h-screen w-20 flex-col items-center border-r py-4">
@@ -42,10 +46,10 @@ export function InstitutionBranchSidebar() {
         <div className="mt-10 flex flex-col items-center gap-4">
           <Avatar className="size-12 border-[3px] border-primary p-0.5">
             <AvatarImage
-              src="https://github.com/shadcn.png"
+              src={organization?.imageUrl}
               className="rounded-full border border-border"
             />
-            <AvatarFallback>SC</AvatarFallback>
+            <AvatarFallback>{organization?.name.charAt(0)}</AvatarFallback>
           </Avatar>
 
           <Separator className="w-full" />
@@ -75,10 +79,11 @@ export function InstitutionBranchSidebar() {
 
 export function BranchDetialsSidebar() {
   return (
-    <ScrollArea>
-      <div className="mb-24 flex h-screen w-60 flex-col gap-7 border-r px-4 py-4">
+    <ScrollArea className="h-screen border-r">
+      <div className="h-fit w-60 space-y-7 px-4 pb-20 pt-4">
         <div className="text-lg font-semibold">Computer Science</div>
 
+        {/**Active Semesters */}
         <div className="space-y-2">
           <p className="font-mono text-xs text-muted-foreground">
             ACTIVE SEMESTERS
@@ -92,6 +97,7 @@ export function BranchDetialsSidebar() {
           </Tabs>
         </div>
 
+        {/**Main Menu */}
         <div className="space-y-2">
           <p className="font-mono text-xs text-muted-foreground">MAIN MENU</p>
           <SidebarItem className="w-full items-start justify-start">
@@ -107,6 +113,7 @@ export function BranchDetialsSidebar() {
           </SidebarItem>
         </div>
 
+        {/**Subjects */}
         <div className="space-y-2">
           <p className="font-mono text-xs text-muted-foreground">SUBJECTS</p>
           <Card>
@@ -123,6 +130,7 @@ export function BranchDetialsSidebar() {
           </Card>
         </div>
 
+        {/**Section & Batches */}
         <div className="space-y-2">
           <p className="font-mono text-xs text-muted-foreground">
             SECTIONS & BATCHES
@@ -141,6 +149,31 @@ export function BranchDetialsSidebar() {
               <Button className="w-full">Setup</Button>
             </CardFooter>
           </Card>
+        </div>
+      </div>
+    </ScrollArea>
+  );
+}
+
+export function InstitutionDetailsSidebar() {
+  return (
+    <ScrollArea className="h-screen border-r">
+      <div className="flex h-fit w-60 flex-col gap-7 px-4 pb-20 pt-4">
+        <CustomOrganizationSwitcher />
+
+        <div className="space-y-2">
+          <p className="font-mono text-xs text-muted-foreground">MAIN MENU</p>
+          <SidebarItem className="w-full items-start justify-start">
+            <LayoutDashboardIcon strokeWidth={1.5} className="size-5" />{" "}
+            Dashboard
+          </SidebarItem>
+          <SidebarItem>
+            <CalendarIcon strokeWidth={1.5} className="size-5" /> Calendar
+          </SidebarItem>
+
+          <SidebarItem>
+            <SettingsIcon strokeWidth={1.5} className="size-5" /> Settings
+          </SidebarItem>
         </div>
       </div>
     </ScrollArea>

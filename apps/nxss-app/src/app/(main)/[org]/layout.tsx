@@ -1,8 +1,8 @@
 import React from "react";
 
 import {
-  BranchDetialsSidebar,
   InstitutionBranchSidebar,
+  InstitutionDetailsSidebar,
 } from "~/components/sidebar";
 
 export default async function Templates(props: {
@@ -12,7 +12,9 @@ export default async function Templates(props: {
   return (
     <div className="flex h-screen w-full">
       <InstitutionBranchSidebar />
-      <BranchDetialsSidebar />
+      <InstitutionDetailsSidebar />
+      {/* <BranchDetialsSidebar /> */}
+      <main>{props.children}</main>
     </div>
   );
 }

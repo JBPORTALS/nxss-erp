@@ -50,11 +50,10 @@ export const CustomOrganizationSwitcher = () => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           role="combobox"
           aria-expanded={open}
-          size={"sm"}
-          className="w-fit justify-between"
+          className="w-full justify-between"
         >
           {organization?.id ? (
             <div className="flex items-center gap-2">
@@ -71,7 +70,7 @@ export const CustomOrganizationSwitcher = () => {
               {organizations.find(
                 (mem) => mem.organization.id === organization.id,
               )?.role === "org:staff" ? (
-                <Badge variant={"secondary"} className="text-xs">
+                <Badge variant={"secondary"} className="px-1 py-1 text-xs">
                   Staff
                 </Badge>
               ) : (
