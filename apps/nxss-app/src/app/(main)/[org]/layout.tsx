@@ -1,14 +1,18 @@
 import React from "react";
 
-import InstitutionBranchSidebar from "~/components/InstitutionBranchSidebar";
+import {
+  BranchDetialsSidebar,
+  InstitutionBranchSidebar,
+} from "~/components/sidebar";
 
 export default async function Templates(props: {
   children: React.ReactNode;
   params: { org: string; branch_id: string; semester_id: string };
 }) {
   return (
-    <div className="h-screen w-full">
+    <div className="flex h-screen w-full">
       <InstitutionBranchSidebar />
+      <BranchDetialsSidebar />
     </div>
   );
 }

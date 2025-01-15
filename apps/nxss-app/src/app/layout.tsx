@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Merriweather, Roboto } from "next/font/google";
+import { JetBrains_Mono, Poppins } from "next/font/google";
 
 import { cn } from "@nxss/ui";
 import { ThemeProvider } from "@nxss/ui/theme";
@@ -11,19 +11,18 @@ import "~/app/globals.css";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
-import { SyncActiveOrganization } from "~/utils/sync-active-organization";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Providers } from "./providers";
 
-const OpenSans = Roboto({
-  variable: "--font-inter",
+const LatoFont = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["100", "400", "300", "500", "700", "900"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const Mw = Merriweather({
-  variable: "--font-Mw",
+const IMBPlexMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["900"],
+  weight: ["100", "300", "400", "700", "200", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -59,9 +58,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "light dark min-h-screen w-full border-border bg-background font-sans text-foreground antialiased",
-          OpenSans.variable,
-          Mw.variable,
+          "min-h-screen w-full border-border bg-background font-sans text-foreground antialiased",
+          LatoFont.variable,
+          IMBPlexMono.variable,
         )}
       >
         <NextSSRPlugin
