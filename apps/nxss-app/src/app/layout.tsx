@@ -58,7 +58,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen w-full border-border bg-background font-sans text-foreground antialiased",
+          "flex bg-background font-sans text-foreground antialiased",
           LatoFont.variable,
           IMBPlexMono.variable,
         )}

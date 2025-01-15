@@ -2,6 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useOrganization } from "@clerk/nextjs";
 import {
   CalendarIcon,
@@ -11,6 +13,7 @@ import {
   SettingsIcon,
 } from "lucide-react";
 
+import { cn } from "@nxss/ui";
 import { SidebarItem } from "@nxss/ui/asidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
@@ -29,9 +32,12 @@ import CustomOrganizationSwitcher from "~/app/_components/switcher/organizatoin-
 
 export function InstitutionBranchSidebar() {
   const { isLoaded, organization } = useOrganization();
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams();
   return (
-    <ScrollArea>
-      <div className="flex h-screen w-20 flex-col items-center border-r py-4">
+    <ScrollArea className="relative h-full border-r">
+      <nav className="flex w-20 flex-col items-center py-4">
         <div>
           {/* Logo Area */}
           <Image
@@ -44,12 +50,24 @@ export function InstitutionBranchSidebar() {
           />
         </div>
         <div className="mt-10 flex flex-col items-center gap-4">
-          <Avatar className="size-12 border-[3px] border-primary p-0.5">
-            <AvatarImage
-              src={organization?.imageUrl}
-              className="rounded-full border border-border"
-            />
-            <AvatarFallback>{organization?.name.charAt(0)}</AvatarFallback>
+          <Avatar asChild className="size-12">
+            <Button
+              onClick={() => router.push(`/${params.org}/dashboard`)}
+              size={"icon"}
+              variant={"ghost"}
+              className={cn(
+                "size-12 border-2 border-border",
+                pathname.startsWith(`/${params.org}`)
+                  ? "border-[3px] border-primary p-0.5"
+                  : "active:scale-95",
+              )}
+            >
+              <AvatarImage
+                src={organization?.imageUrl}
+                className="rounded-full border border-border"
+              />
+              <AvatarFallback>{organization?.name.charAt(0)}</AvatarFallback>
+            </Button>
           </Avatar>
 
           <Separator className="w-full" />
@@ -72,20 +90,20 @@ export function InstitutionBranchSidebar() {
             </Button>
           </Avatar>
         </div>
-      </div>
+      </nav>
     </ScrollArea>
   );
 }
 
 export function BranchDetialsSidebar() {
   return (
-    <ScrollArea className="h-screen border-r">
-      <div className="h-fit w-60 space-y-7 px-4 pb-20 pt-4">
+    <ScrollArea className="relative h-full border-r">
+      <nav className="h-fit w-60 space-y-7 px-4 pb-20 pt-4">
         <div className="text-lg font-semibold">Computer Science</div>
 
         {/**Active Semesters */}
         <div className="space-y-2">
-          <p className="font-mono text-xs text-muted-foreground">
+          <p className="pl-2 font-mono text-xs text-muted-foreground">
             ACTIVE SEMESTERS
           </p>
           <Tabs defaultValue="S1" value="S1">
@@ -99,7 +117,9 @@ export function BranchDetialsSidebar() {
 
         {/**Main Menu */}
         <div className="space-y-2">
-          <p className="font-mono text-xs text-muted-foreground">MAIN MENU</p>
+          <p className="pl-2 font-mono text-xs text-muted-foreground">
+            MAIN MENU
+          </p>
           <SidebarItem className="w-full items-start justify-start">
             <LayoutDashboardIcon strokeWidth={1.5} className="size-5" />{" "}
             Dashboard
@@ -115,7 +135,9 @@ export function BranchDetialsSidebar() {
 
         {/**Subjects */}
         <div className="space-y-2">
-          <p className="font-mono text-xs text-muted-foreground">SUBJECTS</p>
+          <p className="pl-2 font-mono text-xs text-muted-foreground">
+            SUBJECTS
+          </p>
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Add Subjects</CardTitle>
@@ -132,7 +154,7 @@ export function BranchDetialsSidebar() {
 
         {/**Section & Batches */}
         <div className="space-y-2">
-          <p className="font-mono text-xs text-muted-foreground">
+          <p className="pl-2 font-mono text-xs text-muted-foreground">
             SECTIONS & BATCHES
           </p>
           <Card>
@@ -150,32 +172,46 @@ export function BranchDetialsSidebar() {
             </CardFooter>
           </Card>
         </div>
-      </div>
+      </nav>
     </ScrollArea>
   );
 }
 
 export function InstitutionDetailsSidebar() {
+  const pathname = usePathname();
+  const params = useParams();
   return (
-    <ScrollArea className="h-screen border-r">
-      <div className="flex h-fit w-60 flex-col gap-7 px-4 pb-20 pt-4">
+    <ScrollArea className="relative h-full border-r">
+      <nav className="flex h-fit w-60 flex-col gap-7 px-4 pb-20 pt-4">
         <CustomOrganizationSwitcher />
 
-        <div className="space-y-2">
-          <p className="font-mono text-xs text-muted-foreground">MAIN MENU</p>
-          <SidebarItem className="w-full items-start justify-start">
-            <LayoutDashboardIcon strokeWidth={1.5} className="size-5" />{" "}
-            Dashboard
-          </SidebarItem>
-          <SidebarItem>
-            <CalendarIcon strokeWidth={1.5} className="size-5" /> Calendar
-          </SidebarItem>
+        <div className="flex flex-col gap-2">
+          <p className="pl-2 font-mono text-xs text-muted-foreground">
+            MAIN MENU
+          </p>
+          <Link href={`/${params.org}/dashboard`}>
+            <SidebarItem
+              isActive={pathname.startsWith(`/${params.org}/dashboard`)}
+              className="w-full items-start justify-start"
+            >
+              <LayoutDashboardIcon strokeWidth={1.5} className="size-5" />{" "}
+              Dashboard
+            </SidebarItem>
+          </Link>
+
+          {/* <Link href={`/${params.org}/calendar`}>
+            <SidebarItem
+              isActive={pathname.startsWith(`/${params.org}/calendar`)}
+            >
+              <CalendarIcon strokeWidth={1.5} className="size-5" /> Calendar
+            </SidebarItem>
+          </Link>
 
           <SidebarItem>
             <SettingsIcon strokeWidth={1.5} className="size-5" /> Settings
-          </SidebarItem>
+          </SidebarItem> */}
         </div>
-      </div>
+      </nav>
     </ScrollArea>
   );
 }
