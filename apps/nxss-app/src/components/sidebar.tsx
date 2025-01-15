@@ -7,12 +7,14 @@ import {
   LayoutDashboardIcon,
   PlusIcon,
   RocketIcon,
+  SettingsIcon,
 } from "lucide-react";
 
 import { SidebarItem } from "@nxss/ui/asidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Button } from "@nxss/ui/button";
 import { Separator } from "@nxss/ui/seperator";
+import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 
 export function InstitutionBranchSidebar() {
   return (
@@ -67,13 +69,40 @@ export function BranchDetialsSidebar() {
       <div className="text-lg font-semibold">Computer Science</div>
 
       <div className="space-y-2">
-        <p className="font-mono text-sm text-muted-foreground">MAIN MENU</p>
+        <p className="font-mono text-xs text-muted-foreground">
+          ACTIVE SEMESTERS
+        </p>
+        <Tabs defaultValue="S1" value="S1">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="S1">S1</TabsTrigger>
+            <TabsTrigger value="S2">S2</TabsTrigger>
+            <TabsTrigger value="S3">S3</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      <div className="space-y-2">
+        <p className="font-mono text-xs text-muted-foreground">MAIN MENU</p>
         <SidebarItem className="w-full items-start justify-start">
           <LayoutDashboardIcon className="size-5" /> Dashboard
         </SidebarItem>
         <SidebarItem>
           <GraduationCapIcon className="size-5" /> Students
         </SidebarItem>
+
+        <SidebarItem>
+          <SettingsIcon className="size-5" /> Settings
+        </SidebarItem>
+      </div>
+
+      <div className="space-y-2">
+        <p className="font-mono text-xs text-muted-foreground">SUBJECTS</p>
+      </div>
+
+      <div className="space-y-2">
+        <p className="font-mono text-xs text-muted-foreground">
+          SECTIONS & BATCHES
+        </p>
       </div>
     </div>
   );
