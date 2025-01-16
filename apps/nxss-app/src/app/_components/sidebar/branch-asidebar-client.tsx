@@ -17,7 +17,7 @@ import {
   SidebarLabel,
 } from "@nxss/ui/asidebar";
 
-import { SidebarSwitcher } from "../switcher/sidebar-switcher";
+import { SidebarSwitcher } from "../../../components/sidebar-switcher";
 import { SidebarItemClient } from "./sidebar-item";
 
 export default function BranchAsidebarClient() {

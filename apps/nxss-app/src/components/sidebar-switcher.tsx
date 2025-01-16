@@ -2,7 +2,7 @@
 
 import { useParams, usePathname } from "next/navigation";
 
-type SwitcherType = "subject" | "main" | "setting" | "branch";
+type SwitcherType = "institution" | "branch";
 
 interface SidebarSwitcherProps {
   children: React.ReactNode;
@@ -30,23 +30,10 @@ function useShouldRender(
   pathname: string,
 ): boolean {
   switch (type) {
-    case "subject":
-      return Boolean(params.subject_id);
-    case "main":
-      return (
-        !params.subject_id &&
-        !pathname.startsWith(`/${params.org}/settings`) &&
-        !pathname.startsWith(`/${params.org}/branches/${params.branch_id}`)
-      );
-    case "setting":
-      return path ? pathname.startsWith(path) : false;
     case "branch":
-      return (
-        !params.subject_id &&
-        pathname.startsWith(
-          `/${params.org}/branches/${params.branch_id}/s/${params.semester_id}`,
-        )
-      );
+      return Boolean(params.branch_id);
+    case "institution":
+      return !pathname.startsWith(`/${params.org}/branches`);
     default:
       return false;
   }

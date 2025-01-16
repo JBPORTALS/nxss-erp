@@ -13,8 +13,8 @@ import { Sidebar, SidebarBody, SidebarLabel } from "@nxss/ui/asidebar";
 import { ComboboxDemo } from "@nxss/ui/combobox";
 import { VStack } from "@nxss/ui/stack";
 
+import { SidebarSwitcher } from "../../../components/sidebar-switcher";
 import BackButton from "../button/back-button-client";
-import { SidebarSwitcher } from "../switcher/sidebar-switcher";
 import TestTypeClient from "../test-type-client";
 import BranchAsidebarClient from "./branch-asidebar-client";
 import { SidebarItemClient } from "./sidebar-item";

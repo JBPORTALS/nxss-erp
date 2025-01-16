@@ -64,7 +64,7 @@ export function InstitutionBranchSidebar() {
               className={cn(
                 "size-12 border-2 border-border",
                 [`/${params.org}/dashboard`].includes(pathname)
-                  ? "border-[3px] border-primary p-0.5"
+                  ? "border-2 border-primary p-0.5"
                   : "active:scale-95",
               )}
             >
@@ -87,6 +87,11 @@ export function InstitutionBranchSidebar() {
               <PlusIcon className="size-6" />
             </Button>
           </CreateBranchDailog>
+          {data?.length === 0 && (
+            <p className="rotate-180 font-mono text-sm tracking-[0.3rem] text-muted-foreground [writing-mode:vertical-lr]">
+              NO BRANCHES | CREATE ONE HERE
+            </p>
+          )}
           {data?.flatMap((branch) => {
             utils.branch.getDetails.prefetch({ id: branch.id.toString() });
 
@@ -105,7 +110,7 @@ export function InstitutionBranchSidebar() {
                         pathname.startsWith(
                           `/${params.org}/branches/${branch.id}`,
                         )
-                          ? "border-[3px] border-primary p-0.5"
+                          ? "border-2 border-primary p-0.5"
                           : "active:scale-95",
                       )}
                     >
