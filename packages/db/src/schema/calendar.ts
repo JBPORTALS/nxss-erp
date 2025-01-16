@@ -1,47 +1,59 @@
+import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import { boolean, integer, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { createSelectSchema } from "drizzle-zod";
 
 import { pgTable } from "./_table";
-import { branches } from "./branches";
+import { Branches } from "./branches";
 import { audienceTypeEnum, eventTypeEnum } from "./enum";
-import { batches, sections } from "./groups";
-import { semesters } from "./semesters";
+import { Batches, Sections } from "./groups";
+import { Semesters } from "./semesters";
 
-export const calendar = pgTable("calendar", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description"),
-  event_type: eventTypeEnum("event_type").notNull(),
-  audience_type: audienceTypeEnum("audience_type").notNull(),
-  is_all_day: boolean("is_all_day").default(false),
-  start_date: timestamp("start_date").notNull(),
-  end_date: timestamp("end_date"),
-  location: text("location"),
-  attachment_url: text("attachment_url"),
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at"),
-});
+export const calendar = pgTable("calendar", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  title: t.text().notNull(),
+  description: t.text(),
+  eventType: eventTypeEnum("event_type").notNull(),
+  audienceType: audienceTypeEnum("audience_type").notNull(),
+  isAllDay: t.boolean().default(false),
+  startDate: t.timestamp().notNull(),
+  endDate: t.timestamp(),
+  location: t.text(),
+  attachmentUrl: t.text(),
+  createdAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => new Date()),
+}));
 
 export const selectCalendarSchema = createSelectSchema(calendar);
 
 // Calendar Branches Relation Table
-export const calendarBranches = pgTable("calendar_branches", {
-  id: serial("id").primaryKey(),
-  calendar_id: integer("calendar_id")
+export const calendarBranches = pgTable("calendar_branches", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  calendarId: t
+    .text()
     .notNull()
     .references(() => calendar.id, { onDelete: "cascade" }),
-  branch_id: integer("branch_id").references(() => branches.id, {
+  branchId: t.text().references(() => Branches.id, {
     onDelete: "cascade",
   }),
-  semester_id: integer("semester_id").references(() => semesters.id, {
+  semesterId: t.text().references(() => Semesters.id, {
     onDelete: "cascade",
   }),
-  section: integer("section").references(() => sections.id, {
+  section: t.text().references(() => Sections.id, {
     onDelete: "cascade",
   }),
-  batch: integer("batch").references(() => batches.id, { onDelete: "cascade" }),
-});
+  batch: t.text().references(() => Batches.id, { onDelete: "cascade" }),
+}));
 
 // Calendar Event Relations
 export const calendarEventRelations = relations(calendar, ({ many }) => ({
@@ -52,17 +64,17 @@ export const calendarEventRelations = relations(calendar, ({ many }) => ({
 export const calendarBranchesRelations = relations(
   calendarBranches,
   ({ one }) => ({
-    calendarEvent: one(calendar, {
-      fields: [calendarBranches.calendar_id],
+    CalendarEvent: one(calendar, {
+      fields: [calendarBranches.calendarId],
       references: [calendar.id],
     }),
-    branch: one(branches, {
-      fields: [calendarBranches.branch_id],
-      references: [branches.id],
+    Branch: one(Branches, {
+      fields: [calendarBranches.branchId],
+      references: [Branches.id],
     }),
-    semester: one(semesters, {
-      fields: [calendarBranches.semester_id],
-      references: [semesters.id],
+    Semester: one(Semesters, {
+      fields: [calendarBranches.semesterId],
+      references: [Semesters.id],
     }),
   }),
 );

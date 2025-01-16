@@ -1,48 +1,67 @@
+import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import { integer, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { pgTable } from "./_table";
-import { branches } from "./branches";
-import { semesters } from "./semesters";
+import { Branches } from "./branches";
+import { Semesters } from "./semesters";
 
-export const sections = pgTable("sections", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  branch_id: integer("branch_id")
+export const Sections = pgTable("sections", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  name: t.text().notNull(),
+  branchId: t
+    .text()
     .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
-  semester_id: integer("semester_id")
+    .references(() => Branches.id, { onDelete: "cascade" }),
+  semesterId: t
+    .text()
     .notNull()
-    .references(() => semesters.id, { onDelete: "cascade" }),
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at"),
-});
-
-export const batches = pgTable("batches", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  section_id: integer("section_id")
-    .notNull()
-    .references(() => sections.id, { onDelete: "cascade" }),
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at"),
-});
-
-export const sectionsRelations = relations(sections, ({ one, many }) => ({
-  branch: one(branches, {
-    fields: [sections.branch_id],
-    references: [branches.id],
-  }),
-  semester: one(semesters, {
-    fields: [sections.semester_id],
-    references: [semesters.id],
-  }),
-  batches: many(batches), // One-to-many: a section can have many batches
+    .references(() => Semesters.id, { onDelete: "cascade" }),
+  createdAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => new Date()),
 }));
 
-export const batchesRelations = relations(batches, ({ one }) => ({
-  section: one(sections, {
-    fields: [batches.section_id],
-    references: [sections.id],
+export const Batches = pgTable("batches", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  name: t.text("name").notNull(),
+  section_id: t
+    .text("section_id")
+    .notNull()
+    .references(() => Sections.id, { onDelete: "cascade" }),
+  createdAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => new Date()),
+}));
+
+export const sectionsRelations = relations(Sections, ({ one, many }) => ({
+  Branch: one(Branches, {
+    fields: [Sections.branchId],
+    references: [Branches.id],
+  }),
+  Semester: one(Semesters, {
+    fields: [Sections.semesterId],
+    references: [Semesters.id],
+  }),
+  Batches: many(Batches), // One-to-many: a section can have many batches
+}));
+
+export const batchesRelations = relations(Batches, ({ one }) => ({
+  Section: one(Sections, {
+    fields: [Batches.section_id],
+    references: [Sections.id],
   }),
 }));

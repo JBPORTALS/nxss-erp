@@ -1,37 +1,31 @@
+import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import { integer, serial } from "drizzle-orm/pg-core";
 
 import { pgTable } from "./_table";
-import { academicYears } from "./academic-years";
-import { branches } from "./branches";
+import { Branches } from "./branches";
 import { statusEnum } from "./enum";
 
 // Semester table
-export const semesters = pgTable("semesters", {
-  id: serial("id").primaryKey(),
-  academic_year_id: integer("academic_year_id")
+export const Semesters = pgTable("semesters", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  academicYear: t.text(),
+  brancId: t
+    .text()
     .notNull()
-    .references(() => academicYears.id, {
+    .references(() => Branches.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  branch_id: integer("branch_id")
-    .notNull()
-    .references(() => branches.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  number: integer("number").notNull(),
+  number: t.integer().notNull(),
   status: statusEnum("status").notNull(),
-});
+}));
 
-export const semestersRelations = relations(semesters, ({ one }) => ({
-  academicYear: one(academicYears, {
-    fields: [semesters.academic_year_id],
-    references: [academicYears.id],
-  }),
-  branch: one(branches, {
-    fields: [semesters.branch_id],
-    references: [branches.id],
+export const semestersRelations = relations(Semesters, ({ one }) => ({
+  branch: one(Branches, {
+    fields: [Semesters.brancId],
+    references: [Branches.id],
   }),
 }));

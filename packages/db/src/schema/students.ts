@@ -1,57 +1,61 @@
+import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import {
-  date,
-  integer,
-  pgEnum,
-  serial,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { pgEnum, text } from "drizzle-orm/pg-core";
 
 import { pgTable } from "./_table";
-import { branches } from "./branches";
-import { batches } from "./groups";
-import { semesters } from "./semesters";
+import { Branches } from "./branches";
+import { Batches } from "./groups";
+import { Semesters } from "./semesters";
 
 export const profileStatusEnum = pgEnum("profileStatusEnum", [
   "active",
   "inactive",
 ]);
 
-export const students = pgTable("students", {
-  id: serial("id").primaryKey(),
-  full_name: text("full_name").notNull(),
-  email: text("email").notNull(),
-  phone_number: text("phone_number"),
-  date_of_birth: date("date_of_birth"),
-  year_of_join: integer("year_of_join"),
+export const Students = pgTable("students", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  fullName: t.text().notNull(),
+  email: text().notNull(),
+  phoneNumber: text(),
+  dob: t.date(),
+  yearOfJoin: t.integer(),
   status: profileStatusEnum("status").default("active"),
-  clerk_user_id: text("clerk_user_id"),
-  clerk_org_id: text("clerk_org_id").notNull(),
-  branch_id: integer("branch_id")
+  clerkUserId: t.text(),
+  clerkOrgId: t.text().notNull(),
+  branchId: t
+    .text()
     .notNull()
-    .references(() => branches.id),
-  batch_id: integer("batch_id").references(() => batches.id, {
+    .references(() => Branches.id),
+  batchId: t.text().references(() => Batches.id, {
     onDelete: "set null",
   }),
-  current_semester_id: integer("current_semester_id")
+  currentSemesterId: t
+    .text()
     .notNull()
-    .references(() => semesters.id),
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at"),
-});
+    .references(() => Semesters.id),
+  createdAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => new Date()),
+}));
 
-export const studentsRelations = relations(students, ({ one }) => ({
-  branch: one(branches, {
-    fields: [students.branch_id],
-    references: [branches.id],
+export const studentsRelations = relations(Students, ({ one }) => ({
+  Branch: one(Branches, {
+    fields: [Students.branchId],
+    references: [Branches.id],
   }),
-  currentSemester: one(semesters, {
-    fields: [students.current_semester_id],
-    references: [semesters.id],
+  CurrentSemester: one(Semesters, {
+    fields: [Students.currentSemesterId],
+    references: [Semesters.id],
   }),
-  batch: one(batches, {
-    fields: [students.batch_id],
-    references: [batches.id],
+  Batch: one(Batches, {
+    fields: [Students.batchId],
+    references: [Batches.id],
   }),
 }));

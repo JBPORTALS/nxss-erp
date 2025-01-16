@@ -11,6 +11,7 @@ export default {
   schema: "./src/schema",
   tablesFilter: ["nxss_*"],
   dialect: "postgresql",
+  casing: "snake_case",
   dbCredentials: {
     url: connectionString,
   },
