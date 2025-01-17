@@ -10,6 +10,7 @@ import {
 import {
   ContentArea,
   ContentAreaContainer,
+  ContentAreaDescription,
   ContentAreaHeader,
   ContentAreaTitle,
 } from "@nxss/ui/content-area";
@@ -20,6 +21,9 @@ export default function Dashboard() {
       <Protect role="org:admin">
         <ContentAreaHeader>
           <ContentAreaTitle>Welcome to Nexuss ERP</ContentAreaTitle>
+          <ContentAreaDescription>
+            Access all your overview details of this organization
+          </ContentAreaDescription>
         </ContentAreaHeader>
 
         <ContentAreaContainer className="grid h-fit w-full gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">

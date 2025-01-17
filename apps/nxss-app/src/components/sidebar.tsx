@@ -83,7 +83,7 @@ function BranchList() {
                   )}
                 >
                   <AvatarImage src="https://github.com/kite" />
-                  <AvatarFallback className="capitalize">
+                  <AvatarFallback className="bg-gradient-to-r from-primary/10 to-background capitalize">
                     {branches.name.split(" ")[0]?.charAt(0)}
                     {branches.name.split(" ")[1]?.charAt(0)}
                   </AvatarFallback>
