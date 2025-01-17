@@ -10,6 +10,7 @@ import { Theme, ThemeProvider } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 
 import { NAV_THEME } from "~/lib/constants";
+import { TRPCProvider } from "~/utils/api";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -39,7 +40,13 @@ function InitialLayout() {
       router.replace("/(auth)");
     }
   }, [isSignedIn, isLoaded]);
-  return <Slot screenOptions={{ headerShown: false }} />;
+  return (
+    <Slot
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
+  );
 }
 
 export default function RootLayout() {
@@ -92,17 +99,19 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={LIGHT_THEME}>
-      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <ClerkLoaded>
-          <StatusBar
-            style={"dark"}
-            backgroundColor={LIGHT_THEME.colors.background}
-          />
-          <InitialLayout />
-          <PortalHost />
-        </ClerkLoaded>
-      </ClerkProvider>
-    </ThemeProvider>
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <TRPCProvider>
+        <ThemeProvider value={LIGHT_THEME}>
+          <ClerkLoaded>
+            <StatusBar
+              style={"dark"}
+              backgroundColor={LIGHT_THEME.colors.background}
+            />
+            <InitialLayout />
+            <PortalHost />
+          </ClerkLoaded>
+        </ThemeProvider>
+      </TRPCProvider>
+    </ClerkProvider>
   );
 }

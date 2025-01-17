@@ -1,27 +1,36 @@
+import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import { serial, text } from "drizzle-orm/pg-core";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
+import { z } from "zod";
 
 import { pgTable } from "./_table";
-import { institutions } from "./institutions";
-import { semesters } from "./semesters";
+import { Semesters } from "./semesters";
 
-// Branch table
-export const branches = pgTable("branches", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description").default("-"),
-  institution_id: text("institution_id")
-    .notNull()
-    .references(() => institutions.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
+export const Branches = pgTable("branches", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  name: t.text().notNull(),
+  clerkInstitutionId: t.text().notNull(),
+  semesters: t.integer().notNull(),
+  createdAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => new Date()),
+}));
+
+//schemas
+export const insertBranchSchema = createInsertSchema(Branches)
+  .omit({ clerkInstitutionId: true })
+  .and(z.object({ semesterStartsWith: z.enum(["even", "odd"]) }));
+export const updateBranchSchema = createUpdateSchema(Branches, {
+  id: z.string().min(1),
 });
 
-export const branchesRelations = relations(branches, ({ one, many }) => ({
-  institution: one(institutions, {
-    fields: [branches.institution_id],
-    references: [institutions.id],
-  }),
-  semesters: many(semesters),
+export const branchesRelations = relations(Branches, ({ one, many }) => ({
+  Semesters: many(Semesters),
 }));

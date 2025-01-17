@@ -1,54 +1,69 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { and, asc, eq, like, schema } from "@nxss/db";
-import { semesters } from "@nxss/db/schema";
-import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
+import { and, asc, eq, schema } from "@nxss/db";
+import {
+  insertBranchSchema,
+  Semesters,
+  updateBranchSchema,
+} from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
+import { createSemester } from "./semester";
 
-const { branches } = schema;
+const { Branches } = schema;
 
 export const branchesRouter = router({
-  getBranchList: protectedProcedure.query(async ({ ctx }) => {
-    try {
-      const branchList = await ctx.db.query.branches.findMany({
-        where: eq(branches.institution_id, ctx.auth.orgId ?? ""),
-        orderBy: asc(branches.name),
-      });
-      return branchList;
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
-  }),
+  getBranchList: protectedProcedure
+    .input(z.object({ orgId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const branchList = await ctx.db.query.Branches.findMany({
+          where: eq(Branches.clerkInstitutionId, input.orgId),
+          orderBy: asc(Branches.name),
+          with: {
+            Semesters: {
+              where: eq(Semesters.status, "active"),
+              orderBy: asc(Semesters.number),
+            },
+          },
+        });
+        return branchList;
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
+    }),
 
   getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Branch ID is required!") }))
     .query(async ({ ctx, input }) => {
-      const branch_details = await ctx.db.query.branches.findMany({
+      const branch_details = await ctx.db.query.Branches.findMany({
         where: and(
-          eq(branches.id, parseInt(input.id)),
-          eq(branches.institution_id, ctx.auth.orgId ?? ""),
+          eq(Branches.id, input.id),
+          eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
         ),
+        with: {
+          Semesters: {
+            where: eq(Semesters.status, "active"),
+            orderBy: asc(Semesters.number),
+          },
+        },
       });
 
       return branch_details.at(0);
     }),
 
   updateDetails: protectedProcedure
-    .input(UpdateBranchScheme)
+    .input(updateBranchSchema)
     .mutation(({ ctx, input }) => {
       return ctx.db
-        .update(branches)
-        .set({
-          name: input.name,
-          description: input.description,
-        })
+        .update(Branches)
+        .set(input)
         .where(
           and(
-            eq(branches.id, parseInt(input.id)),
-            eq(branches.institution_id, ctx.auth.orgId ?? ""),
+            eq(Branches.id, input.id),
+            eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
           ),
         );
     }),
@@ -57,11 +72,11 @@ export const branchesRouter = router({
     .input(z.object({ id: z.string().min(1, "BranchId is required") }))
     .mutation(async ({ ctx, input }) => {
       const response = await ctx.db
-        .delete(branches)
+        .delete(Branches)
         .where(
           and(
-            eq(branches.id, parseInt(input.id)),
-            eq(branches.institution_id, ctx.auth.orgId ?? ""),
+            eq(Branches.id, input.id),
+            eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
           ),
         )
         .returning();
@@ -76,40 +91,60 @@ export const branchesRouter = router({
     }),
 
   create: protectedProcedure
-    .input(CreateBranchScheme)
+    .input(insertBranchSchema)
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.auth.orgId)
-        throw new TRPCError({
-          message: "No selected organization",
-          code: "BAD_REQUEST",
-        });
+      //transaction
+      const response = await ctx.db.transaction(async (tx) => {
+        if (!ctx.auth.orgId)
+          throw new TRPCError({
+            message: "No selected organization",
+            code: "BAD_REQUEST",
+          });
 
-      const response = await ctx.db
-        .insert(branches)
-        .values({
-          name: input.name,
-          description: input.description,
-          institution_id: ctx.auth.orgId,
-        })
-        .returning();
+        const branchResponse = await tx
+          .insert(Branches)
+          .values({
+            name: input.name,
+            clerkInstitutionId: ctx.auth.orgId,
+            semesters: input.semesters,
+          })
+          .returning();
 
-      const branch_id = response.at(0)?.id;
+        const branch = branchResponse.at(0);
 
-      // if (branch_id) {
-      //   const semester = await ctx.db
-      //     .insert(semesters)
-      //     .values({
-      //       branch_id,
-      //       academic_year_id: 3,
-      //       number: 1,
-      //       status: "current",
-      //     });
-      // }
-      if (!response.at(0)?.id)
-        throw new TRPCError({
-          message: "Can't able to create the branch, Retry",
-          code: "BAD_REQUEST",
-        });
+        if (!branch?.id)
+          throw new TRPCError({
+            message: "Can't able to create the branch, Retry",
+            code: "BAD_REQUEST",
+          });
+
+        //Create active semesters
+        await Promise.all(
+          Array.from({ length: branch?.semesters }).map((_, index) => {
+            const semester = index + 1;
+            if (input.semesterStartsWith === "even" && semester % 2 == 0)
+              return tx
+                .insert(Semesters)
+                .values({
+                  status: "active",
+                  number: semester,
+                  brancId: branch?.id,
+                })
+                .returning();
+            else if (input.semesterStartsWith === "odd" && semester % 2 != 0)
+              return tx
+                .insert(Semesters)
+                .values({
+                  status: "active",
+                  number: semester,
+                  brancId: branch?.id,
+                })
+                .returning();
+          }),
+        );
+
+        return branch;
+      });
 
       return response;
     }),

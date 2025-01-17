@@ -14,8 +14,5 @@ export default async function page() {
     else redirect(`/create-organization`); //if there is no organization created  - create one
   }
 
-  const { slug } = await clerkClient().organizations.getOrganization({
-    organizationId: orgId,
-  });
-  redirect(`/${slug}/dashboard`);
+  redirect(`/${orgId}/dashboard`);
 }

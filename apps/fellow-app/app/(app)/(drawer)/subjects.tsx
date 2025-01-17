@@ -15,7 +15,7 @@ export default function Subjects() {
           title: "Subjects",
         }}
       />
-      <Text>Calendar</Text>
+      <Text>Subjects</Text>
     </View>
   );
 }

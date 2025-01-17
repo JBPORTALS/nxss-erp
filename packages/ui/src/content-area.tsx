@@ -14,7 +14,7 @@ export const ContentArea: React.FC<
 > = ({ children, className, ...props }) => (
   <Card
     className={cn(
-      "h-full w-full space-y-4 rounded-none border-none bg-background py-6 shadow-none",
+      "flex h-full w-full flex-col gap-4 rounded-none border-none bg-background py-8 shadow-none",
       className,
     )}
     {...props}
@@ -26,7 +26,7 @@ export const ContentArea: React.FC<
 export const ContentAreaHeader: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardHeader>>
 > = ({ children, className, ...props }) => (
-  <CardHeader className={cn("space-y-2 p-0 px-8", className)} {...props}>
+  <CardHeader className={cn("space-y-1 p-0 px-16", className)} {...props}>
     {children}
   </CardHeader>
 );
@@ -34,7 +34,7 @@ export const ContentAreaHeader: React.FC<
 export const ContentAreaTitle: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardTitle>>
 > = ({ children, ...props }) => (
-  <CardTitle className="text-2xl font-semibold" {...props}>
+  <CardTitle className="text-2xl font-bold" {...props}>
     {children}
   </CardTitle>
 );
@@ -48,7 +48,7 @@ export const ContentAreaDescription: React.FC<
 export const ContentAreaContainer: React.FC<
   React.PropsWithChildren<React.ComponentProps<typeof CardContent>>
 > = ({ children, className, ...props }) => (
-  <CardContent className={cn("h-full p-0 px-8", className)} {...props}>
+  <CardContent className={cn("h-full p-0 px-16", className)} {...props}>
     {children}
   </CardContent>
 );

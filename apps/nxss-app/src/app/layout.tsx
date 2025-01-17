@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Merriweather, Roboto } from "next/font/google";
+import { IBM_Plex_Mono, Inter, JetBrains_Mono } from "next/font/google";
 
 import { cn } from "@nxss/ui";
 import { ThemeProvider } from "@nxss/ui/theme";
@@ -11,19 +11,18 @@ import "~/app/globals.css";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
-import { SyncActiveOrganization } from "~/utils/sync-active-organization";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Providers } from "./providers";
 
-const OpenSans = Roboto({
+const InterFont = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["100", "400", "300", "500", "700", "900"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const Mw = Merriweather({
-  variable: "--font-Mw",
+const IMBPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
-  weight: ["900"],
+  weight: ["100", "200", "300", "400", "700", "200", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -35,10 +34,9 @@ export const metadata: Metadata = {
   title: "NexussERP",
   description: "Simple monorepo with shared backend for web & mobile apps",
   openGraph: {
-    title: "Create T3 Turbo",
+    title: "NexussERP",
     description: "Simple monorepo with shared backend for web & mobile apps",
-    url: "https://create-t3-turbo.vercel.app",
-    siteName: "Create T3 Turbo",
+    siteName: "NexussERP",
   },
   twitter: {
     card: "summary_large_image",
@@ -59,9 +57,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "light min-h-screen w-full bg-background font-sans text-foreground antialiased",
-          OpenSans.variable,
-          Mw.variable,
+          "flex bg-background font-sans text-foreground antialiased",
+          InterFont.variable,
+          IMBPlexMono.variable,
         )}
       >
         <NextSSRPlugin

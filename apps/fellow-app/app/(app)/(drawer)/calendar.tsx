@@ -1,168 +1,164 @@
-import React, { Component } from "react";
-import { Alert } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  CalendarProvider,
-  CalendarUtils,
-  ExpandableCalendar,
-  TimelineEventProps,
-  TimelineList,
-  TimelineProps,
-} from "react-native-calendars";
-import filter from "lodash/filter";
-import find from "lodash/find";
-import groupBy from "lodash/groupBy";
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Calendar, CalendarUtils, DateData } from "react-native-calendars";
+import { Link } from "expo-router";
+import { Drawer } from "expo-router/drawer";
+import { format } from "date-fns";
+import { CalendarDays } from "lucide-react-native";
 
-import { getDate, timelineEvents } from "./_mocks/timeline-events";
+import { Badge } from "~/components/ui/badge";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { H4 } from "~/components/ui/typography";
+import { NAV_THEME } from "~/lib/constants";
+import { cn } from "~/lib/utils";
+import { api } from "~/utils/api";
 
-const INITIAL_TIME = { hour: 9, minutes: 0 };
-const EVENTS: TimelineEventProps[] = timelineEvents;
-export default class TimelineCalendarScreen extends Component {
-  state = {
-    currentDate: getDate(),
-    events: EVENTS,
-    eventsByDate: groupBy(EVENTS, (e) =>
-      CalendarUtils.getCalendarDateString(e.start),
-    ) as {
-      [key: string]: TimelineEventProps[];
-    },
-  };
+const INITIAL_DATE = new Date().toISOString().split("T")[0]; // Today's date
 
-  marked = {
-    [`${getDate(-1)}`]: { marked: true },
-    [`${getDate()}`]: { marked: true },
-    [`${getDate(1)}`]: { marked: true },
-    [`${getDate(2)}`]: { marked: true },
-    [`${getDate(4)}`]: { marked: true },
-  };
+export default function CalendarScreen() {
+  const [selected, setSelected] = useState(INITIAL_DATE);
+  const [markedDates, setMarkedDates] = useState({});
 
-  onDateChanged = (date: string, source: string) => {
-    console.log("TimelineCalendarScreen onDateChanged: ", date, source);
-    this.setState({ currentDate: date });
-  };
+  const {
+    data: events,
+    isLoading,
+    refetch,
+  } = api.calendar.getStudentEvents.useQuery({
+    date: new Date(selected),
+  });
 
-  onMonthChange = (month: any, updateSource: any) => {
-    console.log("TimelineCalendarScreen onMonthChange: ", month, updateSource);
-  };
+  // console.log(events);
 
-  createNewEvent: TimelineProps["onBackgroundLongPress"] = (
-    timeString,
-    timeObject,
-  ) => {
-    const { eventsByDate } = this.state;
-    const hourString = `${(timeObject.hour + 1).toString().padStart(2, "0")}`;
-    const minutesString = `${timeObject.minutes.toString().padStart(2, "0")}`;
+  useEffect(() => {
+    refetch();
+  }, [selected, refetch]);
 
-    const newEvent = {
-      id: "draft",
-      start: `${timeString}`,
-      end: `${timeObject.date} ${hourString}:${minutesString}:00`,
-      title: "New Event",
-      color: "white",
-    };
-
-    if (timeObject.date) {
-      if (eventsByDate[timeObject.date]) {
-        eventsByDate[timeObject.date] = [
-          ...eventsByDate[timeObject.date],
-          newEvent,
-        ];
-        this.setState({ eventsByDate });
-      } else {
-        eventsByDate[timeObject.date] = [newEvent];
-        this.setState({ eventsByDate: { ...eventsByDate } });
-      }
+  useEffect(() => {
+    if (events) {
+      const newMarkedDates = {
+        [selected]: {
+          marked: events.length > 0,
+          dotColor: NAV_THEME.light.primary,
+          selected: true,
+          selectedColor: NAV_THEME.light.primary,
+        },
+      };
+      setMarkedDates(newMarkedDates);
     }
-  };
+  }, [events, selected]);
 
-  approveNewEvent: TimelineProps["onBackgroundLongPressOut"] = (
-    _timeString,
-    timeObject,
-  ) => {
-    const { eventsByDate } = this.state;
+  const onDayPress = useCallback((day: DateData) => {
+    setSelected(day.dateString);
+  }, []);
 
-    Alert.prompt("New Event", "Enter event title", [
-      {
-        text: "Cancel",
-        onPress: () => {
-          if (timeObject.date) {
-            eventsByDate[timeObject.date] = filter(
-              eventsByDate[timeObject.date],
-              (e) => e.id !== "draft",
-            );
-
-            this.setState({
-              eventsByDate,
-            });
-          }
-        },
-      },
-      {
-        text: "Create",
-        onPress: (eventTitle) => {
-          if (timeObject.date) {
-            const draftEvent = find(eventsByDate[timeObject.date], {
-              id: "draft",
-            });
-            if (draftEvent) {
-              draftEvent.id = undefined;
-              draftEvent.title = eventTitle ?? "New Event";
-              draftEvent.color = "lightgreen";
-              eventsByDate[timeObject.date] = [
-                ...eventsByDate[timeObject.date],
-              ];
-
-              this.setState({
-                eventsByDate,
-              });
-            }
-          }
-        },
-      },
-    ]);
-  };
-
-  private timelineProps: Partial<TimelineProps> = {
-    format24h: true,
-    onBackgroundLongPress: this.createNewEvent,
-    onBackgroundLongPressOut: this.approveNewEvent,
-    // scrollToFirst: true,
-    // start: 0,
-    // end: 24,
-    unavailableHours: [
-      { start: 0, end: 6 },
-      { start: 22, end: 24 },
-    ],
-    overlapEventsSpacing: 8,
-    rightEdgeSpacing: 24,
-  };
-
-  render() {
-    const { currentDate, eventsByDate } = this.state;
-
-    return (
-      <CalendarProvider
-        date={currentDate}
-        onDateChanged={this.onDateChanged}
-        onMonthChange={this.onMonthChange}
-        showTodayButton
-        disabledOpacity={0.6}
-        // numberOfDays={3}
-      >
-        <ExpandableCalendar
-          firstDay={1}
-          leftArrowImageSource={require("assets/images/previous.png")}
-          rightArrowImageSource={require("assets/images/next.png")}
-          markedDates={this.marked}
-        />
-        <TimelineList
-          events={eventsByDate}
-          timelineProps={this.timelineProps}
-          showNowIndicator
-          // scrollToNow
-          scrollToFirst
-          initialTime={INITIAL_TIME}
-        />
-      </CalendarProvider>
-    );
-  }
+  return (
+    <ScrollView style={{ flex: 1 }}>
+      <Drawer.Screen
+        options={{
+          drawerIcon: (props) => <CalendarDays {...props} size={20} />,
+          drawerLabel: "Calendar",
+          title: "Calendar",
+        }}
+      />
+      <Calendar
+        onDayPress={onDayPress}
+        markedDates={markedDates}
+        enableSwipeMonths
+        theme={{
+          backgroundColor: NAV_THEME.light.background,
+          calendarBackground: NAV_THEME.light.background,
+          textSectionTitleColor: "#b6c1cd",
+          selectedDayBackgroundColor: NAV_THEME.light.primary,
+          selectedDayTextColor: "#ffffff",
+          todayTextColor: NAV_THEME.light.primary,
+          dayTextColor: NAV_THEME.light.text,
+          textDisabledColor: "#b6c1cd",
+          dotColor: NAV_THEME.light.primary,
+          selectedDotColor: "#ffffff",
+          arrowColor: NAV_THEME.light.primary,
+          monthTextColor: NAV_THEME.light.text,
+          indicatorColor: NAV_THEME.light.primary,
+          textDayFontFamily: "GeistVF",
+          textMonthFontFamily: "GeistVF",
+          textDayHeaderFontFamily: "GeistMonoVF",
+          textDayFontWeight: "300",
+          textMonthFontWeight: "bold",
+          textDayHeaderFontWeight: "300",
+          textDayFontSize: 16,
+          textMonthFontSize: 16,
+          textDayHeaderFontSize: 14,
+        }}
+      />
+      {isLoading ? (
+        <View className="flex h-full w-full items-center py-20">
+          <ActivityIndicator size={32} color={NAV_THEME.light.primary} />
+        </View>
+      ) : events && events.length > 0 ? (
+        <View className="gap-4 px-6 py-5">
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            Events for {new Date(selected).toLocaleDateString()}
+          </Text>
+          {events.map((event, index) => (
+            <Link
+              asChild
+              className="w-full"
+              key={event.id}
+              href={`/(modal)/event/${event.id}`}
+            >
+              <TouchableNativeFeedback>
+                <Card
+                  key={index}
+                  className={cn(
+                    "rounded-xl bg-secondary",
+                    !event.isSlotStart && "rounded-l-none border-l-4",
+                    !event.isSlotEnd && "rounded-r-none border-r-4",
+                  )}
+                  style={{
+                    borderLeftColor: "red",
+                  }}
+                >
+                  <CardHeader className="flex-row items-center justify-between">
+                    <View className="w-full flex-shrink">
+                      <CardTitle className="w-full text-base">
+                        {event.title.slice(0, 80)}
+                      </CardTitle>
+                      <CardDescription>{event.formattedTime}</CardDescription>
+                    </View>
+                    <Badge className="" variant={"outline"}>
+                      <Text
+                        className={cn(
+                          "text-sm capitalize",
+                          event.event_type === "event" && "text-primary",
+                          event.event_type === "holiday" && "text-green-600",
+                          event.event_type === "opportunity" && "text-blue-600",
+                        )}
+                      >
+                        {event.event_type}
+                      </Text>
+                    </Badge>
+                  </CardHeader>
+                </Card>
+              </TouchableNativeFeedback>
+            </Link>
+          ))}
+        </View>
+      ) : (
+        <View className="flex h-full w-full items-center py-20">
+          <H4>No events for the day</H4>
+        </View>
+      )}
+    </ScrollView>
+  );
 }

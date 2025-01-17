@@ -65,6 +65,8 @@ export default function AppLayout() {
           },
           drawerLabelStyle: { marginLeft: -20, fontWeight: "600" },
           drawerStatusBarAnimation: "fade",
+          headerTitleStyle: { fontFamily: "GeistVF" },
+
           headerRight(props) {
             return (
               <Link href={"/profile"} className="mr-2.5">

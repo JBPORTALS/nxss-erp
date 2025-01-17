@@ -81,39 +81,26 @@ export const CreateBatchScheme = z.object({
 export const UpdateBatchScheme = z.object({
   id: z.number().min(1, "Batch ID is required"),
   name: z.string().min(1, "Name is required").optional(),
-  branch_id: z.number().min(1, "Branch ID is required").optional(),
-  semester_id: z.number().min(1, "Semester ID is required").optional(),
-  section_id: z.number().min(1, "Section ID is required").optional(),
+  branchId: z.number().min(1, "Branch ID is required").optional(),
+  semesterId: z.number().min(1, "Semester ID is required").optional(),
+  sectionId: z.number().min(1, "Section ID is required").optional(),
 });
 
 export const CreateCalendarEventScheme = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  event_type: z.enum(["event", "opportunity", "holiday", "exam_schedule"]),
-  scope: z.object({
-    branchId: z.number(),
-    semesterId: z.number().optional(),
-    sectionId: z.number().optional(),
-    batchId: z.number().optional(),
-  }),
+  eventType: z.enum(["event", "opportunity", "holiday", "exam_schedule"]),
+  scope: z
+    .object({
+      branchId: z.number().optional(),
+      semesterId: z.number().optional(),
+      sectionId: z.number().optional(),
+      batchId: z.number().optional(),
+    })
+    .optional(),
   audience_type: z.enum(["staff", "students", "all"]),
   is_all_day: z.boolean().optional(),
   start_date: z.date(),
-  end_date: z.date().optional(),
-  location: z.string().optional(),
-  attachment_url: z.string().optional(),
-});
-
-export const UpdateCalendarEventScheme = z.object({
-  id: z.number().min(1, "Event ID is required"),
-  title: z.string().min(1, "Title is required").optional(),
-  description: z.string().optional(),
-  event_type: z
-    .enum(["event", "opportunity", "holiday", "exam_schedule"])
-    .optional(),
-  audience_type: z.enum(["staff", "students", "all"]).optional(),
-  is_all_day: z.boolean().optional(),
-  start_date: z.date().optional(),
   end_date: z.date().optional(),
   location: z.string().optional(),
   attachment_url: z.string().optional(),
@@ -124,26 +111,57 @@ const datetime: z.ZodSchema<DateRange | undefined> = z.object({
   to: z.date().optional(),
 });
 
-export const eventSchema = z.object({
+const baseEventSchema = z.object({
   title: z.string().min(1, "Required"),
   description: z.string().optional(),
   datetime,
   location: z.string().optional(),
   includeTime: z.boolean(),
+  attachmentUrl: z.string().optional(),
+});
+
+const scopeSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+});
+
+const studentEventSchema = baseEventSchema.extend({
+  audienceType: z.literal("students"),
   scope: z
-    .array(
-      z.object({
-        value: z.string(),
-        label: z.string(),
-      }),
-      {
-        required_error: "Atlease one scope must be select",
-      },
-    )
-    .min(1, "Atlease one scope must be select"),
-  audienceType: z.enum(["students", "staff", "all"], {
-    required_error: "Missing audience type",
-  }),
+    .array(scopeSchema)
+    .min(1, "At least one scope must be selected for student events"),
+});
+
+const staffEventSchema = baseEventSchema.extend({
+  audienceType: z.literal("staff"),
+  scope: z
+    .array(scopeSchema)
+    .min(1, "At least one scope must be selected for student events"),
+});
+
+const allAudienceEventSchema = baseEventSchema.extend({
+  audienceType: z.literal("all"),
+  scope: z.array(scopeSchema).optional(),
+});
+
+export const eventSchema = z.discriminatedUnion("audienceType", [
+  studentEventSchema,
+  staffEventSchema,
+  allAudienceEventSchema,
+]);
+
+const updateBaseSchema = z.object({
+  id: z.number().min(1, "ID is required"),
+  eventType: z.enum(["event", "opportunity", "holiday", "exam_schedule"]),
+  scope: z
+    .object({
+      branchId: z.number().optional(),
+      semesterId: z.number().optional(),
+      sectionId: z.number().optional(),
+      batchId: z.number().optional(),
+    })
+    .optional(),
+  audienceType: z.enum(["all", "students", "staff"]),
 });
 
 export const CreateOrganizationScheme = z.object({
@@ -160,3 +178,14 @@ export const CreateOrganizationBackendScheme = z.object({
   type: z.enum(["annual", "semester"]),
   semester_count: z.string().min(1, "Select count value"),
 });
+
+// export const UpdateCalendarEventScheme = eventSchema.transform((arg) => {
+//   return {
+//     ...arg,
+//     id: z.number().min(1, "ID is required"),
+//
+//   };
+// });
+
+export const UpdateCalendarEventScheme =
+  baseEventSchema.merge(updateBaseSchema);

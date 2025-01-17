@@ -1,47 +1,80 @@
+import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import { integer, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
+import { z } from "zod";
 
 import { pgTable } from "./_table";
-import { branches } from "./branches";
-import { semesters } from "./semesters";
+import { Branches } from "./branches";
+import { Semesters } from "./semesters";
 
-export const sections = pgTable("sections", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  branch_id: integer("branch_id")
+export const Sections = pgTable("sections", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  name: t.text().notNull(),
+  branchId: t
+    .text()
     .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
-  semester_id: integer("semester_id")
+    .references(() => Branches.id, { onDelete: "cascade" }),
+  semesterId: t
+    .text()
     .notNull()
-    .references(() => semesters.id, { onDelete: "cascade" }),
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at"),
+    .references(() => Semesters.id, { onDelete: "cascade" }),
+  createdAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => new Date()),
+}));
+
+export const Batches = pgTable("batches", (t) => ({
+  id: t
+    .text()
+    .$defaultFn(() => createId())
+    .notNull()
+    .primaryKey(),
+  name: t.text("name").notNull(),
+  sectionId: t
+    .text("section_id")
+    .notNull()
+    .references(() => Sections.id, { onDelete: "cascade" }),
+  createdAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => new Date()),
+}));
+
+//Schemas
+export const updateBatchSchema = createUpdateSchema(Batches, {
+  id: z.string().min(1),
 });
-
-export const batches = pgTable("batches", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  branch_id: integer("branch_id")
-    .notNull()
-    .references(() => branches.id, { onDelete: "cascade" }),
-  semester_id: integer("semester_id")
-    .notNull()
-    .references(() => semesters.id, { onDelete: "cascade" }),
-  section_id: integer("section_id")
-    .notNull()
-    .references(() => sections.id, { onDelete: "cascade" }),
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at"),
+export const insertBatchSchema = createInsertSchema(Batches);
+export const updateSectionSchema = createUpdateSchema(Sections, {
+  id: z.string().min(1),
 });
+export const insertSectionSchema = createInsertSchema(Sections);
 
-export const sectionsRelations = relations(sections, ({ one, many }) => ({
-  branch: one(branches, {
-    fields: [sections.branch_id],
-    references: [branches.id],
+export const sectionsRelations = relations(Sections, ({ one, many }) => ({
+  Branch: one(Branches, {
+    fields: [Sections.branchId],
+    references: [Branches.id],
   }),
-  semester: one(semesters, {
-    fields: [sections.semester_id],
-    references: [semesters.id],
+  Semester: one(Semesters, {
+    fields: [Sections.semesterId],
+    references: [Semesters.id],
   }),
-  batches: many(batches), // One-to-many: a section can have many batches
+  Batches: many(Batches), // One-to-many: a section can have many batches
+}));
+
+export const batchesRelations = relations(Batches, ({ one }) => ({
+  Section: one(Sections, {
+    fields: [Batches.sectionId],
+    references: [Sections.id],
+  }),
 }));

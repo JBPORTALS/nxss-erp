@@ -1,6 +1,7 @@
 "use client";
 
 import { Toaster } from "@nxss/ui/toast";
+import { TooltipProvider } from "@nxss/ui/tooltip";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -10,8 +11,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 
 import { buttonVariants } from "@nxss/ui/button";
-
-import { SyncActiveOrganization } from "~/utils/sync-active-organization";
 
 export function Providers(props: { children: React.ReactNode }) {
   return (
@@ -33,9 +32,9 @@ export function Providers(props: { children: React.ReactNode }) {
         },
       }}
     >
-      <SyncActiveOrganization />
-
-      <TRPCReactProvider>{props.children}</TRPCReactProvider>
+      <TRPCReactProvider>
+        <TooltipProvider>{props.children}</TooltipProvider>
+      </TRPCReactProvider>
       <Toaster
         richColors
         icons={{
