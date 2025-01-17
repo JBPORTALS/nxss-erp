@@ -1,3 +1,3 @@
 {
-  "buildCommand": "turbo push && turbo build"
+  "buildCommand": "turbo db-push && turbo build"
 }
