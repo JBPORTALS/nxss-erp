@@ -105,39 +105,29 @@ export const branchesRouter = router({
           });
 
         //Create active semesters
-        try {
-          await Promise.all(
-            new Array(branch?.semesters).map(async (_, index) => {
-              const semester = index + 1;
-              if (input.semesterStartsWith === "even" && semester % 2 == 0)
-                await tx
-                  .insert(Semesters)
-                  .values({
-                    status: "active",
-                    number: index + 1,
-                    brancId: branch?.id,
-                  })
-                  .returning();
-              else if (input.semesterStartsWith === "odd" && semester % 2 != 0)
-                await tx
-                  .insert(Semesters)
-                  .values({
-                    status: "active",
-                    number: index + 1,
-                    brancId: branch?.id,
-                  })
-                  .returning();
-              else {
-                throw new TRPCError({
-                  message: "Semesters not set",
-                  code: "NOT_IMPLEMENTED",
-                });
-              }
-            }),
-          );
-        } catch (e) {
-          tx.rollback();
-        }
+        await Promise.all(
+          Array.from({ length: branch?.semesters }).map((_, index) => {
+            const semester = index + 1;
+            if (input.semesterStartsWith === "even" && semester % 2 == 0)
+              return tx
+                .insert(Semesters)
+                .values({
+                  status: "active",
+                  number: semester,
+                  brancId: branch?.id,
+                })
+                .returning();
+            else if (input.semesterStartsWith === "odd" && semester % 2 != 0)
+              return tx
+                .insert(Semesters)
+                .values({
+                  status: "active",
+                  number: semester,
+                  brancId: branch?.id,
+                })
+                .returning();
+          }),
+        );
 
         return branch;
       });

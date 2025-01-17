@@ -132,7 +132,10 @@ export function InstitutionBranchSidebar() {
 export function BranchDetialsSidebar() {
   const params = useParams<{ branch_id: string }>();
   const { data, isLoading: isBranchDataLoading } =
-    api.branch.getDetails.useQuery({ id: params.branch_id });
+    api.branch.getDetails.useQuery(
+      { id: params.branch_id },
+      { enabled: !!params.branch_id },
+    );
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="h-fit w-60 space-y-7 px-4 pb-20 pt-4">

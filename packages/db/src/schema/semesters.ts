@@ -13,7 +13,7 @@ export const Semesters = pgTable("semesters", (t) => ({
     .text()
     .$defaultFn(() => createId())
     .primaryKey(),
-  academicYear: t.text(),
+  academicYear: t.text().$defaultFn(() => new Date().getFullYear().toString()),
   brancId: t
     .text()
     .notNull()
