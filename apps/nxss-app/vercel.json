@@ -1,3 +1,3 @@
 {
-  "buildCommand": "turbo db-push && turbo build"
+  "buildCommand": "pnpm db-push && turbo build"
 }

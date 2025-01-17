@@ -23,9 +23,9 @@
     "db-migrate": {
       "cache": false,
       "interactive": false,
-      "dependsOn": ["^migrate"]
+      "dependsOn": ["db#^migrate"]
     },
-    "db-push": {
+    "push": {
       "cache": false,
       "interactive": false,
       "dependsOn": ["^push"]
