@@ -195,7 +195,7 @@ export function BranchDetialsSidebar() {
     );
   return (
     <ScrollArea className="relative h-full border-r">
-      <nav className="h-fit w-72 space-y-7 px-5 pb-20 pt-4">
+      <nav className="h-fit w-64 space-y-7 px-5 pb-20 pt-4">
         <div className="inline-block bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-extrabold text-transparent">
           {isBranchDataLoading ? <Skeleton className="h-4 w-40" /> : data?.name}
         </div>
@@ -305,7 +305,7 @@ export function InstitutionDetailsSidebar() {
   const params = useParams();
   return (
     <ScrollArea className="relative h-full border-r">
-      <nav className="flex h-fit w-72 flex-col gap-7 px-5 pb-20 pt-4">
+      <nav className="flex h-fit w-64 flex-col gap-7 px-5 pb-20 pt-4">
         <InstitutionSwitcher />
         <div className="flex flex-col gap-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
