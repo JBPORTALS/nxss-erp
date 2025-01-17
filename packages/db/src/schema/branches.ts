@@ -10,7 +10,7 @@ export const Branches = pgTable("branches", (t) => ({
     .$defaultFn(() => createId())
     .primaryKey(),
   name: t.text().notNull(),
-  institutionId: t.text().notNull(),
+  clerkInstitutionId: t.text().notNull(),
   semesters: t.integer().notNull(),
   createdAt: t
     .timestamp({ mode: "date", withTimezone: true })

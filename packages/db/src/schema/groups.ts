@@ -1,5 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
+import { z } from "zod";
 
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
@@ -32,9 +34,10 @@ export const Batches = pgTable("batches", (t) => ({
   id: t
     .text()
     .$defaultFn(() => createId())
+    .notNull()
     .primaryKey(),
   name: t.text("name").notNull(),
-  section_id: t
+  sectionId: t
     .text("section_id")
     .notNull()
     .references(() => Sections.id, { onDelete: "cascade" }),
@@ -46,6 +49,16 @@ export const Batches = pgTable("batches", (t) => ({
     .timestamp({ mode: "date", withTimezone: true })
     .$onUpdateFn(() => new Date()),
 }));
+
+//Schemas
+export const updateBatchSchema = createUpdateSchema(Batches, {
+  id: z.string().min(1),
+});
+export const insertBatchSchema = createInsertSchema(Batches);
+export const updateSectionSchema = createUpdateSchema(Sections, {
+  id: z.string().min(1),
+});
+export const insertSectionSchema = createInsertSchema(Sections);
 
 export const sectionsRelations = relations(Sections, ({ one, many }) => ({
   Branch: one(Branches, {
@@ -61,7 +74,7 @@ export const sectionsRelations = relations(Sections, ({ one, many }) => ({
 
 export const batchesRelations = relations(Batches, ({ one }) => ({
   Section: one(Sections, {
-    fields: [Batches.section_id],
+    fields: [Batches.sectionId],
     references: [Sections.id],
   }),
 }));

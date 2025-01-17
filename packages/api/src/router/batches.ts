@@ -1,20 +1,20 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { and, asc, eq, schema } from "@nxss/db";
-import { CreateBatchScheme, UpdateBatchScheme } from "@nxss/validators";
+import { asc, eq, schema } from "@nxss/db";
+import { insertBatchSchema, updateBatchSchema } from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
 
-const { batches, branches, semesters, sections } = schema;
+const { Batches } = schema;
 
 export const batchesRouter = router({
   getBatchList: protectedProcedure
-    .input(z.object({ sectionId: z.number() }))
+    .input(z.object({ sectionId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const batchList = await ctx.db.query.batches.findMany({
-        orderBy: asc(batches.name),
-        where: eq(batches.section_id, input.sectionId),
+      const batchList = await ctx.db.query.Batches.findMany({
+        orderBy: asc(Batches.name),
+        where: eq(Batches.sectionId, input.sectionId),
       });
 
       return batchList;
@@ -23,8 +23,8 @@ export const batchesRouter = router({
   getDetails: protectedProcedure
     .input(z.string().min(1, "Batch ID is required!"))
     .query(async ({ ctx, input }) => {
-      const batchDetails = await ctx.db.query.batches.findFirst({
-        where: eq(batches.id, parseInt(input)),
+      const batchDetails = await ctx.db.query.Batches.findFirst({
+        where: eq(Batches.id, input),
       });
 
       if (!batchDetails) {
@@ -38,17 +38,12 @@ export const batchesRouter = router({
     }),
 
   updateDetails: protectedProcedure
-    .input(UpdateBatchScheme)
+    .input(updateBatchSchema)
     .mutation(async ({ ctx, input }) => {
       const response = await ctx.db
-        .update(batches)
-        .set({
-          name: input.name,
-          branch_id: input.branch_id,
-          semester_id: input.semester_id,
-          section_id: input.section_id,
-        })
-        .where(eq(batches.id, input.id))
+        .update(Batches)
+        .set(input)
+        .where(eq(Batches.id, input.id))
         .returning();
 
       if (!response.at(0)?.id) {
@@ -65,8 +60,8 @@ export const batchesRouter = router({
     .input(z.object({ id: z.string().min(1, "Batch ID is required") }))
     .mutation(async ({ ctx, input }) => {
       const response = await ctx.db
-        .delete(batches)
-        .where(eq(batches.id, parseInt(input.id)))
+        .delete(Batches)
+        .where(eq(Batches.id, input.id))
         .returning();
 
       if (!response.at(0)?.id) {
@@ -80,17 +75,9 @@ export const batchesRouter = router({
     }),
 
   create: protectedProcedure
-    .input(CreateBatchScheme)
+    .input(insertBatchSchema)
     .mutation(async ({ ctx, input }) => {
-      const response = await ctx.db
-        .insert(batches)
-        .values({
-          name: input.name,
-          branch_id: input.branch_id,
-          semester_id: input.semester_id,
-          section_id: input.section_id,
-        })
-        .returning();
+      const response = await ctx.db.insert(Batches).values(input).returning();
 
       if (!response.at(0)?.id) {
         throw new TRPCError({
@@ -102,22 +89,21 @@ export const batchesRouter = router({
       return response.at(0);
     }),
 
-  getBatchesByBranchAndSemester: protectedProcedure
-    .input(
-      z.object({
-        branch_id: z.number().min(1),
-        semester_id: z.number().min(1),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const batchList = await ctx.db.query.batches.findMany({
-        where: and(
-          eq(batches.branch_id, input.branch_id),
-          eq(batches.semester_id, input.semester_id),
-        ),
-        orderBy: asc(batches.name),
-      });
+  // getBatchesByBranchAndSemester: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       branchId: z.number().min(1),
+  //       semesterId: z.number().min(1),
+  //     }),
+  //   )
+  //   .query(async ({ ctx, input }) => {
+  //     const batchList = await ctx.db.query.Batches.findMany({
+  //       where:
+  //         eq(Batches.sectionId, input.se)
+  //       ,
+  //       orderBy: asc(Batches.name),
+  //     });
 
-      return batchList;
-    }),
+  //     return batchList;
+  //   }),
 });

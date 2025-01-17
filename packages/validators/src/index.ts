@@ -81,15 +81,15 @@ export const CreateBatchScheme = z.object({
 export const UpdateBatchScheme = z.object({
   id: z.number().min(1, "Batch ID is required"),
   name: z.string().min(1, "Name is required").optional(),
-  branch_id: z.number().min(1, "Branch ID is required").optional(),
-  semester_id: z.number().min(1, "Semester ID is required").optional(),
-  section_id: z.number().min(1, "Section ID is required").optional(),
+  branchId: z.number().min(1, "Branch ID is required").optional(),
+  semesterId: z.number().min(1, "Semester ID is required").optional(),
+  sectionId: z.number().min(1, "Section ID is required").optional(),
 });
 
 export const CreateCalendarEventScheme = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  event_type: z.enum(["event", "opportunity", "holiday", "exam_schedule"]),
+  eventType: z.enum(["event", "opportunity", "holiday", "exam_schedule"]),
   scope: z
     .object({
       branchId: z.number().optional(),

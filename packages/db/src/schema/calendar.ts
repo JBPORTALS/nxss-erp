@@ -1,6 +1,10 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import { createSelectSchema } from "drizzle-zod";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
@@ -8,7 +12,7 @@ import { audienceTypeEnum, eventTypeEnum } from "./enum";
 import { Batches, Sections } from "./groups";
 import { Semesters } from "./semesters";
 
-export const calendar = pgTable("calendar", (t) => ({
+export const Calendar = pgTable("calendar", (t) => ({
   id: t
     .text()
     .$defaultFn(() => createId())
@@ -31,10 +35,12 @@ export const calendar = pgTable("calendar", (t) => ({
     .$onUpdateFn(() => new Date()),
 }));
 
-export const selectCalendarSchema = createSelectSchema(calendar);
+export const selectCalendarSchema = createSelectSchema(Calendar);
+export const insertCalendarSchema = createInsertSchema(Calendar);
+export const updateCalendarSchema = createUpdateSchema(Calendar);
 
 // Calendar Branches Relation Table
-export const calendarBranches = pgTable("calendar_branches", (t) => ({
+export const CalendarBranches = pgTable("calendar_branches", (t) => ({
   id: t
     .text()
     .$defaultFn(() => createId())
@@ -42,7 +48,7 @@ export const calendarBranches = pgTable("calendar_branches", (t) => ({
   calendarId: t
     .text()
     .notNull()
-    .references(() => calendar.id, { onDelete: "cascade" }),
+    .references(() => Calendar.id, { onDelete: "cascade" }),
   branchId: t.text().references(() => Branches.id, {
     onDelete: "cascade",
   }),
@@ -55,25 +61,28 @@ export const calendarBranches = pgTable("calendar_branches", (t) => ({
   batch: t.text().references(() => Batches.id, { onDelete: "cascade" }),
 }));
 
+export const insertCalendarBranchSchema = createInsertSchema(CalendarBranches);
+export const updateCalendarBranchSchema = createUpdateSchema(CalendarBranches);
+
 // Calendar Event Relations
-export const calendarEventRelations = relations(calendar, ({ many }) => ({
-  calendarBranches: many(calendarBranches),
+export const calendarEventRelations = relations(Calendar, ({ many }) => ({
+  calendarBranches: many(CalendarBranches),
 }));
 
 // Calendar Branches Relations
 export const calendarBranchesRelations = relations(
-  calendarBranches,
+  CalendarBranches,
   ({ one }) => ({
-    CalendarEvent: one(calendar, {
-      fields: [calendarBranches.calendarId],
-      references: [calendar.id],
+    CalendarEvent: one(Calendar, {
+      fields: [CalendarBranches.calendarId],
+      references: [Calendar.id],
     }),
     Branch: one(Branches, {
-      fields: [calendarBranches.branchId],
+      fields: [CalendarBranches.branchId],
       references: [Branches.id],
     }),
     Semester: one(Semesters, {
-      fields: [calendarBranches.semesterId],
+      fields: [CalendarBranches.semesterId],
       references: [Semesters.id],
     }),
   }),

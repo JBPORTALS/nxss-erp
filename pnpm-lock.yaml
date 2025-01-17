@@ -623,6 +623,9 @@ importers:
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@nxss/eslint-config':
         specifier: workspace:^
