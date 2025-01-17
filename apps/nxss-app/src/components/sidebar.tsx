@@ -211,7 +211,9 @@ export function BranchDetialsSidebar() {
               </CardDescription>
             </CardHeader>
             <CardFooter>
-              <Button className="w-full">Add</Button>
+              <Button variant={"outline"} className="w-full">
+                Add
+              </Button>
             </CardFooter>
           </Card>
         </div>
@@ -232,7 +234,9 @@ export function BranchDetialsSidebar() {
               </CardDescription>
             </CardHeader>
             <CardFooter>
-              <Button className="w-full">Setup</Button>
+              <Button variant={"outline"} className="w-full">
+                Setup
+              </Button>
             </CardFooter>
           </Card>
         </div>
