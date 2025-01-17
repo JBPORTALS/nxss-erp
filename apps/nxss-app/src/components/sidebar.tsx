@@ -49,7 +49,7 @@ function BranchList() {
   if (isLoading)
     return Array.from({ length: 6 })
       .fill(0)
-      .map((_, i) => <Skeleton key={i} className="size-12 rounded-full" />);
+      .map((_, i) => <Skeleton key={i} className="size-10 rounded-full" />);
 
   if (data?.length === 0)
     return (
@@ -76,7 +76,7 @@ function BranchList() {
                   size={"icon"}
                   variant={"ghost"}
                   className={cn(
-                    "size-12 border-2 border-border",
+                    "size-10 border-2 border-border",
                     pathname.startsWith(
                       `/${params.orgId}/branches/${branches.id}`,
                     )
@@ -117,26 +117,26 @@ export function InstitutionBranchSidebar() {
 
   return (
     <ScrollArea className="relative flex h-full flex-col border-r">
-      <nav className="relative flex w-20 flex-col items-center py-4">
+      <nav className="relative flex w-16 flex-col items-center py-4">
         <div>
           {/* Logo Area */}
           <Image
             alt="Nexuss Logog"
             src={"/nexuss-logo.png"}
-            height={38}
-            width={38}
+            height={28}
+            width={28}
             quality={100}
             className="dark:invert"
           />
         </div>
         <div className="mt-10 flex flex-col items-center gap-4">
-          <Avatar asChild className="size-12">
+          <Avatar asChild>
             <Button
               onClick={() => router.push(`/${params.orgId}/dashboard`)}
               size={"icon"}
               variant={"ghost"}
               className={cn(
-                "size-12 border-2 border-border",
+                "size-10 border-2 border-border",
                 [`/${params.orgId}/dashboard`].includes(pathname)
                   ? "border-2 border-primary p-0.5"
                   : "active:scale-95",
@@ -155,7 +155,7 @@ export function InstitutionBranchSidebar() {
           <CreateBranchDailog>
             <Button
               size={"icon"}
-              className="size-12 rounded-full"
+              className="size-10 rounded-full"
               variant={"secondary"}
             >
               <PlusIcon className="size-6" />
@@ -172,7 +172,7 @@ export function InstitutionBranchSidebar() {
           variant={"outline"}
           size={"icon"}
           onClick={() => handleSignOut()}
-          className="size-12 rounded-full bg-input"
+          className="size-10 rounded-full bg-input"
         >
           <LogOutIcon className="size-[1.2rem]" />
         </Button>
