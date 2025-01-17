@@ -4,12 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useOrganization } from "@clerk/nextjs";
-import {
-  GraduationCapIcon,
-  LayoutDashboardIcon,
-  PlusIcon,
-  SettingsIcon,
-} from "lucide-react";
+import { GraduationCapIcon, LayoutDashboardIcon, PlusIcon } from "lucide-react";
 
 import { cn } from "@nxss/ui";
 import { SidebarItem } from "@nxss/ui/asidebar";
@@ -55,12 +50,12 @@ export function InstitutionBranchSidebar() {
         <div className="mt-10 flex flex-col items-center gap-4">
           <Avatar asChild className="size-12">
             <Button
-              onClick={() => router.push(`/${params.org}/dashboard`)}
+              onClick={() => router.push(`/${params.orgId}/dashboard`)}
               size={"icon"}
               variant={"ghost"}
               className={cn(
                 "size-12 border-2 border-border",
-                [`/${params.org}/dashboard`].includes(pathname)
+                [`/${params.orgId}/dashboard`].includes(pathname)
                   ? "border-2 border-primary p-0.5"
                   : "active:scale-95",
               )}
@@ -98,14 +93,16 @@ export function InstitutionBranchSidebar() {
                   <Avatar asChild>
                     <Button
                       onClick={() =>
-                        router.push(`/${params.org}/branches/${branch.id}`)
+                        router.push(
+                          `/${params.orgId}/branches/${branch.id}/${branch.Semesters.at(0)?.id}/dashboard`,
+                        )
                       }
                       size={"icon"}
                       variant={"ghost"}
                       className={cn(
                         "size-12 border-2 border-border",
                         pathname.startsWith(
-                          `/${params.org}/branches/${branch.id}`,
+                          `/${params.orgId}/branches/${branch.id}`,
                         )
                           ? "border-2 border-primary p-0.5"
                           : "active:scale-95",
@@ -130,16 +127,21 @@ export function InstitutionBranchSidebar() {
 }
 
 export function BranchDetialsSidebar() {
-  const params = useParams<{ branch_id: string }>();
+  const pathname = usePathname();
+  const params = useParams<{
+    branchId: string;
+    orgId: string;
+    semesterId: string;
+  }>();
   const { data, isLoading: isBranchDataLoading } =
     api.branch.getDetails.useQuery(
-      { id: params.branch_id },
-      { enabled: !!params.branch_id },
+      { id: params.branchId },
+      { enabled: !!params.branchId },
     );
   return (
     <ScrollArea className="relative h-full border-r">
-      <nav className="h-fit w-60 space-y-7 px-4 pb-20 pt-4">
-        <div className="text-lg font-semibold">
+      <nav className="h-fit w-72 space-y-7 px-5 pb-20 pt-4">
+        <div className="inline-block bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-extrabold text-transparent">
           {isBranchDataLoading ? <Skeleton className="h-4 w-40" /> : data?.name}
         </div>
 
@@ -148,31 +150,51 @@ export function BranchDetialsSidebar() {
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             ACTIVE SEMESTERS
           </p>
-          <Tabs defaultValue="S1" value="S1">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="S1">S1</TabsTrigger>
-              <TabsTrigger value="S2">S2</TabsTrigger>
-              <TabsTrigger value="S3">S3</TabsTrigger>
+          <Tabs defaultValue={params.semesterId} value={params.semesterId}>
+            <TabsList className="w-full">
+              {data?.Semesters.map((semester) => (
+                <TabsTrigger className="w-full" asChild value={semester.id}>
+                  <Link
+                    href={`/${params.orgId}/branches/${params.branchId}/${semester.id}/dashboard`}
+                  >
+                    S{semester.number}
+                  </Link>
+                </TabsTrigger>
+              ))}
             </TabsList>
           </Tabs>
         </div>
 
         {/**Main Menu */}
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             MAIN MENU
           </p>
-          <SidebarItem className="w-full items-start justify-start">
-            <LayoutDashboardIcon strokeWidth={1.5} className="size-5" />{" "}
-            Dashboard
-          </SidebarItem>
-          <SidebarItem>
-            <GraduationCapIcon strokeWidth={1.5} className="size-5" /> Students
-          </SidebarItem>
-
-          <SidebarItem>
-            <SettingsIcon strokeWidth={1.5} className="size-5" /> Settings
-          </SidebarItem>
+          <Link
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/dashboard`}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/dashboard`,
+              )}
+              className="w-full items-start justify-start"
+            >
+              <LayoutDashboardIcon strokeWidth={1.5} className="size-5" />{" "}
+              Dashboard
+            </SidebarItem>
+          </Link>
+          <Link
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/students`}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/students`,
+              )}
+            >
+              <GraduationCapIcon strokeWidth={1.5} className="size-5" />{" "}
+              Students
+            </SidebarItem>
+          </Link>
         </div>
 
         {/**Subjects */}
@@ -224,14 +246,14 @@ export function InstitutionDetailsSidebar() {
   const params = useParams();
   return (
     <ScrollArea className="relative h-full border-r">
-      <nav className="flex h-fit w-60 flex-col gap-7 px-4 pb-20 pt-4">
+      <nav className="flex h-fit w-72 flex-col gap-7 px-5 pb-20 pt-4">
         <div className="flex flex-col gap-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             MAIN MENU
           </p>
           <Link href={`/${params.org}/dashboard`}>
             <SidebarItem
-              isActive={pathname.startsWith(`/${params.org}/dashboard`)}
+              isActive={pathname.startsWith(`/${params.orgId}/dashboard`)}
               className="w-full items-start justify-start"
             >
               <LayoutDashboardIcon strokeWidth={1.5} className="size-5" />{" "}

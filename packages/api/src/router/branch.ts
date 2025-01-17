@@ -19,6 +19,12 @@ export const branchesRouter = router({
       const branchList = await ctx.db.query.Branches.findMany({
         where: eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
         orderBy: asc(Branches.name),
+        with: {
+          Semesters: {
+            where: eq(Semesters.status, "active"),
+            orderBy: asc(Semesters.number),
+          },
+        },
       });
       return branchList;
     } catch (e) {
@@ -35,6 +41,12 @@ export const branchesRouter = router({
           eq(Branches.id, input.id),
           eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
         ),
+        with: {
+          Semesters: {
+            where: eq(Semesters.status, "active"),
+            orderBy: asc(Semesters.number),
+          },
+        },
       });
 
       return branch_details.at(0);

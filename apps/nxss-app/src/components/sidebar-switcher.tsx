@@ -31,9 +31,9 @@ function useShouldRender(
 ): boolean {
   switch (type) {
     case "branch":
-      return Boolean(params.branch_id);
+      return Boolean(params.branchId);
     case "institution":
-      return !pathname.startsWith(`/${params.org}/branches`);
+      return !pathname.startsWith(`/${params.orgId}/branches`);
     default:
       return false;
   }

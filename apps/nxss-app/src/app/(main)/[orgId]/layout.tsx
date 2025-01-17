@@ -25,6 +25,7 @@ export default async function Templates(props: {
         </SidebarSwitcher>
       </aside>
       <main className="w-full min-w-0 flex-1 overflow-y-hidden">
+        {/* <header className="sticky top-0 h-14 border-b"></header> */}
         {props.children}
       </main>
     </div>
