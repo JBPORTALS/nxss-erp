@@ -31,6 +31,7 @@ import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nxss/ui/tooltip";
 
 import { api } from "~/trpc/react";
+import { useLocalOrganization } from "~/utils/hooks";
 import CreateBranchDailog from "./create-branch-dailog";
 import { InstitutionSwitcher } from "./institution-switcher";
 
@@ -46,7 +47,7 @@ function BranchList() {
   if (isLoading)
     return Array.from({ length: 6 })
       .fill(0)
-      .map((_, i) => <Skeleton className="size-12 rounded-full" />);
+      .map((_, i) => <Skeleton key={i} className="size-12 rounded-full" />);
 
   if (data?.length === 0)
     return (
@@ -98,10 +99,10 @@ function BranchList() {
 }
 
 export function InstitutionBranchSidebar() {
-  const { isLoaded, organization } = useOrganization();
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
+  const organization = useLocalOrganization();
 
   return (
     <ScrollArea className="relative h-full border-r">
@@ -134,7 +135,7 @@ export function InstitutionBranchSidebar() {
                 src={organization?.imageUrl}
                 className="rounded-full border border-border"
               />
-              <AvatarFallback>{organization?.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{organization?.name?.charAt(0)}</AvatarFallback>
             </Button>
           </Avatar>
 
@@ -297,7 +298,7 @@ export function InstitutionDetailsSidebar() {
           </Link>
 
           <SidebarItem>
-            <Users2Icon strokeWidth={1.5} className="size-5" /> Calendar
+            <Users2Icon strokeWidth={1.5} className="size-5" /> Faculty
           </SidebarItem>
 
           <SidebarItem>
