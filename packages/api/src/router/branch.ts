@@ -73,14 +73,10 @@ export const branchesRouter = router({
     }),
 
   create: protectedProcedure
-    .input(
-      insertBranchSchema.and(
-        z.object({ semesterStartsWith: z.enum(["odd", "even"]) }),
-      ),
-    )
+    .input(insertBranchSchema)
     .mutation(async ({ ctx, input }) => {
       //transaction
-      const response = ctx.db.transaction(async (tx) => {
+      const response = await ctx.db.transaction(async (tx) => {
         if (!ctx.auth.orgId)
           throw new TRPCError({
             message: "No selected organization",
@@ -107,7 +103,8 @@ export const branchesRouter = router({
         //Create active semesters
         await Promise.all(
           new Array(branch?.semesters).map(async (_, index) => {
-            if (input.semesterStartsWith === "even" && index % 2 === 0)
+            const semester = index + 1;
+            if (input.semesterStartsWith === "even" && semester % 2 === 0)
               await createSemester(
                 {
                   status: "active",
@@ -116,7 +113,7 @@ export const branchesRouter = router({
                 },
                 ctx.db,
               );
-            else if (input.semesterStartsWith === "odd" && index % 2 !== 0)
+            else if (input.semesterStartsWith === "odd" && semester % 2 !== 0)
               await createSemester(
                 {
                   status: "active",

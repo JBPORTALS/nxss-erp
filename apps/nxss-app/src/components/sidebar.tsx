@@ -1,12 +1,10 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useOrganization } from "@clerk/nextjs";
 import {
-  CalendarIcon,
   GraduationCapIcon,
   LayoutDashboardIcon,
   PlusIcon,
@@ -30,7 +28,6 @@ import { Skeleton } from "@nxss/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@nxss/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nxss/ui/tooltip";
 
-import CustomOrganizationSwitcher from "~/app/_components/switcher/organizatoin-switcher";
 import { api } from "~/trpc/react";
 import CreateBranchDailog from "./create-branch-dailog";
 
@@ -225,8 +222,6 @@ export function InstitutionDetailsSidebar() {
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="flex h-fit w-60 flex-col gap-7 px-4 pb-20 pt-4">
-        <CustomOrganizationSwitcher />
-
         <div className="flex flex-col gap-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             MAIN MENU

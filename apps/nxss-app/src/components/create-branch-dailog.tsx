@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { z } from "zod";
 
+import { insertBranchSchema } from "@nxss/db/schema";
 import { Button } from "@nxss/ui/button";
 import {
   Dialog,
@@ -24,11 +25,16 @@ import {
 } from "@nxss/ui/form";
 import { Input } from "@nxss/ui/input";
 import { Label } from "@nxss/ui/label";
-import { Textarea } from "@nxss/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@nxss/ui/select";
 import { toast } from "@nxss/ui/toast";
-import { CreateBranchScheme } from "@nxss/validators";
 
-import { createBranch } from "~/trpc/actions";
+import { api } from "~/trpc/react";
 
 export default function CreateBranchDailog({
   children,
@@ -36,23 +42,28 @@ export default function CreateBranchDailog({
   children: React.ReactNode;
 }) {
   const form = useForm({
-    schema: CreateBranchScheme,
+    schema: insertBranchSchema,
     mode: "onChange",
   });
   const [open, onOpenChange] = useState(false);
+  const utils = api.useUtils();
+  const { mutateAsync: createBranch } = api.branch.create.useMutation({
+    onError(error) {
+      return toast.error(error.message);
+    },
+    onSuccess(data) {
+      toast.success(`Branch ${data.name} created successfully`, {
+        richColors: true,
+      });
+      utils.branch.invalidate();
+      utils.semester.invalidate();
+      onOpenChange(false); //close the dialog
+      form.reset(); //reset the form
+    },
+  });
 
-  async function onSubmit(values: z.infer<typeof CreateBranchScheme>) {
-    const response = await createBranch(values);
-
-    if (response?.error)
-      return toast.error(response.error, { richColors: true });
-
-    toast.success(`Branch ${values.name} created successfully`, {
-      richColors: true,
-    });
-
-    onOpenChange(false); //close the dialog
-    form.reset(); //reset the form
+  async function onSubmit(values: z.infer<typeof insertBranchSchema>) {
+    await createBranch(values);
   }
 
   return (
@@ -87,15 +98,57 @@ export default function CreateBranchDailog({
 
             <FormField
               control={form.control}
-              name="description"
               disabled={form.formState.isSubmitting}
+              name="semesters"
               render={({ field }) => (
                 <FormItem>
-                  <Label>Description</Label>
-                  <FormControl>
-                    <Textarea {...field} placeholder="No description..." />
-                  </FormControl>
-                  <FormDescription>This is field is optional</FormDescription>
+                  <Label>No. Semesters</Label>
+                  <Select
+                    onValueChange={(value) => field.onChange(parseInt(value))}
+                    defaultValue={String(field.value)}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Array.from({ length: 6 }).map(
+                        (_, index) =>
+                          (index + 1) % 2 === 0 && (
+                            <SelectItem value={(index + 1).toString()}>
+                              {index + 1}
+                            </SelectItem>
+                          ),
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              disabled={form.formState.isSubmitting}
+              name="semesterStartsWith"
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Start with</Label>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value={"odd"}>Odd Semesters</SelectItem>
+                      <SelectItem value={"even"}>Even Semesters</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

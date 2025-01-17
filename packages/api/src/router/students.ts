@@ -4,18 +4,16 @@ import { and, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { schema } from "@nxss/db";
-import { batches } from "@nxss/db/schema";
+import { Batches, Students } from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
-
-const { students } = schema;
 
 export const studentsRouter = router({
   getStudentsByBranchAndSemester: protectedProcedure
     .input(
       z.object({
-        branchId: z.number(),
-        semesterId: z.number(),
+        branchId: z.string(),
+        semesterId: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -24,12 +22,12 @@ export const studentsRouter = router({
       try {
         const studentsList = await ctx.db
           .select()
-          .from(students)
+          .from(Students)
           .where(
             and(
-              eq(students.branch_id, branchId),
-              eq(students.current_semester_id, semesterId),
-              eq(students.status, "active"),
+              eq(Students.branchId, branchId),
+              eq(Students.currentSemesterId, semesterId),
+              eq(Students.status, "active"),
             ),
           );
 
@@ -65,10 +63,10 @@ export const studentsRouter = router({
           });
 
         const newStaff = await ctx.db
-          .insert(students)
+          .insert(Students)
           .values({
             ...input,
-            clerk_org_id: org_id,
+            clerkOrgId: org_id,
           })
           .returning();
         return newStaff[0];
@@ -91,9 +89,9 @@ export const studentsRouter = router({
       try {
         const studentsList = await ctx.db
           .select()
-          .from(students)
+          .from(Students)
           .where(
-            and(eq(students.batch_id, batchId), eq(students.status, "active")),
+            and(eq(Students.batch_id, batchId), eq(Students.status, "active")),
           );
 
         return studentsList;
@@ -112,7 +110,7 @@ export const studentsRouter = router({
       z.object({
         branchId: z.number(),
         semesterId: z.number(),
-        students: z.array(
+        Students: z.array(
           z.object({
             full_name: z.string(),
             email: z.string().email(),
@@ -124,7 +122,7 @@ export const studentsRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { branchId, semesterId, students: studentsData } = input;
+      const { branchId, semesterId, Students: studentsData } = input;
       const orgId = ctx.auth.orgId;
 
       console.log(branchId);
@@ -135,8 +133,8 @@ export const studentsRouter = router({
           code: "BAD_GATEWAY",
         });
 
-      // Process and insert the imported students
-      const insertedStudents = await ctx.db.insert(students).values(
+      // Process and insert the imported Students
+      const insertedStudents = await ctx.db.insert(Students).values(
         studentsData.map((student) => ({
           ...student,
           clerk_org_id: orgId,
@@ -161,8 +159,8 @@ export const studentsRouter = router({
 
       let query = ctx.db
         .select()
-        .from(students)
-        .where(eq(students.status, "inactive"))
+        .from(Students)
+        .where(eq(Students.status, "inactive"))
         .limit(limit)
         .offset(offset);
 
@@ -170,11 +168,11 @@ export const studentsRouter = router({
 
       const totalCount = await ctx.db
         .select({ count: sql`count(*)` })
-        .from(students)
-        .where(eq(students.status, "inactive"));
+        .from(Students)
+        .where(eq(Students.status, "inactive"));
 
       return {
-        students: inactiveStudents,
+        Students: inactiveStudents,
         totalCount: Number(totalCount.at(0)?.count),
       };
     }),
@@ -199,9 +197,9 @@ export const studentsRouter = router({
           // Multiple profile update
           const updates = input.map(({ studentId, newStatus }) =>
             ctx.db
-              .update(students)
+              .update(Students)
               .set({ status: newStatus, updated_at: new Date() })
-              .where(eq(students.id, studentId)),
+              .where(eq(Students.id, studentId)),
           );
 
           await Promise.all(updates);
@@ -215,9 +213,9 @@ export const studentsRouter = router({
           // Single profile update
           const { studentId, newStatus } = input;
           await ctx.db
-            .update(students)
+            .update(Students)
             .set({ status: newStatus, updated_at: new Date() })
-            .where(eq(students.id, studentId));
+            .where(eq(Students.id, studentId));
 
           return {
             success: true,
@@ -247,55 +245,55 @@ export const studentsRouter = router({
 
       try {
         let baseCondition = and(
-          eq(students.branch_id, branchId),
-          eq(students.current_semester_id, semesterId),
-          isNull(students.batch_id),
+          eq(Students.branch_id, branchId),
+          eq(Students.current_semester_id, semesterId),
+          isNull(Students.batch_id),
         );
 
         if (searchTerm && searchTerm.length > 0) {
           baseCondition = and(
             baseCondition,
             or(
-              ilike(students.full_name, `%${searchTerm}%`),
-              ilike(students.email, `%${searchTerm}%`),
-              ilike(students.phone_number, `%${searchTerm}%`),
+              ilike(Students.full_name, `%${searchTerm}%`),
+              ilike(Students.email, `%${searchTerm}%`),
+              ilike(Students.phone_number, `%${searchTerm}%`),
             ),
           );
         }
 
         const query = ctx.db
           .select({
-            id: students.id,
-            full_name: students.full_name,
-            email: students.email,
-            student_id: students.clerk_user_id,
-            phone_number: students.phone_number,
+            id: Students.id,
+            full_name: Students.full_name,
+            email: Students.email,
+            student_id: Students.clerk_user_id,
+            phone_number: Students.phone_number,
           })
-          .from(students)
+          .from(Students)
           .where(baseCondition)
           .limit(limit)
           .offset(offset)
-          .orderBy(students.full_name);
+          .orderBy(Students.full_name);
 
         const results = await query;
 
         // Get total count for pagination
         const countQuery = ctx.db
           .select({ count: sql<number>`count(*)` })
-          .from(students)
+          .from(Students)
           .where(baseCondition);
 
         const res = await countQuery;
 
         return {
-          students: results,
+          Students: results,
           totalCount: Number(res.at(0)?.count),
         };
       } catch (error) {
         console.error("Error in searchStudents:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "An error occurred while searching for students",
+          message: "An error occurred while searching for Students",
         });
       }
     }),
@@ -303,7 +301,7 @@ export const studentsRouter = router({
   addStudentsToBatch: protectedProcedure
     .input(
       z.object({
-        batchId: z.number(),
+        batchId: z.string(),
         studentIds: z.array(z.number()),
       }),
     )
@@ -314,8 +312,8 @@ export const studentsRouter = router({
         // Check if the batch exists
         const batchExists = await ctx.db
           .select()
-          .from(batches)
-          .where(eq(batches.id, batchId))
+          .from(Batches)
+          .where(eq(Batches.id, batchId))
           .limit(1);
 
         if (batchExists.length === 0) {
@@ -325,16 +323,16 @@ export const studentsRouter = router({
           });
         }
 
-        // Update students to assign them to the batch
+        // Update Students to assign them to the batch
         const updateResult = await ctx.db
-          .update(students)
+          .update(Students)
           .set({ batch_id: batchId, updated_at: new Date() })
-          .where(sql`${students.id} IN ${studentIds}`);
+          .where(sql`${Students.id} IN ${studentIds}`);
 
         if (updateResult.rowCount !== studentIds.length) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "One or more students could not be updated",
+            message: "One or more Students could not be updated",
           });
         }
 
@@ -349,7 +347,7 @@ export const studentsRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message:
-            "An unexpected error occurred while adding students to batch",
+            "An unexpected error occurred while adding Students to batch",
         });
       }
     }),
@@ -357,7 +355,7 @@ export const studentsRouter = router({
   getStudentsByBatch: protectedProcedure
     .input(
       z.object({
-        batchId: z.number(),
+        batchId: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -366,38 +364,38 @@ export const studentsRouter = router({
       try {
         const studentsInBatch = await ctx.db
           .select({
-            id: students.id,
-            full_name: students.full_name,
-            email: students.email,
-            student_id: students.clerk_user_id,
+            id: Students.id,
+            full_name: Students.fullName,
+            email: Students.email,
+            student_id: Students.clerkUserId,
           })
-          .from(students)
-          .where(eq(students.batch_id, batchId));
+          .from(Students)
+          .where(eq(Students.batchId, batchId));
 
         return studentsInBatch;
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "An error occurred while fetching students for the batch",
+          message: "An error occurred while fetching Students for the batch",
         });
       }
     }),
   inviteStudentMember: protectedProcedure
     .input(
       z.object({
-        studentId: z.number(),
+        studentId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
         const studentMember = await ctx.db
           .select({
-            id: students.id,
-            email: students.email,
-            full_name: students.full_name,
+            id: Students.id,
+            email: Students.email,
+            full_name: Students.fullName,
           })
-          .from(students)
-          .where(eq(students.id, input.studentId))
+          .from(Students)
+          .where(eq(Students.id, input.studentId))
           .limit(1);
 
         if (studentMember.length === 0) {
