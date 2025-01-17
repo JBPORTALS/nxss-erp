@@ -21,8 +21,14 @@
       "cache": false
     },
     "migrate": {
-      "persistent": true,
-      "cache": true
+      "cache": false,
+      "interactive": false,
+      "dependsOn": ["^migrate"]
+    },
+    "push": {
+      "cache": false,
+      "interactive": false,
+      "dependsOn": ["^push"]
     },
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"]
@@ -53,5 +59,13 @@
     "NEXT_PUBLIC_CLERK_SIGN_UP_URL",
     "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL",
     "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL"
+  ],
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "CI",
+    "VERCEL",
+    "VERCEL_ENV",
+    "VERCEL_URL",
+    "npm_lifecycle_event"
   ]
 }

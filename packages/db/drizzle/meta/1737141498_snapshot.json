@@ -1,5 +1,5 @@
 {
-  "id": "ce1a9fa3-99e1-4c15-876a-ce3edadcb0d6",
+  "id": "a4e03232-a8f5-4fb0-9987-1d83060333d1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -621,37 +621,6 @@
         "exam_schedule"
       ]
     },
-    "public.fee_category": {
-      "name": "fee_category",
-      "schema": "public",
-      "values": [
-        "TUITION",
-        "HOSTEL",
-        "LIBRARY",
-        "OTHER"
-      ]
-    },
-    "public.grievance_category": {
-      "name": "grievance_category",
-      "schema": "public",
-      "values": [
-        "ACADEMIC",
-        "HOSTEL",
-        "MESS",
-        "INFRASTRUCTURE",
-        "OTHER"
-      ]
-    },
-    "public.grievance_status": {
-      "name": "grievance_status",
-      "schema": "public",
-      "values": [
-        "PENDING",
-        "IN_PROGRESS",
-        "SOLVED",
-        "COMPLETED"
-      ]
-    },
     "public.pattern": {
       "name": "pattern",
       "schema": "public",
@@ -660,31 +629,12 @@
         "annual"
       ]
     },
-    "public.payment_method": {
-      "name": "payment_method",
-      "schema": "public",
-      "values": [
-        "CASH",
-        "ONLINE",
-        "CHEQUE",
-        "OTHER"
-      ]
-    },
     "public.status": {
       "name": "status",
       "schema": "public",
       "values": [
         "active",
         "completed"
-      ]
-    },
-    "public.student_fee_status": {
-      "name": "student_fee_status",
-      "schema": "public",
-      "values": [
-        "UNPAID",
-        "PAID",
-        "OVERDUE"
       ]
     },
     "public.profileStatusEnum": {

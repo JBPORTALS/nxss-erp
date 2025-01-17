@@ -1,5 +1,5 @@
 {
   "build": {
-    "commands": "pnpm db:migrate && turbo build"
+    "commands": "turbo push && turbo build"
   }
 }

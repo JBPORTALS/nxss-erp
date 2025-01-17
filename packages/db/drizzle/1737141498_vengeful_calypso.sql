@@ -1,13 +1,8 @@
 CREATE TYPE "public"."audience_type" AS ENUM('staff', 'students', 'all');--> statement-breakpoint
 CREATE TYPE "public"."event_for" AS ENUM('all', 'staff', 'student');--> statement-breakpoint
 CREATE TYPE "public"."event_type" AS ENUM('event', 'opportunity', 'holiday', 'exam_schedule');--> statement-breakpoint
-CREATE TYPE "public"."fee_category" AS ENUM('TUITION', 'HOSTEL', 'LIBRARY', 'OTHER');--> statement-breakpoint
-CREATE TYPE "public"."grievance_category" AS ENUM('ACADEMIC', 'HOSTEL', 'MESS', 'INFRASTRUCTURE', 'OTHER');--> statement-breakpoint
-CREATE TYPE "public"."grievance_status" AS ENUM('PENDING', 'IN_PROGRESS', 'SOLVED', 'COMPLETED');--> statement-breakpoint
 CREATE TYPE "public"."pattern" AS ENUM('semester', 'annual');--> statement-breakpoint
-CREATE TYPE "public"."payment_method" AS ENUM('CASH', 'ONLINE', 'CHEQUE', 'OTHER');--> statement-breakpoint
 CREATE TYPE "public"."status" AS ENUM('active', 'completed');--> statement-breakpoint
-CREATE TYPE "public"."student_fee_status" AS ENUM('UNPAID', 'PAID', 'OVERDUE');--> statement-breakpoint
 CREATE TYPE "public"."profileStatusEnum" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TABLE "nxss_branches" (
 	"id" text PRIMARY KEY NOT NULL,
