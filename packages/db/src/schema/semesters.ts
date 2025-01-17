@@ -1,5 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
@@ -22,6 +24,12 @@ export const Semesters = pgTable("semesters", (t) => ({
   number: t.integer().notNull(),
   status: statusEnum("status").notNull(),
 }));
+
+//schemas
+export const insertSemesterSchema = createInsertSchema(Semesters);
+export const updateSemesterSchema = createInsertSchema(Semesters, {
+  id: z.string().min(1, "Id must be provided"),
+});
 
 export const semestersRelations = relations(Semesters, ({ one }) => ({
   branch: one(Branches, {

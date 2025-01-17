@@ -1,20 +1,20 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { and, asc, eq, like, schema } from "@nxss/db";
-import { semesters } from "@nxss/db/schema";
-import { CreateBranchScheme, UpdateBranchScheme } from "@nxss/validators";
+import { and, asc, eq, schema } from "@nxss/db";
+import { insertBranchSchema, updateBranchSchema } from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
+import { createSemester } from "./semester";
 
-const { branches } = schema;
+const { Branches } = schema;
 
 export const branchesRouter = router({
   getBranchList: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const branchList = await ctx.db.query.branches.findMany({
-        where: eq(branches.institution_id, ctx.auth.orgId ?? ""),
-        orderBy: asc(branches.name),
+      const branchList = await ctx.db.query.Branches.findMany({
+        where: eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
+        orderBy: asc(Branches.name),
       });
       return branchList;
     } catch (e) {
@@ -26,10 +26,10 @@ export const branchesRouter = router({
   getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Branch ID is required!") }))
     .query(async ({ ctx, input }) => {
-      const branch_details = await ctx.db.query.branches.findMany({
+      const branch_details = await ctx.db.query.Branches.findMany({
         where: and(
-          eq(branches.id, parseInt(input.id)),
-          eq(branches.institution_id, ctx.auth.orgId ?? ""),
+          eq(Branches.id, input.id),
+          eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
         ),
       });
 
@@ -37,18 +37,15 @@ export const branchesRouter = router({
     }),
 
   updateDetails: protectedProcedure
-    .input(UpdateBranchScheme)
+    .input(updateBranchSchema)
     .mutation(({ ctx, input }) => {
       return ctx.db
-        .update(branches)
-        .set({
-          name: input.name,
-          description: input.description,
-        })
+        .update(Branches)
+        .set(input)
         .where(
           and(
-            eq(branches.id, parseInt(input.id)),
-            eq(branches.institution_id, ctx.auth.orgId ?? ""),
+            eq(Branches.id, input.id),
+            eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
           ),
         );
     }),
@@ -57,11 +54,11 @@ export const branchesRouter = router({
     .input(z.object({ id: z.string().min(1, "BranchId is required") }))
     .mutation(async ({ ctx, input }) => {
       const response = await ctx.db
-        .delete(branches)
+        .delete(Branches)
         .where(
           and(
-            eq(branches.id, parseInt(input.id)),
-            eq(branches.institution_id, ctx.auth.orgId ?? ""),
+            eq(Branches.id, input.id),
+            eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
           ),
         )
         .returning();
@@ -76,40 +73,63 @@ export const branchesRouter = router({
     }),
 
   create: protectedProcedure
-    .input(CreateBranchScheme)
+    .input(
+      insertBranchSchema.and(
+        z.object({ semesterStartsWith: z.enum(["odd", "even"]) }),
+      ),
+    )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.auth.orgId)
-        throw new TRPCError({
-          message: "No selected organization",
-          code: "BAD_REQUEST",
-        });
+      //transaction
+      const response = ctx.db.transaction(async (tx) => {
+        if (!ctx.auth.orgId)
+          throw new TRPCError({
+            message: "No selected organization",
+            code: "BAD_REQUEST",
+          });
 
-      const response = await ctx.db
-        .insert(branches)
-        .values({
-          name: input.name,
-          description: input.description,
-          institution_id: ctx.auth.orgId,
-        })
-        .returning();
+        const branchResponse = await ctx.db
+          .insert(Branches)
+          .values({
+            name: input.name,
+            clerkInstitutionId: ctx.auth.orgId,
+            semesters: input.semesters,
+          })
+          .returning();
 
-      const branch_id = response.at(0)?.id;
+        const branch = branchResponse.at(0);
 
-      // if (branch_id) {
-      //   const semester = await ctx.db
-      //     .insert(semesters)
-      //     .values({
-      //       branch_id,
-      //       academic_year_id: 3,
-      //       number: 1,
-      //       status: "current",
-      //     });
-      // }
-      if (!response.at(0)?.id)
-        throw new TRPCError({
-          message: "Can't able to create the branch, Retry",
-          code: "BAD_REQUEST",
-        });
+        if (!branch?.id)
+          throw new TRPCError({
+            message: "Can't able to create the branch, Retry",
+            code: "BAD_REQUEST",
+          });
+
+        //Create active semesters
+        await Promise.all(
+          new Array(branch?.semesters).map(async (_, index) => {
+            if (input.semesterStartsWith === "even" && index % 2 === 0)
+              await createSemester(
+                {
+                  status: "active",
+                  number: index + 1,
+                  brancId: branch?.id,
+                },
+                ctx.db,
+              );
+            else if (input.semesterStartsWith === "odd" && index % 2 !== 0)
+              await createSemester(
+                {
+                  status: "active",
+                  number: index + 1,
+                  brancId: branch?.id,
+                },
+                ctx.db,
+              );
+          }),
+        );
+
+        return branch;
+      });
 
       return response;
     }),
