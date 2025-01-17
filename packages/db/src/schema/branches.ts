@@ -24,9 +24,9 @@ export const Branches = pgTable("branches", (t) => ({
 }));
 
 //schemas
-export const insertBranchSchema = createInsertSchema(Branches).and(
-  z.object({ semesterStartsWith: z.enum(["even", "odd"]) }),
-);
+export const insertBranchSchema = createInsertSchema(Branches)
+  .omit({ clerkInstitutionId: true })
+  .and(z.object({ semesterStartsWith: z.enum(["even", "odd"]) }));
 export const updateBranchSchema = createUpdateSchema(Branches, {
   id: z.string().min(1),
 });

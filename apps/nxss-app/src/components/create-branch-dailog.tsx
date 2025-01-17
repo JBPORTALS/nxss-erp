@@ -47,20 +47,21 @@ export default function CreateBranchDailog({
   });
   const [open, onOpenChange] = useState(false);
   const utils = api.useUtils();
-  const { mutateAsync: createBranch } = api.branch.create.useMutation({
-    onError(error) {
-      return toast.error(error.message);
-    },
-    onSuccess(data) {
-      toast.success(`Branch ${data.name} created successfully`, {
-        richColors: true,
-      });
-      utils.branch.invalidate();
-      utils.semester.invalidate();
-      onOpenChange(false); //close the dialog
-      form.reset(); //reset the form
-    },
-  });
+  const { mutateAsync: createBranch, isPending: isCreatingBranch } =
+    api.branch.create.useMutation({
+      onError(error) {
+        return toast.error(error.message);
+      },
+      onSuccess(data) {
+        toast.success(`Branch ${data.name} created successfully`, {
+          richColors: true,
+        });
+        utils.branch.invalidate();
+        utils.semester.invalidate();
+        onOpenChange(false); //close the dialog
+        form.reset(); //reset the form
+      },
+    });
 
   async function onSubmit(values: z.infer<typeof insertBranchSchema>) {
     await createBranch(values);
@@ -155,9 +156,7 @@ export default function CreateBranchDailog({
             />
 
             <DialogFooter>
-              <Button type="submit" isLoading={form.formState.isSubmitting}>
-                Create
-              </Button>
+              <Button isLoading={isCreatingBranch}>Create</Button>
             </DialogFooter>
           </form>
         </Form>

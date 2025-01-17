@@ -1,7 +1,6 @@
 "use client";
 
 import { Protect, useOrganization, useUser } from "@clerk/nextjs";
-import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import {
   Card,
