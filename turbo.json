@@ -25,6 +25,11 @@
       "interactive": false,
       "dependsOn": ["^migrate"]
     },
+    "up": {
+      "cache": false,
+      "interactive": false,
+      "dependsOn": ["^up"]
+    },
     "push": {
       "cache": false,
       "interactive": false,

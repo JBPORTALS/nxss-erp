@@ -7,7 +7,7 @@ import { Branches } from "./branches";
 import { Batches } from "./groups";
 import { Semesters } from "./semesters";
 
-export const profileStatusEnum = pgEnum("profileStatusEnum", [
+export const profileStatusEnum = pgEnum("profile_status_enum", [
   "active",
   "inactive",
 ]);

@@ -4,8 +4,6 @@ import { drizzle } from "drizzle-orm/neon-serverless";
 import { env } from "./env";
 import * as schema from "./schema";
 
-export * from "./schema/enum";
-
 export { pgTable as tableCreator } from "./schema/_table";
 
 export * from "drizzle-orm";
