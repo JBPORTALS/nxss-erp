@@ -10,9 +10,11 @@ import {
 } from "@nxss/ui/content-area";
 import { Input } from "@nxss/ui/input";
 
-export default async function BranchPage({
-  params,
-}: {
+import { DataTable } from "~/components/data-table";
+import { StudentColumns } from "./columns";
+import { StudentsDataTable } from "./data-table";
+
+export default async function BranchPage({}: {
   params: { branch_id: string; org: string };
 }) {
   return (
@@ -37,6 +39,7 @@ export default async function BranchPage({
               <Input placeholder="Search..." className="h-9 w-full ps-9" />
             </div>
           </div>
+          <StudentsDataTable />
         </ContentAreaContainer>
       </ContentArea>
     </div>
