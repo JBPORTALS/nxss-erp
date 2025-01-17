@@ -1,5 +1,5 @@
 {
-  "github": {
-    "silent": true
+  "build": {
+    "commands": "pnpm db:migrate && turbo build"
   }
 }

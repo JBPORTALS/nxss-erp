@@ -20,6 +20,10 @@
       "persistent": true,
       "cache": false
     },
+    "migrate": {
+      "persistent": true,
+      "cache": true
+    },
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"]
     },
