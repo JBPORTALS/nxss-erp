@@ -36,7 +36,7 @@ export default async function BranchPage({}: {
           <div className="flex w-full gap-3">
             <div className="relative flex w-full items-center">
               <SearchIcon className="absolute ml-2.5 mr-2.5 size-4 text-muted-foreground" />
-              <Input placeholder="Search..." className="h-9 w-full ps-9" />
+              <Input placeholder="Search ..." className="h-9 w-full ps-9" />
             </div>
           </div>
           <StudentsDataTable />
