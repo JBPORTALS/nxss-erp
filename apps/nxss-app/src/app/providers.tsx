@@ -12,8 +12,6 @@ import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 
 import { buttonVariants } from "@nxss/ui/button";
 
-import { SyncActiveOrganization } from "~/utils/sync-active-organization";
-
 export function Providers(props: { children: React.ReactNode }) {
   return (
     <ClerkProvider
@@ -34,8 +32,6 @@ export function Providers(props: { children: React.ReactNode }) {
         },
       }}
     >
-      <SyncActiveOrganization />
-
       <TRPCReactProvider>
         <TooltipProvider>{props.children}</TooltipProvider>
       </TRPCReactProvider>

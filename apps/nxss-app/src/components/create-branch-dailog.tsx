@@ -48,7 +48,7 @@ export default function CreateBranchDailog({
   const [open, onOpenChange] = useState(false);
   const utils = api.useUtils();
   const { mutateAsync: createBranch, isPending: isCreatingBranch } =
-    api.branch.create.useMutation({
+    api.branches.create.useMutation({
       onError(error) {
         return toast.error(error.message);
       },
@@ -56,7 +56,7 @@ export default function CreateBranchDailog({
         toast.success(`Branch ${data.name} created successfully`, {
           richColors: true,
         });
-        utils.branch.invalidate();
+        utils.branches.invalidate();
         utils.semester.invalidate();
         onOpenChange(false); //close the dialog
         form.reset(); //reset the form

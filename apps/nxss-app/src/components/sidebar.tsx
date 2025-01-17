@@ -1,10 +1,17 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useOrganization } from "@clerk/nextjs";
-import { GraduationCapIcon, LayoutDashboardIcon, PlusIcon } from "lucide-react";
+import {
+  GraduationCapIcon,
+  LayoutDashboardIcon,
+  PlusIcon,
+  SettingsIcon,
+  Users2Icon,
+} from "lucide-react";
 
 import { cn } from "@nxss/ui";
 import { SidebarItem } from "@nxss/ui/asidebar";
@@ -25,14 +32,77 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@nxss/ui/tooltip";
 
 import { api } from "~/trpc/react";
 import CreateBranchDailog from "./create-branch-dailog";
+import { InstitutionSwitcher } from "./institution-switcher";
+
+function BranchList() {
+  const params = useParams();
+  const { data, isLoading } = api.branches.getBranchList.useQuery({
+    orgId: params.orgId,
+  });
+  const pathname = usePathname();
+  const router = useRouter();
+  const utils = api.useUtils();
+
+  if (isLoading)
+    return Array.from({ length: 6 })
+      .fill(0)
+      .map((_, i) => <Skeleton className="size-12 rounded-full" />);
+
+  if (data?.length === 0)
+    return (
+      <p className="rotate-180 font-mono text-sm tracking-[0.3rem] text-muted-foreground [writing-mode:vertical-lr]">
+        NO BRANCHES | CREATE ONE HERE
+      </p>
+    );
+
+  return (
+    <React.Fragment>
+      {data?.flatMap((branches) => {
+        utils.branches.getDetails.prefetch({ id: branches.id.toString() });
+
+        return (
+          <Tooltip key={branches.id}>
+            <TooltipTrigger asChild>
+              <Avatar asChild>
+                <Button
+                  onClick={() =>
+                    router.push(
+                      `/${params.orgId}/branches/${branches.id}/${branches.Semesters.at(0)?.id}/dashboard`,
+                    )
+                  }
+                  size={"icon"}
+                  variant={"ghost"}
+                  className={cn(
+                    "size-12 border-2 border-border",
+                    pathname.startsWith(
+                      `/${params.orgId}/branches/${branches.id}`,
+                    )
+                      ? "border-2 border-primary p-0.5"
+                      : "active:scale-95",
+                  )}
+                >
+                  <AvatarImage src="https://github.com/kite" />
+                  <AvatarFallback className="capitalize">
+                    {branches.name.split(" ")[0]?.charAt(0)}
+                    {branches.name.split(" ")[1]?.charAt(0)}
+                  </AvatarFallback>
+                </Button>
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent side={"right"}>{branches.name}</TooltipContent>
+          </Tooltip>
+        );
+      })}
+    </React.Fragment>
+  );
+}
 
 export function InstitutionBranchSidebar() {
   const { isLoaded, organization } = useOrganization();
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
-  const { data, isLoading } = api.branch.getBranchList.useQuery();
-  const utils = api.useUtils();
+
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="flex w-20 flex-col items-center py-4">
@@ -79,47 +149,7 @@ export function InstitutionBranchSidebar() {
               <PlusIcon className="size-6" />
             </Button>
           </CreateBranchDailog>
-          {data?.length === 0 && (
-            <p className="rotate-180 font-mono text-sm tracking-[0.3rem] text-muted-foreground [writing-mode:vertical-lr]">
-              NO BRANCHES | CREATE ONE HERE
-            </p>
-          )}
-          {data?.flatMap((branch) => {
-            utils.branch.getDetails.prefetch({ id: branch.id.toString() });
-
-            return (
-              <Tooltip key={branch.id}>
-                <TooltipTrigger asChild>
-                  <Avatar asChild>
-                    <Button
-                      onClick={() =>
-                        router.push(
-                          `/${params.orgId}/branches/${branch.id}/${branch.Semesters.at(0)?.id}/dashboard`,
-                        )
-                      }
-                      size={"icon"}
-                      variant={"ghost"}
-                      className={cn(
-                        "size-12 border-2 border-border",
-                        pathname.startsWith(
-                          `/${params.orgId}/branches/${branch.id}`,
-                        )
-                          ? "border-2 border-primary p-0.5"
-                          : "active:scale-95",
-                      )}
-                    >
-                      <AvatarImage src="https://github.com/kite" />
-                      <AvatarFallback className="capitalize">
-                        {branch.name.split(" ")[0]?.charAt(0)}
-                        {branch.name.split(" ")[1]?.charAt(0)}
-                      </AvatarFallback>
-                    </Button>
-                  </Avatar>
-                </TooltipTrigger>
-                <TooltipContent side={"right"}>{branch.name}</TooltipContent>
-              </Tooltip>
-            );
-          })}
+          <BranchList />
         </div>
       </nav>
     </ScrollArea>
@@ -134,7 +164,7 @@ export function BranchDetialsSidebar() {
     semesterId: string;
   }>();
   const { data, isLoading: isBranchDataLoading } =
-    api.branch.getDetails.useQuery(
+    api.branches.getDetails.useQuery(
       { id: params.branchId },
       { enabled: !!params.branchId },
     );
@@ -251,11 +281,12 @@ export function InstitutionDetailsSidebar() {
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="flex h-fit w-72 flex-col gap-7 px-5 pb-20 pt-4">
+        <InstitutionSwitcher />
         <div className="flex flex-col gap-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             MAIN MENU
           </p>
-          <Link href={`/${params.org}/dashboard`}>
+          <Link href={`/${params.orgId}/dashboard`}>
             <SidebarItem
               isActive={pathname.startsWith(`/${params.orgId}/dashboard`)}
               className="w-full items-start justify-start"
@@ -265,17 +296,13 @@ export function InstitutionDetailsSidebar() {
             </SidebarItem>
           </Link>
 
-          {/* <Link href={`/${params.org}/calendar`}>
-            <SidebarItem
-              isActive={pathname.startsWith(`/${params.org}/calendar`)}
-            >
-              <CalendarIcon strokeWidth={1.5} className="size-5" /> Calendar
-            </SidebarItem>
-          </Link>
+          <SidebarItem>
+            <Users2Icon strokeWidth={1.5} className="size-5" /> Calendar
+          </SidebarItem>
 
           <SidebarItem>
             <SettingsIcon strokeWidth={1.5} className="size-5" /> Settings
-          </SidebarItem> */}
+          </SidebarItem>
         </div>
       </nav>
     </ScrollArea>

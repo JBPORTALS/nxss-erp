@@ -14,24 +14,26 @@ import { createSemester } from "./semester";
 const { Branches } = schema;
 
 export const branchesRouter = router({
-  getBranchList: protectedProcedure.query(async ({ ctx }) => {
-    try {
-      const branchList = await ctx.db.query.Branches.findMany({
-        where: eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
-        orderBy: asc(Branches.name),
-        with: {
-          Semesters: {
-            where: eq(Semesters.status, "active"),
-            orderBy: asc(Semesters.number),
+  getBranchList: protectedProcedure
+    .input(z.object({ orgId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const branchList = await ctx.db.query.Branches.findMany({
+          where: eq(Branches.clerkInstitutionId, input.orgId),
+          orderBy: asc(Branches.name),
+          with: {
+            Semesters: {
+              where: eq(Semesters.status, "active"),
+              orderBy: asc(Semesters.number),
+            },
           },
-        },
-      });
-      return branchList;
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
-  }),
+        });
+        return branchList;
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
+    }),
 
   getDetails: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Branch ID is required!") }))

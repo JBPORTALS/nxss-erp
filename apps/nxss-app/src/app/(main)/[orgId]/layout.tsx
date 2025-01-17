@@ -1,11 +1,10 @@
-import React from "react";
-
 import {
   BranchDetialsSidebar,
   InstitutionBranchSidebar,
   InstitutionDetailsSidebar,
 } from "~/components/sidebar";
 import { SidebarSwitcher } from "~/components/sidebar-switcher";
+import { SyncActiveOrganization } from "~/components/sync-active-organization";
 
 export default async function Templates(props: {
   children: React.ReactNode;
@@ -13,6 +12,7 @@ export default async function Templates(props: {
 }) {
   return (
     <div className="flex min-h-screen flex-1">
+      <SyncActiveOrganization />
       <aside className="sticky top-0 z-20 flex h-screen shrink-0">
         <InstitutionBranchSidebar />
 

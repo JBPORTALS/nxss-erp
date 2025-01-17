@@ -10,7 +10,7 @@ import { router } from "./trpc";
 
 export const appRouter = router({
   auth: authRouter,
-  branch: branchesRouter,
+  branches: branchesRouter,
   institution: institutinsRouter,
   // calendar: calendarRouter,
   batches: batchesRouter,
