@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useOrganization } from "@clerk/nextjs";
+import { useAuth, useOrganization } from "@clerk/nextjs";
 import {
   GraduationCapIcon,
   LayoutDashboardIcon,
+  LogOutIcon,
   PlusIcon,
   SettingsIcon,
   Users2Icon,
@@ -34,6 +35,7 @@ import { api } from "~/trpc/react";
 import { useLocalOrganization } from "~/utils/hooks";
 import CreateBranchDailog from "./create-branch-dailog";
 import { InstitutionSwitcher } from "./institution-switcher";
+import { ThemeToggle } from "./theme-toggle";
 
 function BranchList() {
   const params = useParams();
@@ -103,10 +105,19 @@ export function InstitutionBranchSidebar() {
   const pathname = usePathname();
   const params = useParams();
   const organization = useLocalOrganization();
+  const { signOut } = useAuth();
+
+  const [isSigningOut, setSigningOut] = useState(false);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    await signOut();
+    setSigningOut(false);
+  }
 
   return (
-    <ScrollArea className="relative h-full border-r">
-      <nav className="flex w-20 flex-col items-center py-4">
+    <ScrollArea className="relative flex h-full flex-col border-r">
+      <nav className="relative flex w-20 flex-col items-center py-4">
         <div>
           {/* Logo Area */}
           <Image
@@ -153,6 +164,19 @@ export function InstitutionBranchSidebar() {
           <BranchList />
         </div>
       </nav>
+      <div className="absolute bottom-0 flex w-full flex-col items-center gap-4 py-4">
+        <ThemeToggle />
+        <Button
+          isLoading={isSigningOut}
+          loadingText=" "
+          variant={"outline"}
+          size={"icon"}
+          onClick={() => handleSignOut()}
+          className="size-12 rounded-full bg-input"
+        >
+          <LogOutIcon className="size-[1.2rem]" />
+        </Button>
+      </div>
     </ScrollArea>
   );
 }
