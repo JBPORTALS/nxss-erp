@@ -15,4 +15,7 @@ export default {
   dbCredentials: {
     url: connectionString,
   },
+  migrations: {
+    prefix: "unix",
+  },
 } satisfies Config;
