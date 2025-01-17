@@ -2,7 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { and, asc, eq, schema } from "@nxss/db";
-import { insertBranchSchema, updateBranchSchema } from "@nxss/db/schema";
+import {
+  insertBranchSchema,
+  Semesters,
+  updateBranchSchema,
+} from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
 import { createSemester } from "./semester";
@@ -83,7 +87,7 @@ export const branchesRouter = router({
             code: "BAD_REQUEST",
           });
 
-        const branchResponse = await ctx.db
+        const branchResponse = await tx
           .insert(Branches)
           .values({
             name: input.name,
@@ -101,29 +105,39 @@ export const branchesRouter = router({
           });
 
         //Create active semesters
-        await Promise.all(
-          new Array(branch?.semesters).map(async (_, index) => {
-            const semester = index + 1;
-            if (input.semesterStartsWith === "even" && semester % 2 === 0)
-              await createSemester(
-                {
-                  status: "active",
-                  number: index + 1,
-                  brancId: branch?.id,
-                },
-                ctx.db,
-              );
-            else if (input.semesterStartsWith === "odd" && semester % 2 !== 0)
-              await createSemester(
-                {
-                  status: "active",
-                  number: index + 1,
-                  brancId: branch?.id,
-                },
-                ctx.db,
-              );
-          }),
-        );
+        try {
+          await Promise.all(
+            new Array(branch?.semesters).map(async (_, index) => {
+              const semester = index + 1;
+              if (input.semesterStartsWith === "even" && semester % 2 == 0)
+                await tx
+                  .insert(Semesters)
+                  .values({
+                    status: "active",
+                    number: index + 1,
+                    brancId: branch?.id,
+                  })
+                  .returning();
+              else if (input.semesterStartsWith === "odd" && semester % 2 != 0)
+                await tx
+                  .insert(Semesters)
+                  .values({
+                    status: "active",
+                    number: index + 1,
+                    brancId: branch?.id,
+                  })
+                  .returning();
+              else {
+                throw new TRPCError({
+                  message: "Semesters not set",
+                  code: "NOT_IMPLEMENTED",
+                });
+              }
+            }),
+          );
+        } catch (e) {
+          tx.rollback();
+        }
 
         return branch;
       });

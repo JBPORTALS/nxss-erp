@@ -93,8 +93,8 @@ export function InstitutionBranchSidebar() {
             utils.branch.getDetails.prefetch({ id: branch.id.toString() });
 
             return (
-              <Tooltip>
-                <TooltipTrigger>
+              <Tooltip key={branch.id}>
+                <TooltipTrigger asChild>
                   <Avatar asChild>
                     <Button
                       onClick={() =>
