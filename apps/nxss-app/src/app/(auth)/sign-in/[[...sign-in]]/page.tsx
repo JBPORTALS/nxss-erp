@@ -1,17 +1,13 @@
-import Link from "next/link";
-import { ClerkLoaded, SignIn } from "@clerk/nextjs";
-
-import { Button } from "@nxss/ui/button";
+import { ClerkLoaded, ClerkLoading, SignIn } from "@clerk/nextjs";
+import { LoaderCircle } from "lucide-react";
 
 export default function SignInPage() {
   return (
     <div className="relative grid w-full grow items-center px-4 sm:justify-center">
+      <ClerkLoading>
+        <LoaderCircle strokeWidth={1} className="size-12 animate-spin" />
+      </ClerkLoading>
       <ClerkLoaded>
-        <Link href={"/sign-up"}>
-          <Button variant={"link"} className="absolute -top-40 right-4">
-            Create Account
-          </Button>
-        </Link>
         <SignIn />
       </ClerkLoaded>
     </div>
