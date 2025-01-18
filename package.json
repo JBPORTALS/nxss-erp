@@ -13,6 +13,7 @@
     "db:generate": "pnpm -F @nxss/db generate",
     "db:drop": "pnpm -F @nxss/db drop",
     "db:migrate": "turbo -F @nxss/db migrate",
+    "db:up": "turbo -F @nxss/db up",
     "db:push": "pnpm -F @nxss/db push",
     "db:studio": "pnpm -F @nxss/db studio",
     "dev": "turbo dev --parallel",

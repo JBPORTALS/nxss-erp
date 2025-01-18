@@ -20,10 +20,15 @@
       "persistent": true,
       "cache": false
     },
-    "db-migrate": {
+    "migrate": {
       "cache": false,
       "interactive": false,
-      "dependsOn": ["db#^migrate"]
+      "dependsOn": ["^migrate"]
+    },
+    "up": {
+      "cache": false,
+      "interactive": false,
+      "dependsOn": ["^up"]
     },
     "push": {
       "cache": false,

@@ -7,7 +7,7 @@
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
-    "db:migrate": "turbo -F @nxss/db migrate",
+    "db-migrate": "turbo -F @nxss/db migrate",
     "db-push": "turbo -F @nxss/db push",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",

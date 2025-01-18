@@ -1,5 +1,5 @@
 {
-  "id": "a4e03232-a8f5-4fb0-9987-1d83060333d1",
+  "id": "a7f9e489-7807-4458-a22d-193fc0b7b000",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -50,9 +50,7 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
     "public.nxss_calendar": {
       "name": "nxss_calendar",
@@ -85,7 +83,7 @@
         },
         "audience_type": {
           "name": "audience_type",
-          "type": "audience_type",
+          "type": "user_type",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
@@ -139,9 +137,7 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
     "public.nxss_calendar_branches": {
       "name": "nxss_calendar_branches",
@@ -254,9 +250,7 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
     "public.nxss_batches": {
       "name": "nxss_batches",
@@ -312,9 +306,7 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
     "public.nxss_sections": {
       "name": "nxss_sections",
@@ -389,9 +381,7 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
     "public.nxss_students": {
       "name": "nxss_students",
@@ -435,7 +425,7 @@
         },
         "status": {
           "name": "status",
-          "type": "profileStatusEnum",
+          "type": "profile_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
@@ -529,9 +519,7 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
     "public.nxss_semesters": {
       "name": "nxss_semesters",
@@ -587,21 +575,10 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     }
   },
   "enums": {
-    "public.audience_type": {
-      "name": "audience_type",
-      "schema": "public",
-      "values": [
-        "staff",
-        "students",
-        "all"
-      ]
-    },
     "public.event_for": {
       "name": "event_for",
       "schema": "public",
@@ -621,12 +598,21 @@
         "exam_schedule"
       ]
     },
-    "public.pattern": {
-      "name": "pattern",
+    "public.user_type": {
+      "name": "user_type",
       "schema": "public",
       "values": [
-        "semester",
-        "annual"
+        "staff",
+        "students",
+        "all"
+      ]
+    },
+    "public.profile_status_enum": {
+      "name": "profile_status_enum",
+      "schema": "public",
+      "values": [
+        "active",
+        "inactive"
       ]
     },
     "public.status": {
@@ -636,20 +622,10 @@
         "active",
         "completed"
       ]
-    },
-    "public.profileStatusEnum": {
-      "name": "profileStatusEnum",
-      "schema": "public",
-      "values": [
-        "active",
-        "inactive"
-      ]
     }
   },
   "schemas": {},
   "sequences": {},
-  "roles": {},
-  "policies": {},
   "views": {},
   "_meta": {
     "columns": {},

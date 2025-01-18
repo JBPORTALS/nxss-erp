@@ -52,7 +52,7 @@ export const InstitutionSwitcher = () => {
               <Avatar className="size-6">
                 <AvatarImage src={orgItem?.organization?.imageUrl} />
               </Avatar>
-              <span className="w-full truncate">
+              <span className="w-full truncate text-xs">
                 {orgItem?.organization?.name}
               </span>
               {orgItem?.role === "org:staff" ? (

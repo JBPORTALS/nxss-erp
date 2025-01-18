@@ -1,5 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
+import { pgEnum } from "drizzle-orm/pg-core";
 import {
   createInsertSchema,
   createSelectSchema,
@@ -8,9 +9,17 @@ import {
 
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
-import { audienceTypeEnum, eventTypeEnum } from "./enum";
 import { Batches, Sections } from "./groups";
 import { Semesters } from "./semesters";
+
+export const eventForEnum = pgEnum("event_for", ["all", "staff", "student"]);
+export const eventTypeEnum = pgEnum("event_type", [
+  "event",
+  "opportunity",
+  "holiday",
+  "exam_schedule",
+]);
+export const userTypeEnum = pgEnum("user_type", ["staff", "students", "all"]);
 
 export const Calendar = pgTable("calendar", (t) => ({
   id: t
@@ -20,7 +29,7 @@ export const Calendar = pgTable("calendar", (t) => ({
   title: t.text().notNull(),
   description: t.text(),
   eventType: eventTypeEnum("event_type").notNull(),
-  audienceType: audienceTypeEnum("audience_type").notNull(),
+  audienceType: userTypeEnum("audience_type").notNull(),
   isAllDay: t.boolean().default(false),
   startDate: t.timestamp().notNull(),
   endDate: t.timestamp(),

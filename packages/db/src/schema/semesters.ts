@@ -1,11 +1,13 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
+import { pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
-import { statusEnum } from "./enum";
+
+export const statusEnum = pgEnum("status", ["active", "completed"]);
 
 // Semester table
 export const Semesters = pgTable("semesters", (t) => ({

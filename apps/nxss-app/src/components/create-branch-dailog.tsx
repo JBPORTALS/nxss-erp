@@ -44,6 +44,10 @@ export default function CreateBranchDailog({
   const form = useForm({
     schema: insertBranchSchema,
     mode: "onChange",
+    defaultValues: {
+      semesters: 6,
+      semesterStartsWith: "odd",
+    },
   });
   const [open, onOpenChange] = useState(false);
   const utils = api.useUtils();
@@ -113,15 +117,16 @@ export default function CreateBranchDailog({
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      {Array.from({ length: 6 }).map(
-                        (_, index) =>
-                          (index + 1) % 2 === 0 && (
+                    <SelectContent side="top" sideOffset={-75}>
+                      {Array.from({ length: 6 })
+                        .fill(0)
+                        .map((_, index) =>
+                          (index + 1) % 2 === 0 ? (
                             <SelectItem value={(index + 1).toString()}>
                               {index + 1}
                             </SelectItem>
-                          ),
-                      )}
+                          ) : null,
+                        )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -145,7 +150,7 @@ export default function CreateBranchDailog({
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent side="top" sideOffset={-75}>
                       <SelectItem value={"odd"}>Odd Semesters</SelectItem>
                       <SelectItem value={"even"}>Even Semesters</SelectItem>
                     </SelectContent>
@@ -155,8 +160,10 @@ export default function CreateBranchDailog({
               )}
             />
 
-            <DialogFooter>
-              <Button isLoading={isCreatingBranch}>Create</Button>
+            <DialogFooter className="pt-5">
+              <Button className="w-full" isLoading={isCreatingBranch}>
+                Create
+              </Button>
             </DialogFooter>
           </form>
         </Form>
