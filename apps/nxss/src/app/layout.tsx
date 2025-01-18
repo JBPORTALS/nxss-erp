@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Merriweather, Roboto } from "next/font/google";
+import { IBM_Plex_Mono, Inter } from "next/font/google";
 import { env } from "@/env";
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -11,15 +11,15 @@ import "@/app/globals.css";
 
 import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 
-const OpenSans = Roboto({
-  variable: "--font-open-sans",
+const InterFont = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["100", "400", "300", "500", "700", "900"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const Mw = Merriweather({
-  variable: "--font-Mw",
+const IMBPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
-  weight: ["900"],
+  weight: ["100", "200", "300", "400", "700", "200", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -56,9 +56,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <html lang="en" suppressHydrationWarning>
         <body
           className={cn(
-            "light min-h-screen w-full bg-background font-sans text-foreground antialiased",
-            OpenSans.variable,
-            Mw.variable,
+            "dark min-h-screen w-full bg-background font-sans text-foreground antialiased",
+            InterFont.variable,
+            IMBPlexMono.variable,
           )}
         >
           {/* <ThemeProvider attribute="class"> */}

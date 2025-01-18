@@ -1,10 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { env } from "@/env";
-import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  useUser,
+} from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import {
+  ArrowRight,
   Briefcase,
   CalendarFold,
   GraduationCap,
@@ -17,6 +26,7 @@ import { Badge } from "@nxss/ui/badge";
 import { Button } from "@nxss/ui/button";
 import { Input } from "@nxss/ui/input";
 import { Label } from "@nxss/ui/label";
+import { Skeleton } from "@nxss/ui/skeleton";
 import { HStack, VStack } from "@nxss/ui/stack";
 import { Textarea } from "@nxss/ui/textarea";
 
@@ -24,33 +34,48 @@ export default function HomePage() {
   const { user } = useUser();
   return (
     <div className="relative h-full w-full">
-      <header className="flex h-16 w-full items-center justify-between border-b px-16">
+      <header className="flex h-16 w-full items-center justify-between border-b border-border/60 px-16">
         <HStack className="items-center">
-          <div className="flex size-10 items-center justify-center rounded-full bg-primary">
-            <RocketIcon className="text-primary-foreground" />
+          <div className="flex size-10 items-center justify-center rounded-full">
+            <Image
+              alt="NexussERP Logo"
+              height={32}
+              width={32}
+              className="dark:invert"
+              src={"/nexuss-logo.png"}
+            />
           </div>
-          <span className="font-mono text-2xl font-bold">NexussERP</span>
+          <span className="font-mono text-xl font-semibold">NexussERP</span>
         </HStack>
         <HStack className="items-center gap-3">
-          <Button variant={"link"}>Docs</Button>
           <Button variant={"link"}>Pricings</Button>
-          <SignedIn>
-            <Link href={env.NEXT_PUBLIC_NXSS_DASHBOARD_DOMAIN}>
-              <Button variant={"ghost"}>
-                Dashboard
-                <Avatar className="size-6">
-                  <AvatarImage src={user?.imageUrl} />
-                </Avatar>
-              </Button>
-            </Link>
-          </SignedIn>
-          <SignedOut>
-            <SignInButton>
-              <Button>Sign in</Button>
-            </SignInButton>
-          </SignedOut>
+
+          <ClerkLoading>
+            <Skeleton className="size-9 w-20" />
+          </ClerkLoading>
+
+          <ClerkLoaded>
+            <SignedIn>
+              <Link href={env.NEXT_PUBLIC_NXSS_DASHBOARD_DOMAIN}>
+                <Button variant={"outline"} className="bg-input">
+                  Dashboard
+                  <Avatar className="size-6">
+                    <AvatarImage src={user?.imageUrl} />
+                  </Avatar>
+                </Button>
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <SignInButton>
+                <Button variant={"outline"} className="bg-input">
+                  Sign in
+                </Button>
+              </SignInButton>
+            </SignedOut>
+          </ClerkLoaded>
         </HStack>
       </header>
+
       <section className="relative px-[62px] pb-52">
         <img
           src="/Diamond-up-hat.png"
@@ -58,23 +83,26 @@ export default function HomePage() {
         />
 
         <VStack className="items-center gap-4 pb-80 pt-28">
-          <Badge
-            variant={"secondary"}
-            className="mb-7 text-sm font-normal drop-shadow-sm hover:bg-transparent"
-          >
-            Hey, Unlock the new features 🎉
-          </Badge>
-          <span className="w-[880px] text-center font-serif text-6xl font-extrabold">
+          <span className="w-[880px] bg-gradient-to-b from-foreground to-foreground/65 bg-clip-text text-center text-6xl font-extrabold leading-snug text-transparent">
             Empowering Education with Smart ERP Solutions
           </span>
-          <span className="w-[1060px] text-center text-2xl">
+          <span className="w-1/2 text-center font-mono text-xl leading-relaxed text-muted-foreground">
             Streamline academic management, enhance efficiency, and drive
             success with our comrehensive ERP system designed for educational
-            institutions.
+            institutions
           </span>
-          <Button className="mt-7 h-14 w-48 rounded-full text-xl">
-            Get a Demo <PlayCircleIcon />
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              variant={"outline"}
+              className="mt-7 h-12 w-48 bg-input text-lg"
+            >
+              Watch Demo <PlayCircleIcon />
+            </Button>
+            <Button className="group mt-7 h-12 w-48 text-lg">
+              Get Started{" "}
+              <ArrowRight className="transition-all group-hover:translate-x-1" />
+            </Button>
+          </div>
           <img
             src="/Diamond-down-hat.png"
             className="absolute right-16 top-60 -z-10 opacity-65 dark:opacity-5"
