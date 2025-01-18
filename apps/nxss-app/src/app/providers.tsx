@@ -8,27 +8,20 @@ import { TRPCReactProvider } from "~/trpc/react";
 import "~/app/globals.css";
 
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
-
-import { buttonVariants } from "@nxss/ui/button";
+import { useTheme } from "next-themes";
 
 export function Providers(props: { children: React.ReactNode }) {
+  const { theme } = useTheme();
   return (
     <ClerkProvider
       afterSignOutUrl={"/sign-in"}
       appearance={{
-        layout: {
-          socialButtonsPlacement: "bottom",
-          logoPlacement: "none",
-          socialButtonsVariant: "blockButton",
-          showOptionalFields: false,
-        },
+        baseTheme: theme === "dark" ? dark : undefined,
         elements: {
-          cardBox: "shadow-none",
-          footer: "hidden",
-          headerTitle: "text-2xl",
-          buttonArrowIcon: "hidden",
-          formButtonPrimary: buttonVariants({ size: "sm" }),
+          card: "bg-background",
+          logoImage: "dark:invert",
         },
       }}
     >

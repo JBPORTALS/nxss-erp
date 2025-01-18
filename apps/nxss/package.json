@@ -13,7 +13,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.5.5",
+    "@clerk/nextjs": "^5.7.5",
     "@nxss/api": "workspace:^",
     "@nxss/db": "workspace:^",
     "@nxss/ui": "workspace:^",

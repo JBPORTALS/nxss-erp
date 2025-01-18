@@ -11,8 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-open-sans)", ...fontFamily.sans],
-        mw: ["var(--font-Mw)"],
+        sans: ["var(--font-inter)", ...fontFamily.sans],
+        mono: ["var(--font-ibm-plex-mono)", ...fontFamily.mono],
       },
     },
   },
