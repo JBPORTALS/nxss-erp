@@ -1,8 +1,38 @@
-CREATE TYPE "public"."event_for" AS ENUM('all', 'staff', 'student');--> statement-breakpoint
-CREATE TYPE "public"."event_type" AS ENUM('event', 'opportunity', 'holiday', 'exam_schedule');--> statement-breakpoint
-CREATE TYPE "public"."user_type" AS ENUM('staff', 'students', 'all');--> statement-breakpoint
-CREATE TYPE "public"."profileStatusEnum" AS ENUM('active', 'inactive');--> statement-breakpoint
-CREATE TYPE "public"."status" AS ENUM('active', 'completed');--> statement-breakpoint
+DO $$ BEGIN
+CREATE TYPE "public"."event_for" AS ENUM('all', 'staff', 'student');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+
+DO $$ BEGIN
+CREATE TYPE "public"."event_type" AS ENUM('event', 'opportunity', 'holiday', 'exam_schedule');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+
+DO $$ BEGIN
+CREATE TYPE "public"."user_type" AS ENUM('staff', 'students', 'all');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+
+DO $$ BEGIN
+CREATE TYPE "public"."profile_status_enum" AS ENUM('active', 'inactive');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+
+DO $$ BEGIN
+CREATE TYPE "public"."status" AS ENUM('active', 'completed');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+
 CREATE TABLE IF NOT EXISTS "nxss_branches" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
@@ -60,7 +90,7 @@ CREATE TABLE IF NOT EXISTS "nxss_students" (
 	"phone_number" text,
 	"dob" date,
 	"year_of_join" integer,
-	"status" "profileStatusEnum" DEFAULT 'active',
+	"status" "profile_status_enum" DEFAULT 'active',
 	"clerk_user_id" text,
 	"clerk_org_id" text NOT NULL,
 	"branch_id" text NOT NULL,

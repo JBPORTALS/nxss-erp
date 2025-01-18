@@ -1,5 +1,5 @@
 {
-  "id": "3c64671b-a837-4827-a33e-b48a0bbaccb1",
+  "id": "a7f9e489-7807-4458-a22d-193fc0b7b000",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -425,7 +425,7 @@
         },
         "status": {
           "name": "status",
-          "type": "profileStatusEnum",
+          "type": "profile_status_enum",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
@@ -607,8 +607,8 @@
         "all"
       ]
     },
-    "public.profileStatusEnum": {
-      "name": "profileStatusEnum",
+    "public.profile_status_enum": {
+      "name": "profile_status_enum",
       "schema": "public",
       "values": [
         "active",
