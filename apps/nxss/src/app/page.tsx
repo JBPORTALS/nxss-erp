@@ -79,7 +79,7 @@ export default function HomePage() {
       <section className="relative px-[62px] pb-52">
         <img
           src="/Diamond-up-hat.png"
-          className="absolute -z-10 opacity-65 dark:opacity-5"
+          className="absolute left-0 -z-10 opacity-65 dark:opacity-5"
         />
 
         <VStack className="items-center gap-4 pb-80 pt-28">
@@ -98,18 +98,20 @@ export default function HomePage() {
             >
               Watch Demo <PlayCircleIcon />
             </Button>
-            <Button className="group mt-7 h-12 w-48 text-lg">
-              Get Started{" "}
-              <ArrowRight className="transition-all group-hover:translate-x-1" />
-            </Button>
+            <Link href={env.NEXT_PUBLIC_NXSS_DASHBOARD_DOMAIN}>
+              <Button className="group mt-7 h-12 w-48 text-lg">
+                Get Started{" "}
+                <ArrowRight className="transition-all group-hover:translate-x-1" />
+              </Button>
+            </Link>
           </div>
           <img
             src="/Diamond-down-hat.png"
-            className="absolute right-16 top-60 -z-10 opacity-65 dark:opacity-5"
+            className="absolute right-0 top-60 -z-10 opacity-65 dark:opacity-5"
           />
         </VStack>
 
-        <HStack className="w-full gap-6">
+        {/* <HStack className="w-full gap-6">
           <div className="w-full border-b pb-4"></div>
           <span className="min-w-fit text-3xl font-bold text-muted-foreground">
             Explore The Features
@@ -213,26 +215,31 @@ export default function HomePage() {
         <img
           src="/Diamond-down-hat.png"
           className="absolute bottom-0 right-16 -z-10 opacity-65 dark:opacity-5"
-        />
+        /> */}
       </section>
-      <footer className="flex justify-between border-t px-20 py-8">
+      <footer className="flex justify-between border-t px-20 py-4">
         <VStack>
-          <span className="text-7xl font-bold text-muted-foreground">
+          <span className="text-xl font-bold text-muted-foreground">
             NexussERP
           </span>
-          <span className="text-muted-foreground">
-            @2024 NexussERP Platform | All Reserved
+          <span className="text-xs text-muted-foreground">
+            @2025 NexussERP Platform | All Reserved
           </span>
         </VStack>
-        <VStack>
+        <VStack className="flex flex-col items-end gap-4 text-right">
           <div>
-            <span className="text-2xl font-semibold">
-              Get Nexuss Fellow App
-            </span>
-            <p className="text-muted-foreground">to get updates for students</p>
+            <span className="text-lg font-semibold">Get Nexuss Fellow App</span>
+            <p className="text-sm text-muted-foreground">
+              to get updates for students
+            </p>
           </div>
-          <img src="/playstore.png" />
-          <img src="/appstore.png" />
+          <Image
+            height={32}
+            width={150}
+            quality={100}
+            alt="playstore"
+            src="/playstore.png"
+          />
         </VStack>
       </footer>
     </div>
