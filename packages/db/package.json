@@ -29,7 +29,7 @@
     "@neondatabase/serverless": "^0.9.5",
     "@paralleldrive/cuid2": "^2.2.2",
     "date-fns": "^3.6.0",
-    "drizzle-orm": "^0.35.1",
+    "drizzle-orm": "^0.38.4",
     "drizzle-zod": "^0.6.1",
     "ws": "^8.18.0",
     "zod": "^3.23.8"
@@ -40,7 +40,7 @@
     "@nxss/tsconfig": "workspace:^",
     "@types/ws": "^8.5.13",
     "dotenv-cli": "^7.4.2",
-    "drizzle-kit": "^0.26.2",
+    "drizzle-kit": "^0.30.2",
     "eslint": "^8.56.0",
     "prettier": "^3.3.2",
     "tsx": "^4.16.5",

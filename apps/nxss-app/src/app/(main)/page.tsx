@@ -10,7 +10,7 @@ export default async function page() {
     const organizations =
       await clerkClient().users.getOrganizationMembershipList({ userId });
     if (organizations.totalCount > 0)
-      redirect(`/${organizations.data.at(0)?.organization.slug}/dashboard`); //if orgId is not active select first organization in the list
+      redirect(`/${orgId}/dashboard`); //if orgId is not active select first organization in the list
     else redirect(`/create-organization`); //if there is no organization created  - create one
   }
 
