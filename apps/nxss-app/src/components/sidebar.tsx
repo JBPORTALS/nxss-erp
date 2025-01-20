@@ -123,8 +123,8 @@ export function InstitutionBranchSidebar() {
           <Image
             alt="Nexuss Logog"
             src={"/nexuss-logo.png"}
-            height={28}
-            width={28}
+            height={32}
+            width={32}
             quality={100}
             className="dark:invert"
           />

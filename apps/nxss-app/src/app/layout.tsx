@@ -66,7 +66,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           IMBPlexMono.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider enableSystem attribute="class" defaultTheme="light">
           <Providers>
             <NextSSRPlugin
               /**
