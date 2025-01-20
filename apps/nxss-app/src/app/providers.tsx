@@ -13,12 +13,13 @@ import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export function Providers(props: { children: React.ReactNode }) {
-  const { theme } = useTheme();
+  const { theme, systemTheme } = useTheme();
   return (
     <ClerkProvider
       afterSignOutUrl={"/sign-in"}
       appearance={{
-        baseTheme: theme === "dark" ? dark : undefined,
+        baseTheme:
+          theme === "dark" || systemTheme === "dark" ? dark : undefined,
         elements: {
           card: "bg-background",
           logoImage: "dark:invert",
