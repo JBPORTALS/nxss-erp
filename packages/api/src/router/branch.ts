@@ -21,14 +21,19 @@ export const branchesRouter = router({
         const branchList = await ctx.db.query.Branches.findMany({
           where: eq(Branches.clerkInstitutionId, input.orgId),
           orderBy: asc(Branches.name),
-          with: {
-            Semesters: {
-              where: eq(Semesters.status, "active"),
-              orderBy: asc(Semesters.number),
-            },
-          },
         });
-        return branchList;
+        const mappedBranchList = branchList.map((branch) => {
+          const semesters = branch.semesters;
+
+          return {
+            ...branch,
+            Semester: Array.from({ length: semesters }).map((_, i) => ({
+              id: (i + 1).toString(),
+            })),
+          };
+        });
+
+        return mappedBranchList;
       } catch (e) {
         console.log(e);
         throw e;
@@ -43,15 +48,19 @@ export const branchesRouter = router({
           eq(Branches.id, input.id),
           eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
         ),
-        with: {
-          Semesters: {
-            where: eq(Semesters.status, "active"),
-            orderBy: asc(Semesters.number),
-          },
-        },
+      });
+      const mappedBranchList = branch_details.map((branch) => {
+        const semesters = branch.semesters;
+
+        return {
+          ...branch,
+          Semesters: Array.from({ length: semesters }).map((_, i) => ({
+            id: (i + 1).toString(),
+          })),
+        };
       });
 
-      return branch_details.at(0);
+      return mappedBranchList.at(0);
     }),
 
   updateDetails: protectedProcedure

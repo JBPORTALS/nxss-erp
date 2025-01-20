@@ -70,7 +70,7 @@ function BranchList() {
                 <Button
                   onClick={() =>
                     router.push(
-                      `/${params.orgId}/branches/${branches.id}/${branches.Semesters.at(0)?.id}/dashboard`,
+                      `/${params.orgId}/branches/${branches.id}/${branches.Semester.at(0)?.id}/dashboard`,
                     )
                   }
                   size={"icon"}
@@ -212,7 +212,7 @@ export function BranchDetialsSidebar() {
                   <Link
                     href={`/${params.orgId}/branches/${params.branchId}/${semester.id}/dashboard`}
                   >
-                    S{semester.number}
+                    S{semester.id}
                   </Link>
                 </TabsTrigger>
               ))}
