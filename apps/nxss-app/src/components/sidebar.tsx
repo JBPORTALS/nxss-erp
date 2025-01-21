@@ -4,17 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useAuth, useOrganization } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import {
-  BookAIcon,
-  CalendarDaysIcon,
   GraduationCapIcon,
-  Layers2Icon,
-  LayersIcon,
   LayoutDashboardIcon,
   LogOutIcon,
   PlusIcon,
   SettingsIcon,
+  Table2Icon,
   Users2Icon,
 } from "lucide-react";
 
@@ -325,16 +322,14 @@ export function BranchDetialsSidebar() {
           </Link>
 
           <Link
-            // href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/students`}
-            href={"#"}
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/time-table`}
           >
             <SidebarItem
               isActive={pathname.startsWith(
                 `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/time-table`,
               )}
             >
-              <CalendarDaysIcon strokeWidth={1.5} className="size-5" /> Time
-              Table
+              <Table2Icon strokeWidth={1.5} className="size-5" /> Time Table
             </SidebarItem>
           </Link>
           {/* <Link

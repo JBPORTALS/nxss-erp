@@ -21,7 +21,7 @@ export default async function BranchPage({}: {
     <div className="flex h-screen">
       <ContentArea>
         <ContentAreaHeader className="flex-row items-center justify-between">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <ContentAreaTitle>Students</ContentAreaTitle>
             <ContentAreaDescription>
               All student in this branch & semester
