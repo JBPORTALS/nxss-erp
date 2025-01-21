@@ -31,7 +31,12 @@ export default async function BranchPage({
             <ContentAreaTitle>{subject?.title}</ContentAreaTitle>
           </div>
         </ContentAreaHeader>
-        <ContentAreaContainer></ContentAreaContainer>
+        <ContentAreaContainer className="flex h-full w-full items-center justify-center">
+          <p className="w-1/2 text-center text-xl text-muted-foreground">
+            Subject related functionalities like attendance, marks, etc. will be
+            available here.
+          </p>
+        </ContentAreaContainer>
       </ContentArea>
     </div>
   );
