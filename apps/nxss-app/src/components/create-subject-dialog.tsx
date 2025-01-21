@@ -29,6 +29,10 @@ import { toast } from "@nxss/ui/toast";
 
 import { api } from "~/trpc/react";
 
+const createSubjectSchema = insertSubjectSchema.omit({
+  semesterId: true,
+  branchId: true,
+});
 export default function CreateSubjectDailog({
   children,
 }: {
@@ -36,12 +40,8 @@ export default function CreateSubjectDailog({
 }) {
   const { semesterId, branchId } = useParams();
   const form = useForm({
-    schema: insertSubjectSchema,
+    schema: createSubjectSchema,
     mode: "onChange",
-    defaultValues: {
-      semesterId,
-      branchId,
-    },
   });
   const [open, onOpenChange] = useState(false);
   const utils = api.useUtils();
@@ -60,8 +60,8 @@ export default function CreateSubjectDailog({
       },
     });
 
-  async function onSubmit(values: z.infer<typeof insertSubjectSchema>) {
-    await createSubject(values);
+  async function onSubmit(values: z.infer<typeof createSubjectSchema>) {
+    await createSubject({ ...values, semesterId, branchId });
   }
 
   return (
