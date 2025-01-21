@@ -6,6 +6,7 @@ import { institutinsRouter } from "./router/institution";
 // import { sectionsRouter } from "./router/sections";
 import { semesterRouter } from "./router/semester";
 import { studentsRouter } from "./router/students";
+import { subjectsRouter } from "./router/subjects";
 import { router } from "./trpc";
 
 export const appRouter = router({
@@ -17,6 +18,7 @@ export const appRouter = router({
   // sections: sectionsRouter,
   students: studentsRouter,
   semester: semesterRouter,
+  subjects: subjectsRouter,
 });
 
 // export type definition of API

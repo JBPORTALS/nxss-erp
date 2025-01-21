@@ -7,10 +7,7 @@ import { z } from "zod";
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
 
-export const statusEnum = pgEnum("profile_status_enum", [
-  "active",
-  "completed",
-]);
+export const statusEnum = pgEnum("profile_status_enum", ["active", "inactive"]);
 
 // Semester table
 export const Semesters = pgTable("semesters", (t) => ({
@@ -19,7 +16,7 @@ export const Semesters = pgTable("semesters", (t) => ({
     .$defaultFn(() => createId())
     .primaryKey(),
   academicYear: t.text().$defaultFn(() => new Date().getFullYear().toString()),
-  brancId: t
+  branchId: t
     .text()
     .notNull()
     .references(() => Branches.id, {
@@ -27,7 +24,7 @@ export const Semesters = pgTable("semesters", (t) => ({
       onUpdate: "cascade",
     }),
   number: t.integer().notNull(),
-  status: statusEnum("status").notNull(),
+  status: statusEnum("status").default("inactive").notNull(),
 }));
 
 //schemas
@@ -38,7 +35,7 @@ export const updateSemesterSchema = createInsertSchema(Semesters, {
 
 export const semestersRelations = relations(Semesters, ({ one }) => ({
   branch: one(Branches, {
-    fields: [Semesters.brancId],
+    fields: [Semesters.branchId],
     references: [Branches.id],
   }),
 }));

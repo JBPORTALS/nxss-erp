@@ -37,6 +37,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@nxss/ui/tooltip";
 import { api } from "~/trpc/react";
 import { useLocalOrganization } from "~/utils/hooks";
 import CreateBranchDailog from "./create-branch-dailog";
+import CreateSubjectDailog from "./create-subject-dialog";
 import { InstitutionSwitcher } from "./institution-switcher";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -73,7 +74,7 @@ function BranchList() {
                 <Button
                   onClick={() =>
                     router.push(
-                      `/${params.orgId}/branches/${branch.id}/${branch.Semester.at(0)?.id}/dashboard`,
+                      `/${params.orgId}/branches/${branch.id}/${branch.Semesters.at(0)?.id}/dashboard`,
                     )
                   }
                   size={"icon"}
@@ -97,6 +98,61 @@ function BranchList() {
             </TooltipTrigger>
             <TooltipContent side={"right"}>{branch.title}</TooltipContent>
           </Tooltip>
+        );
+      })}
+    </React.Fragment>
+  );
+}
+function SubjectList() {
+  const params = useParams();
+  const { data, isLoading } = api.subjects.getAll.useQuery({
+    semesterId: params.semesterId,
+  });
+  const pathname = usePathname();
+  const router = useRouter();
+  const utils = api.useUtils();
+
+  if (isLoading)
+    return Array.from({ length: 4 })
+      .fill(0)
+      .map((_, i) => <Skeleton key={i} className="h-9 w-full" />);
+
+  if (data?.length === 0)
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Add Subjects</CardTitle>
+          <CardDescription className="text-xs">
+            Create subjects of this semester to manage marks, attendance etc...
+          </CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <CreateSubjectDailog>
+            <Button variant={"outline"} className="w-full">
+              Add
+            </Button>
+          </CreateSubjectDailog>
+        </CardFooter>
+      </Card>
+    );
+
+  return (
+    <React.Fragment>
+      {data?.flatMap((subject) => {
+        utils.subjects.getById.prefetch({ subjectId: subject.id });
+
+        return (
+          <Link
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects/${subject.id}`}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects/${subject.id}`,
+              )}
+            >
+              {subject.title}
+            </SidebarItem>
+          </Link>
         );
       })}
     </React.Fragment>
@@ -209,7 +265,7 @@ export function BranchDetialsSidebar() {
 
         {/**Active Semesters */}
         <div className="space-y-2">
-          <p className="pl-2 font-mono text-xs text-muted-foreground">
+          <p className="pl-2 font-mono text-xs text-muted-foreground/80">
             ACTIVE SEMESTERS
           </p>
           <Tabs defaultValue={params.semesterId} value={params.semesterId}>
@@ -219,7 +275,7 @@ export function BranchDetialsSidebar() {
                   <Link
                     href={`/${params.orgId}/branches/${params.branchId}/${semester.id}/dashboard`}
                   >
-                    S{semester.id}
+                    S{semester.number}
                   </Link>
                 </TabsTrigger>
               ))}
@@ -229,7 +285,7 @@ export function BranchDetialsSidebar() {
 
         {/**Main Menu */}
         <div className="flex flex-col gap-2">
-          <p className="pl-2 font-mono text-xs text-muted-foreground">
+          <p className="pl-2 font-mono text-xs text-muted-foreground/80">
             MAIN MENU
           </p>
           <Link
@@ -257,7 +313,7 @@ export function BranchDetialsSidebar() {
               Students
             </SidebarItem>
           </Link>
-          <Link
+          {/* <Link
             href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects`}
           >
             <SidebarItem
@@ -267,30 +323,28 @@ export function BranchDetialsSidebar() {
             >
               <BookAIcon strokeWidth={1.5} className="size-5" /> Subjects
             </SidebarItem>
-          </Link>
+          </Link> */}
         </div>
 
-        {/*         
-        <div className="space-y-2">
-          <p className="pl-2 font-mono text-xs text-muted-foreground">
-            SUBJECTS
-          </p>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Add Subjects</CardTitle>
-              <CardDescription className="text-xs">
-                Create subjects of this semester to manage marks, attendance
-                etc...
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button variant={"outline"} className="w-full">
-                Add
-              </Button>
-            </CardFooter>
-          </Card>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <p className="pl-2 font-mono text-xs text-muted-foreground/80">
+              SUBJECTS
+            </p>
+            <Tooltip>
+              <CreateSubjectDailog>
+                <TooltipTrigger asChild>
+                  <Button variant={"outline"} className="size-7" size={"icon"}>
+                    <PlusIcon className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+              </CreateSubjectDailog>
+              <TooltipContent side={"right"}>Add Subject</TooltipContent>
+            </Tooltip>
+          </div>
+          <SubjectList />
         </div>
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             SECTIONS & BATCHES
           </p>
@@ -310,7 +364,7 @@ export function BranchDetialsSidebar() {
               </Button>
             </CardFooter>
           </Card>
-        </div> */}
+        </div>  */}
       </nav>
     </ScrollArea>
   );

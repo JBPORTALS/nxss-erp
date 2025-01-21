@@ -8,7 +8,7 @@ import { StudentColumns } from "./columns";
 
 export function StudentsDataTable() {
   const params = useParams();
-  const { data } = api.students.getAll.useQuery({
+  const { data } = api.subjects.getAll.useQuery({
     semesterId: params.semesterId,
   });
 

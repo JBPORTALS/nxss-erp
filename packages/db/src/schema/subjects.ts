@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
+import { Semesters } from "./semesters";
 
 export const Subjects = pgTable("subjects", (t) => ({
   id: t
@@ -12,14 +13,17 @@ export const Subjects = pgTable("subjects", (t) => ({
     .$defaultFn(() => createId())
     .primaryKey(),
   title: t.text().notNull(),
-  brancId: t
+  branchId: t
     .text()
     .notNull()
     .references(() => Branches.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  semester: t.integer().notNull(),
+  semesterId: t
+    .text()
+    .notNull()
+    .references(() => Semesters.id),
   createdAt: t
     .timestamp({ mode: "date", withTimezone: true })
     .defaultNow()
@@ -37,7 +41,11 @@ export const updateSubjectsSchema = createUpdateSchema(Subjects, {
 
 export const subjectsRelations = relations(Subjects, ({ one }) => ({
   branch: one(Branches, {
-    fields: [Subjects.brancId],
+    fields: [Subjects.branchId],
     references: [Branches.id],
+  }),
+  semester: one(Semesters, {
+    fields: [Subjects.semesterId],
+    references: [Semesters.id],
   }),
 }));

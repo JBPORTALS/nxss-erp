@@ -9,7 +9,6 @@ import {
 } from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
-import { createSemester } from "./semester";
 
 const { Branches } = schema;
 
@@ -21,19 +20,15 @@ export const branchesRouter = router({
         const branchList = await ctx.db.query.Branches.findMany({
           where: eq(Branches.clerkInstitutionId, input.orgId),
           orderBy: asc(Branches.title),
-        });
-        const mappedBranchList = branchList.map((branch) => {
-          const semesters = branch.noOfSemesters;
-
-          return {
-            ...branch,
-            Semester: Array.from({ length: semesters }).map((_, i) => ({
-              id: (i + 1).toString(),
-            })),
-          };
+          with: {
+            Semesters: {
+              where: eq(Semesters.status, "active"),
+              orderBy: asc(Semesters.number),
+            },
+          },
         });
 
-        return mappedBranchList;
+        return branchList;
       } catch (e) {
         console.log(e);
         throw e;
@@ -48,19 +43,15 @@ export const branchesRouter = router({
           eq(Branches.id, input.id),
           eq(Branches.clerkInstitutionId, ctx.auth.orgId ?? ""),
         ),
-      });
-      const mappedBranchList = branch_details.map((branch) => {
-        const semesters = branch.noOfSemesters;
-
-        return {
-          ...branch,
-          Semesters: Array.from({ length: semesters }).map((_, i) => ({
-            id: (i + 1).toString(),
-          })),
-        };
+        with: {
+          Semesters: {
+            where: eq(Semesters.status, "active"),
+            orderBy: asc(Semesters.number),
+          },
+        },
       });
 
-      return mappedBranchList.at(0);
+      return branch_details.at(0);
     }),
 
   updateDetails: protectedProcedure
@@ -124,33 +115,36 @@ export const branchesRouter = router({
         if (!branch?.id)
           throw new TRPCError({
             message: "Can't able to create the branch, Retry",
-            code: "BAD_REQUEST",
+            code: "INTERNAL_SERVER_ERROR",
           });
 
         //Create active semesters
-        await Promise.all(
+        const semesters = await Promise.all(
           Array.from({ length: branch?.noOfSemesters }).map((_, index) => {
-            const semester = index + 1;
-            if (input.semesterStartsWith === "even" && semester % 2 == 0)
-              return tx
-                .insert(Semesters)
-                .values({
-                  status: "active",
-                  number: semester,
-                  brancId: branch?.id,
-                })
-                .returning();
-            else if (input.semesterStartsWith === "odd" && semester % 2 != 0)
-              return tx
-                .insert(Semesters)
-                .values({
-                  status: "active",
-                  number: semester,
-                  brancId: branch?.id,
-                })
-                .returning();
+            const semesterIndex = index + 1;
+
+            return tx
+              .insert(Semesters)
+              .values({
+                status:
+                  input.semesterStartsWith === "even" && semesterIndex % 2 === 0
+                    ? "active"
+                    : input.semesterStartsWith === "odd" &&
+                        semesterIndex % 2 !== 0
+                      ? "active"
+                      : "inactive",
+                number: semesterIndex,
+                branchId: branch?.id,
+              })
+              .returning();
           }),
         );
+
+        if (semesters.length !== 6)
+          throw new TRPCError({
+            message: "Can't able to create the branch, Retry",
+            code: "INTERNAL_SERVER_ERROR",
+          });
 
         return branch;
       });
