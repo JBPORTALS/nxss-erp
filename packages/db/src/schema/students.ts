@@ -24,7 +24,7 @@ export const Students = pgTable("students", (t) => ({
   yearOfJoin: t.integer(),
   status: profileStatusEnum("status").default("active"),
   clerkUserId: t.text(),
-  clerkOrgId: t.text().notNull(),
+  clerkInstitutionId: t.text().notNull(),
   branchId: t
     .text()
     .notNull()

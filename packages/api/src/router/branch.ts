@@ -9,7 +9,6 @@ import {
 } from "@nxss/db/schema";
 
 import { protectedProcedure, router } from "../trpc";
-import { createSemester } from "./semester";
 
 const { Branches } = schema;
 
@@ -20,7 +19,7 @@ export const branchesRouter = router({
       try {
         const branchList = await ctx.db.query.Branches.findMany({
           where: eq(Branches.clerkInstitutionId, input.orgId),
-          orderBy: asc(Branches.name),
+          orderBy: asc(Branches.title),
           with: {
             Semesters: {
               where: eq(Semesters.status, "active"),
@@ -28,6 +27,7 @@ export const branchesRouter = router({
             },
           },
         });
+
         return branchList;
       } catch (e) {
         console.log(e);
@@ -104,9 +104,9 @@ export const branchesRouter = router({
         const branchResponse = await tx
           .insert(Branches)
           .values({
-            name: input.name,
+            title: input.title,
             clerkInstitutionId: ctx.auth.orgId,
-            semesters: input.semesters,
+            noOfSemesters: input.noOfSemesters,
           })
           .returning();
 
@@ -115,33 +115,36 @@ export const branchesRouter = router({
         if (!branch?.id)
           throw new TRPCError({
             message: "Can't able to create the branch, Retry",
-            code: "BAD_REQUEST",
+            code: "INTERNAL_SERVER_ERROR",
           });
 
         //Create active semesters
-        await Promise.all(
-          Array.from({ length: branch?.semesters }).map((_, index) => {
-            const semester = index + 1;
-            if (input.semesterStartsWith === "even" && semester % 2 == 0)
-              return tx
-                .insert(Semesters)
-                .values({
-                  status: "active",
-                  number: semester,
-                  brancId: branch?.id,
-                })
-                .returning();
-            else if (input.semesterStartsWith === "odd" && semester % 2 != 0)
-              return tx
-                .insert(Semesters)
-                .values({
-                  status: "active",
-                  number: semester,
-                  brancId: branch?.id,
-                })
-                .returning();
+        const semesters = await Promise.all(
+          Array.from({ length: branch?.noOfSemesters }).map((_, index) => {
+            const semesterIndex = index + 1;
+
+            return tx
+              .insert(Semesters)
+              .values({
+                status:
+                  input.semesterStartsWith === "even" && semesterIndex % 2 === 0
+                    ? "active"
+                    : input.semesterStartsWith === "odd" &&
+                        semesterIndex % 2 !== 0
+                      ? "active"
+                      : "inactive",
+                number: semesterIndex,
+                branchId: branch?.id,
+              })
+              .returning();
           }),
         );
+
+        if (semesters.length !== branch.noOfSemesters)
+          throw new TRPCError({
+            message: "Can't able to create the branch, Retry",
+            code: "INTERNAL_SERVER_ERROR",
+          });
 
         return branch;
       });

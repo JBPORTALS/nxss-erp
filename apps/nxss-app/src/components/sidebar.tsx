@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useAuth, useOrganization } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import {
   GraduationCapIcon,
   LayoutDashboardIcon,
   LogOutIcon,
   PlusIcon,
   SettingsIcon,
+  Table2Icon,
   Users2Icon,
 } from "lucide-react";
 
@@ -34,6 +35,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@nxss/ui/tooltip";
 import { api } from "~/trpc/react";
 import { useLocalOrganization } from "~/utils/hooks";
 import CreateBranchDailog from "./create-branch-dailog";
+import CreateSubjectDailog from "./create-subject-dialog";
 import { InstitutionSwitcher } from "./institution-switcher";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -60,17 +62,17 @@ function BranchList() {
 
   return (
     <React.Fragment>
-      {data?.flatMap((branches) => {
-        utils.branches.getDetails.prefetch({ id: branches.id.toString() });
+      {data?.flatMap((branch) => {
+        utils.branches.getDetails.prefetch({ id: branch.id.toString() });
 
         return (
-          <Tooltip key={branches.id}>
+          <Tooltip key={branch.id}>
             <TooltipTrigger asChild>
               <Avatar asChild>
                 <Button
                   onClick={() =>
                     router.push(
-                      `/${params.orgId}/branches/${branches.id}/${branches.Semesters.at(0)?.id}/dashboard`,
+                      `/${params.orgId}/branches/${branch.id}/${branch.Semesters.at(0)?.id}/dashboard`,
                     )
                   }
                   size={"icon"}
@@ -78,7 +80,7 @@ function BranchList() {
                   className={cn(
                     "size-10 border-2 border-border",
                     pathname.startsWith(
-                      `/${params.orgId}/branches/${branches.id}`,
+                      `/${params.orgId}/branches/${branch.id}`,
                     )
                       ? "border-2 border-primary p-0.5"
                       : "active:scale-95",
@@ -86,14 +88,69 @@ function BranchList() {
                 >
                   <AvatarImage src="https://github.com/kite" />
                   <AvatarFallback className="bg-gradient-to-r from-primary/10 to-background capitalize">
-                    {branches.name.split(" ")[0]?.charAt(0)}
-                    {branches.name.split(" ")[1]?.charAt(0)}
+                    {branch.title.split(" ")[0]?.charAt(0)}
+                    {branch.title.split(" ")[1]?.charAt(0)}
                   </AvatarFallback>
                 </Button>
               </Avatar>
             </TooltipTrigger>
-            <TooltipContent side={"right"}>{branches.name}</TooltipContent>
+            <TooltipContent side={"right"}>{branch.title}</TooltipContent>
           </Tooltip>
+        );
+      })}
+    </React.Fragment>
+  );
+}
+function SubjectList() {
+  const params = useParams();
+  const { data, isLoading } = api.subjects.getAll.useQuery({
+    semesterId: params.semesterId,
+  });
+  const pathname = usePathname();
+  const router = useRouter();
+  const utils = api.useUtils();
+
+  if (isLoading)
+    return Array.from({ length: 4 })
+      .fill(0)
+      .map((_, i) => <Skeleton key={i} className="h-9 w-full" />);
+
+  if (data?.length === 0)
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Add Subjects</CardTitle>
+          <CardDescription className="text-xs">
+            Create subjects of this semester to manage marks, attendance etc...
+          </CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <CreateSubjectDailog>
+            <Button variant={"outline"} className="w-full">
+              Add
+            </Button>
+          </CreateSubjectDailog>
+        </CardFooter>
+      </Card>
+    );
+
+  return (
+    <React.Fragment>
+      {data?.flatMap((subject) => {
+        utils.subjects.getById.prefetch({ subjectId: subject.id });
+
+        return (
+          <Link
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects/${subject.id}`}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects/${subject.id}`,
+              )}
+            >
+              {subject.title}
+            </SidebarItem>
+          </Link>
         );
       })}
     </React.Fragment>
@@ -152,15 +209,22 @@ export function InstitutionBranchSidebar() {
 
           <Separator className="w-full" />
 
-          <CreateBranchDailog>
-            <Button
-              size={"icon"}
-              className="size-10 rounded-full"
-              variant={"secondary"}
-            >
-              <PlusIcon className="size-6" />
-            </Button>
-          </CreateBranchDailog>
+          <Tooltip>
+            <CreateBranchDailog>
+              <TooltipTrigger asChild>
+                <Button
+                  size={"icon"}
+                  className="size-10 rounded-full"
+                  variant={"outline"}
+                >
+                  <PlusIcon strokeWidth={1} className="size-6" />
+                </Button>
+              </TooltipTrigger>
+            </CreateBranchDailog>
+            <TooltipContent side="right" align="center">
+              Create Branch
+            </TooltipContent>
+          </Tooltip>
           <BranchList />
         </div>
       </nav>
@@ -196,13 +260,19 @@ export function BranchDetialsSidebar() {
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="h-fit w-64 space-y-7 px-5 pb-20 pt-4">
-        <div className="inline-block bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-extrabold text-transparent">
-          {isBranchDataLoading ? <Skeleton className="h-4 w-40" /> : data?.name}
+        <div className="inline-block w-full bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-bold text-transparent">
+          {isBranchDataLoading ? (
+            <div className="animate-random-width mt-1 w-full">
+              <Skeleton className="h-4 w-full" />
+            </div>
+          ) : (
+            data?.title
+          )}
         </div>
 
         {/**Active Semesters */}
         <div className="space-y-2">
-          <p className="pl-2 font-mono text-xs text-muted-foreground">
+          <p className="pl-2 font-mono text-xs text-muted-foreground/80">
             ACTIVE SEMESTERS
           </p>
           <Tabs defaultValue={params.semesterId} value={params.semesterId}>
@@ -222,7 +292,7 @@ export function BranchDetialsSidebar() {
 
         {/**Main Menu */}
         <div className="flex flex-col gap-2">
-          <p className="pl-2 font-mono text-xs text-muted-foreground">
+          <p className="pl-2 font-mono text-xs text-muted-foreground/80">
             MAIN MENU
           </p>
           <Link
@@ -250,31 +320,50 @@ export function BranchDetialsSidebar() {
               Students
             </SidebarItem>
           </Link>
+
+          <Link
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/time-table`}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/time-table`,
+              )}
+            >
+              <Table2Icon strokeWidth={1.5} className="size-5" /> Time Table
+            </SidebarItem>
+          </Link>
+          {/* <Link
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects`}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects`,
+              )}
+            >
+              <BookAIcon strokeWidth={1.5} className="size-5" /> Subjects
+            </SidebarItem>
+          </Link> */}
         </div>
 
-        {/**Subjects */}
-        <div className="space-y-2">
-          <p className="pl-2 font-mono text-xs text-muted-foreground">
-            SUBJECTS
-          </p>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Add Subjects</CardTitle>
-              <CardDescription className="text-xs">
-                Create subjects of this semester to manage marks, attendance
-                etc...
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button variant={"outline"} className="w-full">
-                Add
-              </Button>
-            </CardFooter>
-          </Card>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <p className="pl-2 font-mono text-xs text-muted-foreground/80">
+              SUBJECTS
+            </p>
+            <Tooltip>
+              <CreateSubjectDailog>
+                <TooltipTrigger asChild>
+                  <Button variant={"outline"} className="size-7" size={"icon"}>
+                    <PlusIcon className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+              </CreateSubjectDailog>
+              <TooltipContent side={"right"}>Add Subject</TooltipContent>
+            </Tooltip>
+          </div>
+          <SubjectList />
         </div>
-
-        {/**Section & Batches */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             SECTIONS & BATCHES
           </p>
@@ -294,7 +383,7 @@ export function BranchDetialsSidebar() {
               </Button>
             </CardFooter>
           </Card>
-        </div>
+        </div>  */}
       </nav>
     </ScrollArea>
   );

@@ -45,7 +45,7 @@ export default function CreateBranchDailog({
     schema: insertBranchSchema,
     mode: "onChange",
     defaultValues: {
-      semesters: 6,
+      noOfSemesters: 6,
       semesterStartsWith: "odd",
     },
   });
@@ -57,7 +57,7 @@ export default function CreateBranchDailog({
         return toast.error(error.message);
       },
       onSuccess(data) {
-        toast.success(`Branch ${data.name} created successfully`, {
+        toast.success(`Branch ${data.title} created successfully`, {
           richColors: true,
         });
         utils.branches.invalidate();
@@ -78,7 +78,7 @@ export default function CreateBranchDailog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Branch</DialogTitle>
+          <DialogTitle>New Branch</DialogTitle>
           <DialogDescription className="text-xs">
             A space for academic data course wise
           </DialogDescription>
@@ -89,7 +89,7 @@ export default function CreateBranchDailog({
             <FormField
               control={form.control}
               disabled={form.formState.isSubmitting}
-              name="name"
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <Label>Name of the branch</Label>
@@ -104,7 +104,7 @@ export default function CreateBranchDailog({
             <FormField
               control={form.control}
               disabled={form.formState.isSubmitting}
-              name="semesters"
+              name="noOfSemesters"
               render={({ field }) => (
                 <FormItem>
                   <Label>No. Semesters</Label>
