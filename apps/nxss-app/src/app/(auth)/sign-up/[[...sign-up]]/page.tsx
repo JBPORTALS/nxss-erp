@@ -5,7 +5,7 @@ export default function SignUpPage() {
   return (
     <div className="relative grid w-full grow items-center px-4 sm:justify-center">
       <ClerkLoading>
-        <LoaderCircle strokeWidth={1} className="size-12 animate-spin" />
+        <LoaderCircle strokeWidth={1} className="size-10 animate-spin" />
       </ClerkLoading>
       <ClerkLoaded>
         <SignUp />
