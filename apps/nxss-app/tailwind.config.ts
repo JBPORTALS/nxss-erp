@@ -13,8 +13,8 @@ export default withUt({
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", ...fontFamily.sans],
-        mono: ["var(--font-ibm-plex-mono)", ...fontFamily.mono],
+        sans: ["var(--font-fira-sans)", ...fontFamily.sans],
+        mono: ["var(--font-fira-mono)", ...fontFamily.mono],
       },
       keyframes: {
         "caret-blink": {

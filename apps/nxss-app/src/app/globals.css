@@ -60,6 +60,6 @@
 
   * {
     box-sizing: border-box;
-    @apply border-border;
+    @apply border-border leading-snug tracking-wide;
   }
 }

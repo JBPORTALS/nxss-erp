@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Inter } from "next/font/google";
+import { Fira_Mono, Fira_Sans } from "next/font/google";
 import { env } from "@/env";
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -11,15 +11,15 @@ import "@/app/globals.css";
 
 import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 
-const InterFont = Inter({
-  variable: "--font-inter",
+const FiraSans = Fira_Sans({
+  variable: "--font-fira-sans",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const IMBPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+const FiraMono = Fira_Mono({
+  variable: "--font-fira-mono",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "700", "200", "500", "600"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -57,8 +57,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <body
           className={cn(
             "dark min-h-screen w-full bg-background font-sans text-foreground antialiased",
-            InterFont.variable,
-            IMBPlexMono.variable,
+            FiraSans.variable,
+            FiraSans.variable,
           )}
         >
           {/* <ThemeProvider attribute="class"> */}

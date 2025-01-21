@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Inter, JetBrains_Mono } from "next/font/google";
+import { Fira_Mono, Fira_Sans } from "next/font/google";
 
 import { cn } from "@nxss/ui";
 import { ThemeProvider } from "@nxss/ui/theme";
@@ -8,25 +8,21 @@ import { env } from "~/env";
 
 import "~/app/globals.css";
 
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
-
-import { buttonVariants } from "@nxss/ui/button";
 
 import { ourFileRouter } from "./api/uploadthing/core";
 import { Providers } from "./providers";
 
-const InterFont = Inter({
-  variable: "--font-inter",
+const FiraSans = Fira_Sans({
+  variable: "--font-fira-sans",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const IMBPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+const FiraMono = Fira_Mono({
+  variable: "--font-fira-mono",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "700", "200", "500", "600"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -62,8 +58,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body
         className={cn(
           "flex bg-background font-sans text-foreground antialiased",
-          InterFont.variable,
-          IMBPlexMono.variable,
+          FiraSans.variable,
+          FiraMono.variable,
         )}
       >
         <ThemeProvider enableSystem attribute="class" defaultTheme="light">

@@ -196,7 +196,7 @@ export function BranchDetialsSidebar() {
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="h-fit w-64 space-y-7 px-5 pb-20 pt-4">
-        <div className="inline-block bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-extrabold text-transparent">
+        <div className="inline-block bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-bold text-transparent">
           {isBranchDataLoading ? (
             <Skeleton className="h-4 w-40" />
           ) : (
