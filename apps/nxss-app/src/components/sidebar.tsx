@@ -7,6 +7,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { useAuth, useOrganization } from "@clerk/nextjs";
 import {
   BookAIcon,
+  CalendarDaysIcon,
   GraduationCapIcon,
   Layers2Icon,
   LayersIcon,
@@ -255,9 +256,11 @@ export function BranchDetialsSidebar() {
   return (
     <ScrollArea className="relative h-full border-r">
       <nav className="h-fit w-64 space-y-7 px-5 pb-20 pt-4">
-        <div className="inline-block bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-bold text-transparent">
+        <div className="inline-block w-full bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-bold text-transparent">
           {isBranchDataLoading ? (
-            <Skeleton className="h-4 w-40" />
+            <div className="animate-random-width mt-1 w-full">
+              <Skeleton className="h-4 w-full" />
+            </div>
           ) : (
             data?.title
           )}
@@ -311,6 +314,20 @@ export function BranchDetialsSidebar() {
             >
               <GraduationCapIcon strokeWidth={1.5} className="size-5" />{" "}
               Students
+            </SidebarItem>
+          </Link>
+
+          <Link
+            // href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/students`}
+            href={"#"}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/students`,
+              )}
+            >
+              <CalendarDaysIcon strokeWidth={1.5} className="size-5" /> Time
+              Table
             </SidebarItem>
           </Link>
           {/* <Link
