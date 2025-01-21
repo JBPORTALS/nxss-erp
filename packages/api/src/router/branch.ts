@@ -20,10 +20,10 @@ export const branchesRouter = router({
       try {
         const branchList = await ctx.db.query.Branches.findMany({
           where: eq(Branches.clerkInstitutionId, input.orgId),
-          orderBy: asc(Branches.name),
+          orderBy: asc(Branches.title),
         });
         const mappedBranchList = branchList.map((branch) => {
-          const semesters = branch.semesters;
+          const semesters = branch.noOfSemesters;
 
           return {
             ...branch,
@@ -50,7 +50,7 @@ export const branchesRouter = router({
         ),
       });
       const mappedBranchList = branch_details.map((branch) => {
-        const semesters = branch.semesters;
+        const semesters = branch.noOfSemesters;
 
         return {
           ...branch,
@@ -113,9 +113,9 @@ export const branchesRouter = router({
         const branchResponse = await tx
           .insert(Branches)
           .values({
-            name: input.name,
+            title: input.title,
             clerkInstitutionId: ctx.auth.orgId,
-            semesters: input.semesters,
+            noOfSemesters: input.noOfSemesters,
           })
           .returning();
 
@@ -129,7 +129,7 @@ export const branchesRouter = router({
 
         //Create active semesters
         await Promise.all(
-          Array.from({ length: branch?.semesters }).map((_, index) => {
+          Array.from({ length: branch?.noOfSemesters }).map((_, index) => {
             const semester = index + 1;
             if (input.semesterStartsWith === "even" && semester % 2 == 0)
               return tx

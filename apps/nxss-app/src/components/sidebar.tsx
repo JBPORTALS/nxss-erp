@@ -60,17 +60,17 @@ function BranchList() {
 
   return (
     <React.Fragment>
-      {data?.flatMap((branches) => {
-        utils.branches.getDetails.prefetch({ id: branches.id.toString() });
+      {data?.flatMap((branch) => {
+        utils.branches.getDetails.prefetch({ id: branch.id.toString() });
 
         return (
-          <Tooltip key={branches.id}>
+          <Tooltip key={branch.id}>
             <TooltipTrigger asChild>
               <Avatar asChild>
                 <Button
                   onClick={() =>
                     router.push(
-                      `/${params.orgId}/branches/${branches.id}/${branches.Semester.at(0)?.id}/dashboard`,
+                      `/${params.orgId}/branches/${branch.id}/${branch.Semester.at(0)?.id}/dashboard`,
                     )
                   }
                   size={"icon"}
@@ -78,7 +78,7 @@ function BranchList() {
                   className={cn(
                     "size-10 border-2 border-border",
                     pathname.startsWith(
-                      `/${params.orgId}/branches/${branches.id}`,
+                      `/${params.orgId}/branches/${branch.id}`,
                     )
                       ? "border-2 border-primary p-0.5"
                       : "active:scale-95",
@@ -86,13 +86,13 @@ function BranchList() {
                 >
                   <AvatarImage src="https://github.com/kite" />
                   <AvatarFallback className="bg-gradient-to-r from-primary/10 to-background capitalize">
-                    {branches.name.split(" ")[0]?.charAt(0)}
-                    {branches.name.split(" ")[1]?.charAt(0)}
+                    {branch.title.split(" ")[0]?.charAt(0)}
+                    {branch.title.split(" ")[1]?.charAt(0)}
                   </AvatarFallback>
                 </Button>
               </Avatar>
             </TooltipTrigger>
-            <TooltipContent side={"right"}>{branches.name}</TooltipContent>
+            <TooltipContent side={"right"}>{branch.title}</TooltipContent>
           </Tooltip>
         );
       })}
@@ -197,7 +197,11 @@ export function BranchDetialsSidebar() {
     <ScrollArea className="relative h-full border-r">
       <nav className="h-fit w-64 space-y-7 px-5 pb-20 pt-4">
         <div className="inline-block bg-gradient-to-t from-foreground/70 to-foreground bg-clip-text text-lg font-extrabold text-transparent">
-          {isBranchDataLoading ? <Skeleton className="h-4 w-40" /> : data?.name}
+          {isBranchDataLoading ? (
+            <Skeleton className="h-4 w-40" />
+          ) : (
+            data?.title
+          )}
         </div>
 
         {/**Active Semesters */}

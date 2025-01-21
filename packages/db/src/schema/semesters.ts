@@ -7,7 +7,10 @@ import { z } from "zod";
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
 
-export const statusEnum = pgEnum("status", ["active", "completed"]);
+export const statusEnum = pgEnum("profile_status_enum", [
+  "active",
+  "completed",
+]);
 
 // Semester table
 export const Semesters = pgTable("semesters", (t) => ({

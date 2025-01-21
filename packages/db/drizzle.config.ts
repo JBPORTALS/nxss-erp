@@ -17,4 +17,6 @@ export default {
   migrations: {
     prefix: "unix",
   },
+  verbose: true,
+  strict: false,
 } satisfies Config;

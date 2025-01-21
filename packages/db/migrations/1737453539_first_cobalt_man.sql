@@ -4,40 +4,29 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-
 DO $$ BEGIN
 CREATE TYPE "public"."event_type" AS ENUM('event', 'opportunity', 'holiday', 'exam_schedule');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-
 DO $$ BEGIN
 CREATE TYPE "public"."user_type" AS ENUM('staff', 'students', 'all');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-
 DO $$ BEGIN
 CREATE TYPE "public"."profile_status_enum" AS ENUM('active', 'inactive');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-
-DO $$ BEGIN
-CREATE TYPE "public"."status" AS ENUM('active', 'completed');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-
 CREATE TABLE IF NOT EXISTS "nxss_branches" (
 	"id" text PRIMARY KEY NOT NULL,
-	"name" text NOT NULL,
+	"title" text NOT NULL,
 	"clerk_institution_id" text NOT NULL,
-	"semesters" integer NOT NULL,
+	"no_of_semesters" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone
 );
@@ -92,7 +81,7 @@ CREATE TABLE IF NOT EXISTS "nxss_students" (
 	"year_of_join" integer,
 	"status" "profile_status_enum" DEFAULT 'active',
 	"clerk_user_id" text,
-	"clerk_org_id" text NOT NULL,
+	"clerk_institution_id" text NOT NULL,
 	"branch_id" text NOT NULL,
 	"batch_id" text,
 	"current_semester_id" text NOT NULL,
@@ -105,7 +94,16 @@ CREATE TABLE IF NOT EXISTS "nxss_semesters" (
 	"academic_year" text,
 	"branc_id" text NOT NULL,
 	"number" integer NOT NULL,
-	"status" "status" NOT NULL
+	"status" "profile_status_enum" NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "nxss_subjects" (
+	"id" text PRIMARY KEY NOT NULL,
+	"title" text NOT NULL,
+	"branc_id" text NOT NULL,
+	"semester" integer NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -176,6 +174,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "nxss_semesters" ADD CONSTRAINT "nxss_semesters_branc_id_nxss_branches_id_fk" FOREIGN KEY ("branc_id") REFERENCES "public"."nxss_branches"("id") ON DELETE cascade ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "nxss_subjects" ADD CONSTRAINT "nxss_subjects_branc_id_nxss_branches_id_fk" FOREIGN KEY ("branc_id") REFERENCES "public"."nxss_branches"("id") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
