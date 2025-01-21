@@ -140,7 +140,7 @@ export const branchesRouter = router({
           }),
         );
 
-        if (semesters.length !== 6)
+        if (semesters.length !== branch.noOfSemesters)
           throw new TRPCError({
             message: "Can't able to create the branch, Retry",
             code: "INTERNAL_SERVER_ERROR",
