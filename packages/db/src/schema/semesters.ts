@@ -24,7 +24,7 @@ export const Semesters = pgTable("semesters", (t) => ({
       onUpdate: "cascade",
     }),
   number: t.integer().notNull(),
-  status: statusEnum("status").default("inactive").notNull(),
+  status: statusEnum("status").notNull(),
 }));
 
 //schemas

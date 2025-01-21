@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS "nxss_students" (
 CREATE TABLE IF NOT EXISTS "nxss_semesters" (
 	"id" text PRIMARY KEY NOT NULL,
 	"academic_year" text,
-	"branc_id" text NOT NULL,
+	"branch_id" text NOT NULL,
 	"number" integer NOT NULL,
 	"status" "profile_status_enum" NOT NULL
 );
@@ -100,8 +100,8 @@ CREATE TABLE IF NOT EXISTS "nxss_semesters" (
 CREATE TABLE IF NOT EXISTS "nxss_subjects" (
 	"id" text PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
-	"branc_id" text NOT NULL,
-	"semester" integer NOT NULL,
+	"branch_id" text NOT NULL,
+	"semester_id" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone
 );
@@ -173,13 +173,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "nxss_semesters" ADD CONSTRAINT "nxss_semesters_branc_id_nxss_branches_id_fk" FOREIGN KEY ("branc_id") REFERENCES "public"."nxss_branches"("id") ON DELETE cascade ON UPDATE cascade;
+ ALTER TABLE "nxss_semesters" ADD CONSTRAINT "nxss_semesters_branch_id_nxss_branches_id_fk" FOREIGN KEY ("branch_id") REFERENCES "public"."nxss_branches"("id") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "nxss_subjects" ADD CONSTRAINT "nxss_subjects_branc_id_nxss_branches_id_fk" FOREIGN KEY ("branc_id") REFERENCES "public"."nxss_branches"("id") ON DELETE cascade ON UPDATE cascade;
+ ALTER TABLE "nxss_subjects" ADD CONSTRAINT "nxss_subjects_branch_id_nxss_branches_id_fk" FOREIGN KEY ("branch_id") REFERENCES "public"."nxss_branches"("id") ON DELETE cascade ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "nxss_subjects" ADD CONSTRAINT "nxss_subjects_semester_id_nxss_semesters_id_fk" FOREIGN KEY ("semester_id") REFERENCES "public"."nxss_semesters"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
