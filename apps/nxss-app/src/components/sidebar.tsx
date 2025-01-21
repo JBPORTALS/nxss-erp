@@ -212,15 +212,22 @@ export function InstitutionBranchSidebar() {
 
           <Separator className="w-full" />
 
-          <CreateBranchDailog>
-            <Button
-              size={"icon"}
-              className="size-10 rounded-full"
-              variant={"secondary"}
-            >
-              <PlusIcon className="size-6" />
-            </Button>
-          </CreateBranchDailog>
+          <Tooltip>
+            <CreateBranchDailog>
+              <TooltipTrigger asChild>
+                <Button
+                  size={"icon"}
+                  className="size-10 rounded-full"
+                  variant={"outline"}
+                >
+                  <PlusIcon strokeWidth={1} className="size-6" />
+                </Button>
+              </TooltipTrigger>
+            </CreateBranchDailog>
+            <TooltipContent side="right" align="center">
+              Create Branch
+            </TooltipContent>
+          </Tooltip>
           <BranchList />
         </div>
       </nav>
@@ -323,7 +330,7 @@ export function BranchDetialsSidebar() {
           >
             <SidebarItem
               isActive={pathname.startsWith(
-                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/students`,
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/time-table`,
               )}
             >
               <CalendarDaysIcon strokeWidth={1.5} className="size-5" /> Time

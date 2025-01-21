@@ -78,7 +78,7 @@ export default function CreateBranchDailog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Branch</DialogTitle>
+          <DialogTitle>New Branch</DialogTitle>
           <DialogDescription className="text-xs">
             A space for academic data course wise
           </DialogDescription>

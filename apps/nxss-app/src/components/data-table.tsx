@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))
         ) : (
-          <TableRow className="border-0 hover:bg-transparent">
+          <TableRow className="border-none hover:bg-transparent">
             <TableCell colSpan={columns.length} className="h-24 text-center">
               {emptyStateComponent ?? "No results."}
             </TableCell>
