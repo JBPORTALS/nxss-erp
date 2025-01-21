@@ -6,7 +6,10 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useAuth, useOrganization } from "@clerk/nextjs";
 import {
+  BookAIcon,
   GraduationCapIcon,
+  Layers2Icon,
+  LayersIcon,
   LayoutDashboardIcon,
   LogOutIcon,
   PlusIcon,
@@ -254,9 +257,20 @@ export function BranchDetialsSidebar() {
               Students
             </SidebarItem>
           </Link>
+          <Link
+            href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects`}
+          >
+            <SidebarItem
+              isActive={pathname.startsWith(
+                `/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects`,
+              )}
+            >
+              <BookAIcon strokeWidth={1.5} className="size-5" /> Subjects
+            </SidebarItem>
+          </Link>
         </div>
 
-        {/**Subjects */}
+        {/*         
         <div className="space-y-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             SUBJECTS
@@ -276,8 +290,6 @@ export function BranchDetialsSidebar() {
             </CardFooter>
           </Card>
         </div>
-
-        {/**Section & Batches */}
         <div className="space-y-2">
           <p className="pl-2 font-mono text-xs text-muted-foreground">
             SECTIONS & BATCHES
@@ -298,7 +310,7 @@ export function BranchDetialsSidebar() {
               </Button>
             </CardFooter>
           </Card>
-        </div>
+        </div> */}
       </nav>
     </ScrollArea>
   );
