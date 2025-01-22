@@ -49,15 +49,7 @@ export function Providers(props: { children: React.ReactNode }) {
           <NuqsAdapter>{props.children}</NuqsAdapter>
         </TooltipProvider>
       </TRPCReactProvider>
-      <Toaster
-        richColors
-        icons={{
-          success: <BadgeCheck />,
-          error: <BadgeAlert />,
-          info: <BadgeInfo />,
-          warning: <TriangleAlert />,
-        }}
-      />
+      <Toaster richColors />
     </ClerkProvider>
   );
 }

@@ -80,7 +80,10 @@ export default function SearchStudents() {
                   value="active"
                   className="flex items-center gap-2"
                 >
-                  <SquareIcon className="fill-success text-success size-4" />
+                  <SquareIcon
+                    strokeWidth={1}
+                    className="fill-success/30 text-success size-4"
+                  />
                   Active
                   {status === "active" && (
                     <CheckIcon className="ml-auto size-4" />
@@ -93,7 +96,10 @@ export default function SearchStudents() {
                   value="inactive"
                   className="flex items-center gap-2"
                 >
-                  <SquareIcon className="fill-warning text-warning size-4" />
+                  <SquareIcon
+                    strokeWidth={1}
+                    className="fill-warning/30 text-warning size-4"
+                  />
                   Inactive{" "}
                   {status === "inactive" && (
                     <CheckIcon className="ml-auto size-4" />

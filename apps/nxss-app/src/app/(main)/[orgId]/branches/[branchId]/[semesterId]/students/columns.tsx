@@ -1,11 +1,29 @@
+import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
-import { MoreVerticalIcon, User2 } from "lucide-react";
+import {
+  MoreHorizontalIcon,
+  ShieldCheckIcon,
+  ShieldMinusIcon,
+  Trash2Icon,
+  User2,
+} from "lucide-react";
 
 import { RouterOutputs } from "@nxss/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@nxss/ui/avatar";
 import { Badge } from "@nxss/ui/badge";
 import { Button } from "@nxss/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@nxss/ui/dropdown-menu";
+
+import { ToggleStudentStatusAlertDialog } from "~/components/student-actions";
 
 type Student = RouterOutputs["students"]["getAll"][0];
 
@@ -66,11 +84,58 @@ export const StudentColumns: ColumnDef<Student>[] = [
       return <div className="w-fit text-right"></div>;
     },
     cell(props) {
+      const [isDeactivateAlertDialogOpen, setIsDeactivateAlertDialogOpen] =
+        React.useState(false);
+      const [isActivateAlertDialogOpen, setIsActivateAlertDialogOpen] =
+        React.useState(false);
+      const student = props.row.original;
       return (
         <div className="text-right">
-          <Button className="ml-auto" size={"icon"} variant={"ghost"}>
-            <MoreVerticalIcon strokeWidth={1} className="size-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="ml-auto" size={"icon"} variant={"ghost"}>
+                <MoreHorizontalIcon strokeWidth={1} className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[160px]">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                {student.status === "active" ? (
+                  <DropdownMenuItem
+                    onClick={(e) => setIsDeactivateAlertDialogOpen(true)}
+                    className="text-warning focus:bg-warning/30 focus:text-warning flex items-center gap-2"
+                  >
+                    <ShieldMinusIcon className="size-5" /> Deactive
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem
+                    onClick={(e) => setIsActivateAlertDialogOpen(true)}
+                    className="text-success focus:bg-success/30 focus:text-success flex items-center gap-2"
+                  >
+                    <ShieldCheckIcon className="size-5" /> Activate
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem className="flex items-center gap-2 text-destructive focus:bg-destructive/30 focus:text-destructive">
+                  <Trash2Icon className="size-5" /> Delete
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <ToggleStudentStatusAlertDialog
+            status={"inactive"}
+            key={"Deactivate student"}
+            studentId={student.id}
+            open={isDeactivateAlertDialogOpen}
+            onOpenChange={setIsDeactivateAlertDialogOpen}
+          />
+          <ToggleStudentStatusAlertDialog
+            key={"Activate student"}
+            status={"active"}
+            studentId={student.id}
+            open={isActivateAlertDialogOpen}
+            onOpenChange={setIsActivateAlertDialogOpen}
+          />
         </div>
       );
     },

@@ -50,6 +50,10 @@ export const Students = pgTable("students", (t) => ({
 export const insertStudentSchema = createInsertSchema(Students);
 export const updateStudentSchema = createInsertSchema(Students, {
   id: z.string().nonempty(),
+  branchId: z.string().optional(),
+  clerkInstitutionId: z.string().optional(),
+  email: z.string().optional(),
+  currentSemesterId: z.string().optional(),
 });
 
 export const studentsRelations = relations(Students, ({ one }) => ({

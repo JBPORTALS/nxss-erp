@@ -163,7 +163,7 @@ export default function CreateBranchDailog({
 
             <DialogFooter className="pt-5">
               <DialogClose asChild>
-                <Button variant={"secondary"} className="w-full">
+                <Button variant={"outline"} className="w-full">
                   Cancel
                 </Button>
               </DialogClose>
