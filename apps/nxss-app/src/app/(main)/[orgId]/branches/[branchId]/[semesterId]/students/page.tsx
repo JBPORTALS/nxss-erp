@@ -10,7 +10,7 @@ import {
 } from "@nxss/ui/content-area";
 import { Input } from "@nxss/ui/input";
 
-import { DataTable } from "~/components/data-table";
+import { AddStudentsDialog } from "~/components/add-students-dialog";
 import { StudentColumns } from "./columns";
 import { StudentsDataTable } from "./data-table";
 
@@ -27,10 +27,12 @@ export default async function BranchPage({}: {
               All student in this branch & semester
             </ContentAreaDescription>
           </div>
-          <Button className="font-semibold">
-            <PlusIcon className="size-4" />
-            Add Students
-          </Button>
+          <AddStudentsDialog>
+            <Button className="font-semibold">
+              <PlusIcon className="size-4" />
+              Add Students
+            </Button>
+          </AddStudentsDialog>
         </ContentAreaHeader>
         <ContentAreaContainer>
           <div className="flex w-full gap-3">
