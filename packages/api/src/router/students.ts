@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, ilike } from "drizzle-orm";
+import { and, eq, ilike, or } from "drizzle-orm";
 import { z } from "zod";
 
 import { insertStudentSchema, Students } from "@nxss/db/schema";
@@ -9,16 +9,19 @@ import { protectedProcedure, router } from "../trpc";
 export const studentsRouter = router({
   getAll: protectedProcedure
     .input(
-      z.object({ semesterId: z.string().min(1), query: z.string().nullable() }),
+      z.object({
+        semesterId: z.string().min(1),
+        query: z.string().nullable(),
+        status: z.enum(["active", "inactive"]).nullable().optional(),
+      }),
     )
-    .query(({ ctx, input }) =>
+    .query(({ ctx, input: { semesterId, query, status } }) =>
       ctx.db.query.Students.findMany({
-        where: input.query
-          ? and(
-              eq(Students.currentSemesterId, input.semesterId),
-              ilike(Students.email, `%${input.query}%`),
-            )
-          : eq(Students.currentSemesterId, input.semesterId),
+        where: and(
+          eq(Students.currentSemesterId, semesterId),
+          query ? ilike(Students.email, `%${query}%`) : undefined,
+          status ? eq(Students.status, status) : undefined,
+        ),
       }),
     ),
   create: protectedProcedure

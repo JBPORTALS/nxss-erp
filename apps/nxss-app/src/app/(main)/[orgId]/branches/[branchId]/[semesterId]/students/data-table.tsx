@@ -10,9 +10,11 @@ export function StudentsDataTable() {
   const params = useParams();
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
+  const status = searchParams.get("status") as "active" | "inactive" | null;
   const { data, isLoading: isFetchingStudents } = api.students.getAll.useQuery({
     semesterId: params.semesterId,
     query,
+    status,
   });
 
   return (

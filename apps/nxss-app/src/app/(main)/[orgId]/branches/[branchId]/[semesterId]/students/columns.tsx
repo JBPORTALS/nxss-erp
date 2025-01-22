@@ -15,7 +15,7 @@ export const StudentColumns: ColumnDef<Student>[] = [
     accessorKey: "email",
     cell(props) {
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex w-48 items-center gap-2">
           <Avatar className="border-2 border-border">
             <AvatarImage />
             <AvatarFallback>
@@ -32,8 +32,17 @@ export const StudentColumns: ColumnDef<Student>[] = [
     accessorKey: "status",
     cell(props) {
       if (props.row.original.status === "inactive")
-        return <Badge variant={"secondary"}>Inactive</Badge>;
-      else return <Badge variant={"success"}>Active</Badge>;
+        return (
+          <div className="w-32">
+            <Badge variant={"warning"}>Inactive</Badge>
+          </div>
+        );
+      else
+        return (
+          <div className="w-32">
+            <Badge variant={"success"}>Active</Badge>
+          </div>
+        );
     },
   },
   {
