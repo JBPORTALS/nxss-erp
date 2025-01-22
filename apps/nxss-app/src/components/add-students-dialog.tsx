@@ -69,8 +69,8 @@ export function AddStudentsDialog({ children }: { children: React.ReactNode }) {
   const utils = api.useUtils();
   const { mutateAsync: createStudent, isPending: isAddingStudents } =
     api.students.create.useMutation({
-      onSuccess(data, variables, context) {
-        utils.students.invalidate();
+      async onSuccess(data) {
+        await utils.students.invalidate();
         onOpenChange(false); //close the dialog
         form.reset(); //reset the form
       },
