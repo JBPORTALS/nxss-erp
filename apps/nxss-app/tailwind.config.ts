@@ -16,6 +16,16 @@ export default withUt({
         sans: ["var(--font-fira-sans)", ...fontFamily.sans],
         mono: ["var(--font-fira-mono)", ...fontFamily.mono],
       },
+      colors: {
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+      },
       keyframes: {
         "caret-blink": {
           "0%,70%,100%": { opacity: "1" },

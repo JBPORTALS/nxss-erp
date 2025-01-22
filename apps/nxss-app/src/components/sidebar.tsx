@@ -141,6 +141,7 @@ function SubjectList() {
 
         return (
           <Link
+            key={subject.id}
             href={`/${params.orgId}/branches/${params.branchId}/${params.semesterId}/subjects/${subject.id}`}
           >
             <SidebarItem
@@ -278,7 +279,12 @@ export function BranchDetialsSidebar() {
           <Tabs defaultValue={params.semesterId} value={params.semesterId}>
             <TabsList className="w-full">
               {data?.Semesters.map((semester) => (
-                <TabsTrigger className="w-full" asChild value={semester.id}>
+                <TabsTrigger
+                  key={semester.id}
+                  className="w-full"
+                  asChild
+                  value={semester.id}
+                >
                   <Link
                     href={`/${params.orgId}/branches/${params.branchId}/${semester.id}/dashboard`}
                   >

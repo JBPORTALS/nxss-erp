@@ -11,6 +11,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { BadgeAlert, BadgeCheck, BadgeInfo, TriangleAlert } from "lucide-react";
 import { useTheme } from "next-themes";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { buttonVariants } from "@nxss/ui/button";
 
@@ -44,17 +45,11 @@ export function Providers(props: { children: React.ReactNode }) {
       }}
     >
       <TRPCReactProvider>
-        <TooltipProvider>{props.children}</TooltipProvider>
+        <TooltipProvider>
+          <NuqsAdapter>{props.children}</NuqsAdapter>
+        </TooltipProvider>
       </TRPCReactProvider>
-      <Toaster
-        richColors
-        icons={{
-          success: <BadgeCheck />,
-          error: <BadgeAlert />,
-          info: <BadgeInfo />,
-          warning: <TriangleAlert />,
-        }}
-      />
+      <Toaster richColors />
     </ClerkProvider>
   );
 }

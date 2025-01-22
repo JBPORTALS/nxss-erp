@@ -1,6 +1,8 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
-import { pgEnum, text } from "drizzle-orm/pg-core";
+import { pgEnum, text, uniqueIndex, varchar } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
 import { pgTable } from "./_table";
 import { Branches } from "./branches";
@@ -17,8 +19,8 @@ export const Students = pgTable("students", (t) => ({
     .text()
     .$defaultFn(() => createId())
     .primaryKey(),
-  fullName: t.text().notNull(),
-  email: text().notNull(),
+  fullName: t.text(),
+  email: varchar().unique().notNull(),
   phoneNumber: text(),
   dob: t.date(),
   yearOfJoin: t.integer(),
@@ -44,6 +46,15 @@ export const Students = pgTable("students", (t) => ({
     .timestamp({ mode: "date", withTimezone: true })
     .$onUpdateFn(() => new Date()),
 }));
+
+export const insertStudentSchema = createInsertSchema(Students);
+export const updateStudentSchema = createInsertSchema(Students, {
+  id: z.string().nonempty(),
+  branchId: z.string().optional(),
+  clerkInstitutionId: z.string().optional(),
+  email: z.string().optional(),
+  currentSemesterId: z.string().optional(),
+});
 
 export const studentsRelations = relations(Students, ({ one }) => ({
   Branch: one(Branches, {
