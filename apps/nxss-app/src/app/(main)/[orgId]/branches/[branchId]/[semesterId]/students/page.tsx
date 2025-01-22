@@ -1,4 +1,4 @@
-import { PlusIcon, SearchIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 import { Button } from "@nxss/ui/button";
 import {
@@ -8,15 +8,12 @@ import {
   ContentAreaHeader,
   ContentAreaTitle,
 } from "@nxss/ui/content-area";
-import { Input } from "@nxss/ui/input";
 
 import { AddStudentsDialog } from "~/components/add-students-dialog";
-import { StudentColumns } from "./columns";
 import { StudentsDataTable } from "./data-table";
+import SearchStudents from "./search-students";
 
-export default async function BranchPage({}: {
-  params: { branch_id: string; org: string };
-}) {
+export default function BranchPage() {
   return (
     <div className="flex h-screen">
       <ContentArea>
@@ -35,12 +32,7 @@ export default async function BranchPage({}: {
           </AddStudentsDialog>
         </ContentAreaHeader>
         <ContentAreaContainer>
-          <div className="flex w-full gap-3">
-            <div className="relative flex w-full items-center">
-              <SearchIcon className="absolute ml-2.5 mr-2.5 size-4 text-muted-foreground" />
-              <Input placeholder="Search ..." className="h-9 w-full ps-9" />
-            </div>
-          </div>
+          <SearchStudents />
           <StudentsDataTable />
         </ContentAreaContainer>
       </ContentArea>

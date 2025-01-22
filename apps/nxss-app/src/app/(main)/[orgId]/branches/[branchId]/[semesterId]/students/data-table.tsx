@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { DataTable } from "~/components/data-table";
 import { api } from "~/trpc/react";
@@ -8,8 +8,11 @@ import { StudentColumns } from "./columns";
 
 export function StudentsDataTable() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q");
   const { data } = api.students.getAll.useQuery({
     semesterId: params.semesterId,
+    query,
   });
 
   return (
