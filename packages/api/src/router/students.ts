@@ -62,4 +62,21 @@ export const studentsRouter = router({
         });
       return res;
     }),
+
+  delete: protectedProcedure
+    .input(updateStudentSchema.pick({ id: true }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await ctx.db
+        .delete(Students)
+        .where(eq(Students.id, input.id))
+        .returning()
+        .then((res) => res.at(0));
+
+      if (!res)
+        throw new TRPCError({
+          message: `Can't able to delete`,
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      return res;
+    }),
 });

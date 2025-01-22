@@ -23,7 +23,10 @@ import {
   DropdownMenuTrigger,
 } from "@nxss/ui/dropdown-menu";
 
-import { ToggleStudentStatusAlertDialog } from "~/components/student-actions";
+import {
+  DeleteStudentAlertDialog,
+  ToggleStudentStatusAlertDialog,
+} from "~/components/student-actions";
 
 type Student = RouterOutputs["students"]["getAll"][0];
 
@@ -88,6 +91,8 @@ export const StudentColumns: ColumnDef<Student>[] = [
         React.useState(false);
       const [isActivateAlertDialogOpen, setIsActivateAlertDialogOpen] =
         React.useState(false);
+      const [isDeleteAlertDialogOpen, setIsDeleteAlertDialogOpen] =
+        React.useState(false);
       const student = props.row.original;
       return (
         <div className="text-right">
@@ -116,7 +121,10 @@ export const StudentColumns: ColumnDef<Student>[] = [
                     <ShieldCheckIcon className="size-5" /> Activate
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem className="flex items-center gap-2 text-destructive focus:bg-destructive/30 focus:text-destructive">
+                <DropdownMenuItem
+                  onClick={() => setIsDeleteAlertDialogOpen(true)}
+                  className="flex items-center gap-2 text-destructive focus:bg-destructive/30 focus:text-destructive"
+                >
                   <Trash2Icon className="size-5" /> Delete
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -135,6 +143,12 @@ export const StudentColumns: ColumnDef<Student>[] = [
             studentId={student.id}
             open={isActivateAlertDialogOpen}
             onOpenChange={setIsActivateAlertDialogOpen}
+          />
+          <DeleteStudentAlertDialog
+            key={"Delete student"}
+            studentId={student.id}
+            open={isDeleteAlertDialogOpen}
+            onOpenChange={setIsDeleteAlertDialogOpen}
           />
         </div>
       );

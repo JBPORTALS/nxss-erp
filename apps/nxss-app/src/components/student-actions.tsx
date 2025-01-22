@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@nxss/ui/alert-dialog";
+import { buttonVariants } from "@nxss/ui/button";
 import { toast } from "@nxss/ui/toast";
 
 import { api } from "~/trpc/react";
@@ -83,6 +84,57 @@ export function ToggleStudentStatusAlertDialog({
               Deactivate
             </AlertDialogAction>
           )}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+export function DeleteStudentAlertDialog({
+  children,
+  open,
+  onOpenChange,
+  studentId,
+}: {
+  children?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  studentId: string;
+}) {
+  const utils = api.useUtils();
+  const { mutateAsync: deleteStudent, isPending } =
+    api.students.delete.useMutation({
+      onSuccess: async () => {
+        await utils.students.invalidate();
+        toast.info("Student deleted successfully");
+      },
+      onError() {
+        toast.error("Failed to delete student");
+      },
+    });
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Your about to delete a student. This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+          <AlertDialogAction
+            isLoading={isPending}
+            loadingText="Processing..."
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={() => {
+              deleteStudent({ id: studentId });
+            }}
+          >
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
