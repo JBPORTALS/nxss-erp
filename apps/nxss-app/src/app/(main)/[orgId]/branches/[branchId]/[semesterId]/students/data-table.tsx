@@ -10,7 +10,7 @@ export function StudentsDataTable() {
   const params = useParams();
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
-  const { data } = api.students.getAll.useQuery({
+  const { data, isLoading: isFetchingStudents } = api.students.getAll.useQuery({
     semesterId: params.semesterId,
     query,
   });
@@ -18,6 +18,7 @@ export function StudentsDataTable() {
   return (
     <div className="py-5">
       <DataTable
+        isLoading={isFetchingStudents}
         emptyStateComponent={
           <div className="flex h-56 flex-col items-center justify-center">
             <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
