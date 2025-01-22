@@ -7,6 +7,7 @@ import { insertBranchSchema } from "@nxss/db/schema";
 import { Button } from "@nxss/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -161,6 +162,11 @@ export default function CreateBranchDailog({
             />
 
             <DialogFooter className="pt-5">
+              <DialogClose asChild>
+                <Button variant={"secondary"} className="w-full">
+                  Cancel
+                </Button>
+              </DialogClose>
               <Button className="w-full" isLoading={isCreatingBranch}>
                 Create
               </Button>
