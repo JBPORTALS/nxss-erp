@@ -19,7 +19,7 @@ export const studentsRouter = router({
     .mutation(async ({ ctx, input }) => {
       const res = await ctx.db
         .insert(Students)
-        .values(input)
+        .values({ ...input, email: input.email.toLowerCase() })
         .returning()
         .then((res) => res.at(0));
 

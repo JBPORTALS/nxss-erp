@@ -1,7 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
+import { MoreVerticalIcon } from "lucide-react";
 
 import { RouterOutputs } from "@nxss/api";
+import { Button } from "@nxss/ui/button";
 
 type Student = RouterOutputs["students"]["getAll"][0];
 
@@ -26,6 +28,21 @@ export const StudentColumns: ColumnDef<Student>[] = [
               })
             : ""}
         </p>
+      );
+    },
+  },
+  {
+    id: "more-actions",
+    header() {
+      return <div className="w-fit text-right"></div>;
+    },
+    cell(props) {
+      return (
+        <div className="text-right">
+          <Button className="ml-auto" size={"icon"} variant={"ghost"}>
+            <MoreVerticalIcon strokeWidth={1} className="size-4" />
+          </Button>
+        </div>
       );
     },
   },
